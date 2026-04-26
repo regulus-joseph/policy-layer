@@ -1,0 +1,12 @@
+{
+  "name": "policy-sensorium",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Springdrift-inspired Cognitive Behavior System for OpenClaw: CBS sensorium injection, D'gating, cycle metrics",
+  "main": "src/index.ts",
+  "openclaw": {
+    "extensions": [
+      "./src/index.ts"
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "id": "policy-sensorium",
+  "name": "Policy Sensorium (CBS)",
+  "description": "Springdrift-inspired Cognitive Behavior System: injects self-perception signals before each LLM call and tracks cycle outcomes for D'gating.",
+  "version": "0.1.0",
+  "kind": "sensorium",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "default": true
+      },
+      "sensoriumWindow": {
+        "type": "number",
+        "minimum": 1,
+        "default": 20,
+        "description": "Number of recent cycles to consider for metrics"
+      },
+      "dGateThreshold": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "default": 0.35,
+        "description": "D' threshold below which actions are gated"
+      },
+      "logLevel": {
+        "type": "string",
+        "enum": ["debug", "info", "warn"],
+        "default": "info"
+      }
+    }
+  },
+  "uiHints": {
+    "sensoriumWindow": {
+      "label": "CBS Sensorium Window",
+      "help": "Number of recent cognitive cycles to consider for CBS signal computation"
+    },
+    "dGateThreshold": {
+      "label": "D' Gating Threshold",
+      "help": "D' score below which the agent should slow down and reassess strategy"
+    },
+    "logLevel": {
+      "label": "Log Level",
+      "help": "Verbosity of policy-sensorium logging"
+    }
+  }
+}
