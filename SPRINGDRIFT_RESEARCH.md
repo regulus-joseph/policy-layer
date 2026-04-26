@@ -134,7 +134,32 @@ D' = Σ(importance_i × magnitude_i) / (max_importance × max_magnitude × n)
 - 3.6% tool failure rate
 - 714 LLM timeouts 自动恢复，无需人工干预
 
+## 已实现（vs 论文原版）
+
+| 论文组件 | 状态 | 实现方式 |
+|---------|------|---------|
+| CBS Sensorium 注入 | ✅ 完成 | `before_prompt_build` → `prependContext` |
+| 5维信号（论文） | ⚠️ 部分 | 实现了4个：success_rate, tool_success, cbr_hit, severity |
+| Novelty 信号 | ❌ 未实现 | 需要 System M / keyword Jaccard，未接入 |
+| D' 公式 | ✅ 完成 | Σ(w·mag)/(0.3×1.0×n)，阈值 0.35/0.55 |
+| D' 决策带 | ✅ 完成 | LOW_ACCEPT / MEDIUM_CONFIRM / HIGH_REJECT |
+| Severity 分类 | ✅ 完成 | 错误原因→CRITICAL(1000)–LOW(50) |
+| Normative Calculus | ❌ 未实现 | 7,056 查表成本高；用简化 ordinal 替代 |
+| Affect Subsystem | ❌ 未实现 | 暂不需要 |
+| Artificial Retainer | ⚠️ 部分 | POLICY.md 体现了 bounded autonomy 原则 |
+| CBR 集成 | ⚠️ 框架 | memory-recall 有 hook，但 sensorium 未读取 hit rate |
+
+## 关键实现发现
+
+1. **`allowConversationAccess` 会导致 gateway abort** — schema 是 strict Zod，不支持此字段
+2. **`agent_end` 不可用** — conversation hook，需 `allowConversationAccess`
+3. **用 `before_prompt_build` 替代 `agent_end`** — prompt injection hook，通过 `event.messages` 分析上一轮结果
+4. **gateway 拦截 openclaw.json 写入** — 需先 kill 再改再启动
+5. **LLM 可以读取自身 D'** — `<openclaw_state>` 作为 context 注入，agent 理解并据此决策
+
 ## 下一步
-1. Level 1 CBS 注入实现到 memory-recall 或 gateway 层
-2. 参考 Springdrift 的 sensorium 注入机制
-3. 研究 OpenClaw gateway 的 system prompt injection point
+1. D' gating 强制执行 — 当前只 warn，下一步在 `before_tool_call` 实施 blocking
+2. CBR hit rate 集成 — memory-recall 的 CBR 结果接入 sensorium 第4信号
+3. Normative Calculus 简化版 — 用关键词+ordinal 分级替代 7,056 查表
+4. Policy-sensorium 命令 — 验证 TUI 中 `policy-sensorium` 命令注册正常
+5. 长期： Affect Subsystem — 监控 desperation/confidence/pressure 指标
