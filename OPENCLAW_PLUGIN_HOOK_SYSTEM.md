@@ -1,374 +1,911 @@
-# OpenClaw Plugin & Hook System 分析文档
+# OpenClaw Plugin & Hook System
 
-## 1. 概述
+## 目录
 
-OpenClaw 的插件系统和 Hook 系统是两个独立但相互关联的核心扩展机制：
-
-- **插件系统（Plugin）**：通过 `openclaw.plugin.json` manifest 声明，通过 `OpenClawPluginApi` 注册工具、Provider、命令、HTTP 路由等
-- **Hook 系统（Hook）**：事件驱动的回调机制，用于在 agent 生命周期中注入逻辑
-- **工具系统（Tool）**：通过插件注册，由 AI 模型在运行时调用
-
----
-
-## 2. OpenClawPluginApi 注册方法（完整列表）
-
-插件通过 `index(pluginApi)` 入口函数获得 `OpenClawPluginApi` 对象，可调用的注册方法：
-
-### 2.1 Hook 事件注册
-
-|                    方法                    |            说明            |
-| ------------------------------------------ | -------------------------- |
-| `api.on(hookName, handler, opts?)`         | 强类型 Hook 注册（推荐）   |
-| `api.registerHook(events, handler, opts?)` | 底层 Hook 注册，支持多事件 |
-
-### 2.2 工具注册
-
-|              方法               |      说明       |
-| ------------------------------- | --------------- |
-| `api.registerTool(tool, opts?)` | 注册 agent 工具 |
-
-### 2.3 HTTP 路由
-
-|                 方法                 |                          说明                          |
-| ------------------------------------ | ------------------------------------------------------ |
-| `api.registerHttpRoute(routeParams)` | 注册 HTTP 路由，支持 `gateway` / `plugin` 两种认证模式 |
-
-### 2.4 Provider 注册
-
-|                         方法                          |     说明      |
-| ----------------------------------------------------- | ------------- |
-| `api.registerProvider(provider)`                      | 通用 Provider |
-| `api.registerSpeechProvider(provider)`                | 语音合成      |
-| `api.registerRealtimeTranscriptionProvider(provider)` | 实时转录      |
-| `api.registerRealtimeVoiceProvider(provider)`         | 实时语音      |
-| `api.registerMediaUnderstandingProvider(provider)`    | 媒体理解      |
-| `api.registerImageGenerationProvider(provider)`       | 图片生成      |
-| `api.registerVideoGenerationProvider(provider)`       | 视频生成      |
-| `api.registerMusicGenerationProvider(provider)`       | 音乐生成      |
-| `api.registerWebFetchProvider(provider)`              | Web 获取      |
-| `api.registerWebSearchProvider(provider)`             | Web 搜索      |
-
-### 2.5 其他扩展
-
-|                         方法                          |                     说明                     |
-| ----------------------------------------------------- | -------------------------------------------- |
-| `api.registerChannel(registration)`                   | 注册 channel 插件                            |
-| `api.registerAgentHarness(harness)`                   | 注册自定义 agent harness                     |
-| `api.registerGatewayMethod(method, handler, opts?)`   | 注册 gateway RPC 方法                        |
-| `api.registerService(service)`                        | 注册后台服务                                 |
-| `api.registerCli(registrar, opts?)`                   | 注册 CLI 命令                                |
-| `api.registerCliBackend(backend)`                     | 注册 CLI 后端                                |
-| `api.registerCommand(command)`                        | 注册 gateway 命令                            |
-| `api.registerTextTransforms(transforms)`              | 注册文本转换（input/output）                 |
-| `api.registerReload(registration)`                    | 注册插件热重载前缀                           |
-| `api.registerNodeHostCommand(command)`                | 注册 Node host 命令                          |
-| `api.registerSecurityAuditCollector(collector)`       | 注册安全审计收集器                           |
-| `api.registerInteractiveHandler(registration)`        | 注册交互式处理器                             |
-| `api.registerContextEngine(id, factory)`              | 注册 context engine 工厂                     |
-| `api.registerCompactionProvider(provider)`            | 注册内存压缩 Provider                        |
-| `api.registerEmbeddedExtensionFactory(factory)`       | 注册 Pi 嵌入式扩展工厂（仅 bundled）         |
-| `api.registerCodexAppServerExtensionFactory(factory)` | 注册 Codex app-server 扩展工厂（仅 bundled） |
-| `api.onConversationBindingResolved(handler)`          | 注册会话绑定解析处理器                       |
-| `api.registerDetachedTaskRuntime(runtime)`            | 注册 detached task 生命周期运行时            |
-| `api.registerMemoryCapability(capability)`            | 注册内存能力（仅 memory 插件）               |
-| `api.registerMemoryPromptSection(builder)`            | 注册内存 prompt section（仅 memory 插件）    |
-| `api.registerMemoryPromptSupplement(builder)`         | 注册内存 prompt 补充                         |
-| `api.registerMemoryCorpusSupplement(supplement)`      | 注册内存语料补充                             |
-| `api.registerMemoryFlushPlan(resolver)`               | 注册内存 flush plan 解析器（仅 memory 插件） |
-| `api.registerMemoryRuntime(runtime)`                  | 注册内存运行时（仅 memory 插件）             |
-| `api.registerMemoryEmbeddingProvider(provider)`       | 注册内存嵌入 Provider                        |
+1. [插件项目结构](#1-插件项目结构)
+2. [openclaw.json 配置](#2-openclawjson-配置)
+3. [PluginEntrySchema（严格验证）](#3-pluginentryschema严格验证)
+4. [Hook 系统分类](#4-hook-系统分类)
+5. [所有 Hook 类型详解](#5-所有-hook-类型详解)
+6. [PluginEntrySchema 字段对照表](#6-pluginentryschema-字段对照表)
+7. [api.on() 注册](#7-apion-注册)
+8. [api.registerCommand() 注册命令](#8-apiregistercommand-注册命令)
+9. [before_prompt_build 详解](#9-before_prompt_build-详解)
+10. [before_agent_start（Legacy）](#10-before_agent_startlegacy)
+11. [完整示例：policy-sensorium 插件](#11-完整示例policy-sensorium-插件)
+12. [常见陷阱](#12-常见陷阱)
+13. [关键文件索引](#13-关键文件索引)
 
 ---
 
-## 3. Hook 系统架构
-
-### 3.1 两套独立的 Hook 系统
-
-OpenClaw 有两个完全独立的 Hook 实现：
-
-**系统 A：内部插件 Hook**（`src/hooks/internal-hooks.ts`）
-- 所有插件 Hook、workspace Hook、legacy 配置 Hook 汇聚于此
-- 通过 `triggerInternalHook(event, eventObj)` 触发
-
-**系统 B：外部 HTTP Webhook**（`src/gateway/hooks.ts`）
-- 完全独立，HTTP POST 到 `/hooks` 端点
-- 通过 `gateway.hooks.webhooks[]` 在 manifest 中声明
-
-### 3.2 内部 Hook 核心实现
-
-```typescript
-// 注册
-registerInternalHook(event: string, handler: InternalHookHandler, opts?): void
-unregisterInternalHook(event: string, handler: InternalHookHandler): void
-triggerInternalHook(event: string, eventObj: InternalHookEvent): Promise<void>
-
-// 类型定义
-type InternalHookHandler = (event: InternalHookEvent) => Promise<void> | void
-
-interface InternalHookEvent {
-  type: InternalHookEventType   // "command" | "session" | "agent" | "gateway" | "message"
-  action: string               // 动作名称，如 "new", "reset", "stop"
-  sessionKey: string           // 会话 key
-  context: Record<string, unknown>
-  timestamp: Date
-  messages: string[]           // Hook 可向此数组推送消息返回给用户
-}
-```
-
-**关键机制：**
-- **去重**：`_hookEventDedup` Set，key = `handlerName:sessionKey:timestamp`，最多 200 条
-- **防重入**：`_currentlyFiring` Map，同一 handler 不可重入
-- **优先级**：`options.priority`，数字越小越早执行（默认 0）
-- **超时**：单个 handler 超时 30000ms
-- **全局回滚**：`activePluginHookRegistrations` 全局 Map，存储每个 plugin 的 hook 注册，供热重载时回滚
-
-### 3.3 Hook 事件类型
-
-定义在 `src/hooks/internal-hooks.ts`：
-
-|      分类      |                                       事件                                       |
-| -------------- | -------------------------------------------------------------------------------- |
-| **Agent**      | `before_agent_start`, `after_agent_start`, `before_agent_end`, `after_agent_end` |
-| **Prompt**     | `before_prompt_build`, `after_prompt_build`                                      |
-| **Command**    | `before_command_execute`, `after_command_execute`                                |
-| **Message**    | `before_message_process`, `after_message_process`, `after_message_append`        |
-| **Session**    | `after_session_start`, `after_session_reset`, `after_session_stop`               |
-| **Gateway**    | `after_gateway_start`, `before_gateway_stop`                                     |
-| **Tool**       | `before_tool_call`, `after_tool_call`                                            |
-| **Compaction** | `before_compaction`, `after_compaction`                                          |
-| **Reset**      | `before_reset`, `after_reset`                                                    |
-
-### 3.4 插件 Hook 注册流程
+## 1. 插件项目结构
 
 ```
-Plugin: api.on("before_prompt_build", handler, opts)
-  │
-  ├─ hook-types.ts: api.on() → handlers.registerHook(events, handler, opts)
-  │    └─ 内部调用 api.registerHook()
-  │
-  └─ registry.ts: registerHook() (line 358)
-       ├─ 存储到 registry.hooks[] = HookRegistration[]
-       │    HookEntry {
-       │      hook: { name, description, source="openclaw-plugin", pluginId, filePath, baseDir, handlerPath },
-       │      frontmatter: {},
-       │      metadata: { events },
-       │      invocation: { enabled: true }
-       │    }
-       ├─ 检查重复 hook name
-       ├─ 检查 config?.hooks?.internal?.enabled
-       ├─ activePluginHookRegistrations.set(name, nextRegistrations)  ← 跟踪用于回滚
-       └─ registerInternalHook(event, handler)  ← 挂载到内部 Hook 引擎
-            └─ internalHooks.get(event).push({ handler, options })
+~/projects/policy-sensorium/          ← 插件根目录（放在 ~/projects/ 下，NOT ~/.openclaw/extensions/）
+├── openclaw.plugin.json              ← 插件 manifest（描述符）
+├── package.json                      ← npm 包配置
+└── src/
+    └── index.ts                      ← 插件入口（ESM，default export plugin 对象）
 ```
 
-### 3.5 强类型 Hook vs 底层 Hook
+### 1.1 openclaw.plugin.json
 
-**强类型 Hook**（`api.on(hookName, handler)`）：
-- 使用 `PluginHookName` 类型，自动推断事件参数类型
-- 通过 `registerTypedHook()` 注册，存入 `registry.typedHooks[]`
-- 支持 `priority` 优先级和 `allowPromptInjection` 策略
-- 在 agent 循环中被按优先级顺序执行
-
-**底层 Hook**（`api.registerHook(events, handler, opts)`）：
-- 事件名是字符串，支持多事件注册
-- 事件对象是扁平的 `InternalHookEvent`
-
-### 3.6 Loader：第三种 Hook 来源
-
-`src/hooks/loader.ts`：`loadInternalHooks(config, workspaceDir)`
-- 加载自：workspace 目录、managed hooks、bundled hooks
-- 支持 legacy 配置格式（向后兼容）
-- 两者都通过 `registerInternalHook()` 注册，汇入同一 Hook 引擎
-
----
-
-## 4. 工具注册与触发
-
-### 4.1 注册
-
-```typescript
-api.registerTool(tool: AnyAgentTool | OpenClawPluginToolFactory, opts?)
-```
-
-**工厂函数签名：**
-```typescript
-type OpenClawPluginToolFactory = (ctx: OpenClawPluginToolContext) => AnyAgentTool | AnyAgentTool[] | null | undefined
-```
-
-**工具上下文（OpenClawPluginToolContext）：**
-```typescript
+```json
 {
-  config?: OpenClawConfig            // 静态配置
-  runtimeConfig?: OpenClawConfig     // 运行时配置快照
-  fsPolicy?: ToolFsPolicy             // 文件系统安全策略
-  workspaceDir?: string              // 工作目录
-  agentDir?: string                  // agent 目录
-  agentId?: string                   // agent ID
-  sessionKey?: string                // 会话 key
-  sessionId?: string                 // 临时会话 UUID（/new 和 /reset 时重置）
-  browser?: {                        // 沙箱浏览器桥接
-    sandboxBridgeUrl?: string
-    allowHostControl?: boolean
+  "id": "policy-sensorium",
+  "name": "Policy Sensorium (CBS)",
+  "description": "Springdrift-inspired Cognitive Behavior System: injects self-perception signals.",
+  "version": "0.1.0",
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "sensoriumWindow": {
+        "type": "number",
+        "default": 20,
+        "description": "Rolling window for cycle metrics"
+      },
+      "dGateThreshold": {
+        "type": "number",
+        "default": 0.35,
+        "description": "D' gating threshold"
+      },
+      "logLevel": {
+        "type": "string",
+        "default": "info",
+        "enum": ["debug", "info", "warn"]
+      }
+    }
   }
-  messageChannel?: string            // 消息通道
-  agentAccountId?: string            // 账户 ID
-  deliveryContext?: DeliveryContext // 投递上下文
-  requesterSenderId?: string         // 信任的发送者 ID（来自入站上下文，非工具参数）
-  senderIsOwner?: boolean           // 发送者是否为 owner
-  sandboxed?: boolean               // 是否沙箱模式
 }
 ```
 
-**注册结果存入：**
-```typescript
-registry.tools[] = PluginToolRegistration[]
+### 1.2 package.json
+
+```json
 {
-  pluginId, pluginName, factory, names, optional, source, rootDir
+  "name": "policy-sensorium",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "openclaw": {
+    "extensions": ["./src/index.ts"]
+  },
+  "dependencies": {}
 }
 ```
 
-### 4.2 工具实例化时机
-
-工具采用**延迟实例化**策略——工厂函数不在插件加载时调用，而在 agent 每次运行时调用：
-
-```
-createOpenClawCodingTools()  ← agent 运行时
-  └─ createOpenClawTools()
-       └─ resolveOpenClawPluginToolsForOptions()
-            └─ resolvePluginTools()  ← 遍历 registry.tools[]
-                 └─ entry.factory(context)  ← 调用工厂函数
-```
-
-每次 agent 运行都会重新调用 `factory(context)`，确保工具获得最新的上下文信息（sessionId、fsPolicy 等）。
-
-### 4.3 工具元数据追踪
-
-工具元数据通过 WeakMap 关联：
+### 1.3 src/index.ts（ESM 插件入口）
 
 ```typescript
-const pluginToolMeta = new WeakMap<AnyAgentTool, PluginToolMeta>()
-// PluginToolMeta = { pluginId: string, optional: boolean }
+const plugin = {
+  id: "policy-sensorium",
+  name: "Policy Sensorium (CBS)",
+  description: "Springdrift-inspired Cognitive Behavior System: injects self-perception signals before each LLM call.",
+  kind: "sensorium",
+  register(api: OpenClawPluginApi) {
+    // 注册 hooks, commands, tools 等
+  },
+};
+
+export default plugin;
 ```
 
-**用途 1：** `tools.effective` API — 判断工具来源（`core` / `plugin` / `channel`）
-**用途 2：** 策略管道 — `applyToolPolicyPipeline()` 使用 `toolMeta` 回调获取 `pluginId` 用于策略决策
+**关键点：**
+- `type: "module"` 使其成为 ESM
+- `main: "src/index.ts"` 直接指向 TypeScript 源文件
+- `openclaw.extensions: ["./src/index.ts"]` 告诉 OpenClaw 加载这个入口文件
+- 插件 ID 必须与 `openclaw.plugin.json` 中的 `id` 一致
 
-### 4.4 工具 Policy Pipeline
+---
 
-工具组装完成后经过多层过滤：
+## 2. openclaw.json 配置
 
+### 2.1 三处必须修改的地方
+
+```json
+{
+  "plugins": {
+    "allow": [
+      "...",
+      "policy-sensorium"          // ① allow 列表
+    ],
+    "entries": {
+      "...": {},
+      "policy-sensorium": {       // ② entries 配置
+        "enabled": true,
+        "hooks": {
+          "allowPromptInjection": true   // 注意：只有这个，没有 allowConversationAccess！
+        }
+      }
+    },
+    "installs": {
+      "...": {},
+      "policy-sensorium": {       // ③ installs 记录
+        "source": "path",
+        "sourcePath": "/home/marlon-wei/projects/policy-sensorium",
+        "installPath": "/home/marlon-wei/projects/policy-sensorium",
+        "version": "0.1.0",
+        "installedAt": "2026-04-26T05:00:00.000Z"
+      }
+    },
+    "load": {
+      "paths": [
+        "/home/marlon-wei/projects/skill-auto-injection",
+        "/home/marlon-wei/projects/memory-recall",
+        "/home/marlon-wei/projects/policy-sensorium"  // ④ load.paths（若用 sourcePath 加载则需）
+      ]
+    }
+  }
+}
 ```
-registry.tools[].factory(context)  ← 实例化
-  → filterToolsByMessageProvider()        ← 按 channel 过滤
-  → applyModelProviderToolPolicy()         ← 按 model provider 过滤（如抑制 web_search）
-  → applyOwnerOnlyToolPolicy()            ← owner-only 工具
-  → applyToolPolicyPipeline()             ← profile/global/agent/group/sandbox/subagent 策略链
-  → normalizeToolParameters()             ← JSON Schema 规范化（Gemini 特殊处理）
-  → wrapToolWithBeforeToolCallHook()     ← 包装 before_tool_call / after_tool_call Hook
-  → wrapToolWithAbortSignal()            ← 包装 AbortSignal
-  → applyDeferredFollowupDescriptions()   ← 延迟描述符
-  → 返回最终工具列表给 AI 模型
+
+### 2.2 完整插件配置对象结构
+
+```typescript
+type PluginEntryConfig = {
+  enabled?: boolean;
+  hooks?: {
+    allowPromptInjection?: boolean;      // 控制 before_prompt_build / before_agent_start 的 prompt 字段
+    allowConversationAccess?: boolean;   // ⚠️ 仅 TypeScript 类型定义，运行时 Zod schema 不支持！
+  };
+  subagent?: {
+    allowModelOverride?: boolean;
+    allowedModels?: string[];            // ["*"] 允许任意模型
+  };
+  config?: Record<string, unknown>;      // 插件自定义配置（通过 api.pluginConfig 访问）
+};
 ```
 
 ---
 
-## 5. 插件生命周期
+## 3. PluginEntrySchema（严格验证）
 
-### 5.1 加载流程
-
-```
-Gateway 启动
-  └─ loadInternalHooks(cfg, workspaceDir)  ← 加载 workspace/managed/bundled Hook
-  └─ 插件发现（通过 openclaw.plugin.json manifest）
-       └─ 验证 contracts 和 capabilities
-       └─ createPluginRegistry()  ← 创建本插件 registry
-            └─ createApi(record, params)  ← 构建 OpenClawPluginApi
-                 └─ buildPluginApi()  ← 组装 API 对象
-            └─ 调用 plugin.index(api)  ← 插件执行注册逻辑
-                 └─ api.registerTool() / api.on() / api.registerProvider() 等
-```
-
-### 5.2 PluginRuntime
-
-每个插件通过 `PluginRuntime` 代理访问核心功能：
+**来源：** `zod-schema-BhKK4qYw.js` 第 773-781 行
 
 ```typescript
-resolvePluginRuntime(pluginId): PluginRuntime
-  // 返回 registryParams.runtime 的 Proxy
-  // 对 .subagent 属性的访问自动注入 pluginId scope
-  // 其他属性直接透传
+const PluginEntrySchema = z.object({
+  enabled: z.boolean().optional(),
+  hooks: z.object({
+    allowPromptInjection: z.boolean().optional()
+  }).strict().optional(),   // ← .strict() 意味着任何未知 key 都会报错！
+  subagent: z.object({
+    allowModelOverride: z.boolean().optional(),
+    allowedModels: z.array(z.string()).optional()
+  }).strict().optional(),
+  config: z.record(z.string(), z.unknown()).optional()
+}).strict();   // ← .strict() 顶层也拒绝未知字段
 ```
 
-这确保插件的 subagent 操作自动带上插件 ID 标记。
+### 关键结论
 
-### 5.3 热重载支持
+| 字段 | schema 支持 | 运行时效果 |
+|------|------------|-----------|
+| `enabled` | ✅ | 启用/禁用插件 |
+| `hooks.allowPromptInjection` | ✅ | 控制 prompt 变异字段 |
+| `hooks.allowConversationAccess` | ❌ | **不要用！** 类型定义有但 Zod `.strict()` 拒绝， gateway 会 abort |
+| `subagent` | ✅ | 子 agent 权限控制 |
+| `config` | ✅ | 插件自定义配置 |
 
-- `activePluginHookRegistrations` 全局 Map 跟踪每个 hook 的注册
-- `registerReload(registration)` 允许插件声明 `restartPrefixes` / `hotPrefixes` / `noopPrefixes`
-- 卸载插件时自动回滚所有 hook 注册
+**`allowConversationAccess` 在 `types.plugins.d.ts` 的 TypeScript 类型中定义，但 Zod `.strict()` schema 不包含它。** 写入此字段 → gateway abort。
 
 ---
 
-## 6. 与 MLP 的集成
+## 4. Hook 系统分类
 
-MLP（Memory-LanceDB-Pro）作为 OpenClaw 插件，通过以下方式使用 Hook 系统：
+### 4.1 三类 Hook
 
-### 6.1 Hook 注册方式
-
-```typescript
-api.on("before_prompt_build", recallHandler, {
-  name: "mlp-recall",
-  description: "Retrieve relevant memories",
-  priority: 10,  // recall 最先执行
-})
-
-api.on("after_message_process", captureHandler, {
-  name: "mlp-capture",
-  description: "Capture messages into memory",
-  // fire-and-forget，不 await
-})
-
-api.on("after_agent_end", reflectionHandler, {
-  name: "mlp-reflection",
-  description: "Analyze and store reflections",
-  priority: 12,  // 在继承之后执行
-})
+```
+PROMPT_INJECTION_HOOK_NAMES  ← "before_prompt_build" | "before_agent_start"
+CONVERSATION_HOOK_NAMES       ← "llm_input" | "llm_output" | "agent_end"
+（其余 ~20 种）               ← tool/session/compaction/subagent/gateway/dispatch/messaging
 ```
 
-### 6.2 优先级约定（MLP）
+### 4.2 权限控制矩阵
 
-| 优先级 |         Hook          |                功能                |
-| ------ | --------------------- | ---------------------------------- |
-| 10     | before_prompt_build   | recall（记忆召回）                 |
-| 12     | before_prompt_build   | reflection_inheritance（反射继承） |
-| 15     | before_prompt_build   | reflection_derived（衍生反射）     |
-| —      | after_message_process | capture（消息捕获）                |
-| —      | after_agent_end       | reflection（反思分析）             |
+| Hook 类型 | `allowPromptInjection` | `allowConversationAccess` | 备注 |
+|-----------|----------------------|--------------------------|------|
+| `before_prompt_build` | ✅ 控制（变异字段） | ❌ 不需要 | 推荐使用 |
+| `before_agent_start` | ✅ 控制（变异字段） | ❌ 不需要 | Legacy，推荐用上面 |
+| `before_model_resolve` | ✅ 控制（模型选择） | ❌ 不需要 | 选模型，不改 prompt |
+| `llm_input` | — | ❌ **schema 不支持** | 不要用 |
+| `llm_output` | — | ❌ **schema 不支持** | 不要用 |
+| `agent_end` | — | ❌ **schema 不支持** | 不要用 |
+| `session_start/end` | — | ❌ 不需要 | 无权限限制 |
+| `before/after_tool_call` | — | ❌ 不需要 | 无权限限制 |
+| `message_received/sent` | — | ❌ 不需要 | 无权限限制 |
+| `gateway_start/stop` | — | ❌ 不需要 | 无权限限制 |
 
-### 6.3 MLP 不使用工具系统
-
-MLP 通过 Hook 系统实现，无需注册 agent 工具。所有记忆操作（recall / capture / reflection）都在 Hook handler 中完成。
+**结论：** 对于非 bundled 插件，只有 `before_prompt_build` 和 `before_agent_start` 是实际可用的（通过 `allowPromptInjection: true` 控制）。`agent_end` / `llm_input` / `llm_output` 需要 `allowConversationAccess`，但 schema 不支持。
 
 ---
 
-## 7. 关键文件索引
+## 5. 所有 Hook 类型详解
 
-|                   文件                    |                            职责                            |
-| ----------------------------------------- | ---------------------------------------------------------- |
-| `src/plugins/types.ts`                    | OpenClawPluginApi 接口定义（~2065 行）                     |
-| `src/plugins/api-builder.ts`              | buildPluginApi — 组装 API 对象                             |
-| `src/plugins/registry.ts`                 | createPluginRegistry — 插件注册逻辑中心                    |
-| `src/plugins/registry-types.ts`           | 注册类型定义                                               |
-| `src/plugins/tool-types.ts`               | OpenClawPluginToolFactory / ToolContext                    |
-| `src/plugins/tools.ts`                    | resolvePluginTools — 工具解析入口                          |
-| `src/plugins/registry-empty.ts`           | createEmptyPluginRegistry — 初始化空 registry              |
-| `src/hooks/internal-hooks.ts`             | registerInternalHook / triggerInternalHook — Hook 引擎核心 |
-| `src/hooks/internal-hook-types.ts`        | InternalHookHandler / InternalHookEvent 类型               |
-| `src/hooks/loader.ts`                     | loadInternalHooks — Hook 加载器                            |
-| `src/hooks/hook-types.ts`                 | 插件可见的 Hook 类型导出                                   |
-| `src/gateway/hooks.ts`                    | 外部 HTTP Webhook 系统                                     |
-| `src/agents/tools-effective-inventory.ts` | resolveEffectiveToolInventory — 工具清单 API               |
-| `src/agents/pi-tools.ts`                  | createOpenClawCodingTools — 工具组装主函数                 |
-| `src/agents/openclaw-tools.ts`            | createOpenClawTools — OpenClaw 内置工具 + 插件工具         |
-| `src/agents/openclaw-plugin-tools.ts`     | resolveOpenClawPluginToolsForOptions — 插件工具解析入口    |
-| `packages/plugin-sdk/src/plugin-entry.ts` | 公共 SDK 导出入口                                          |
+### 5.1 Prompt 变异 Hook（需要 `allowPromptInjection`）
+
+#### `before_prompt_build`
+
+```typescript
+// Event
+{
+  prompt: string;              // 用户输入的 prompt
+  messages: unknown[];          // 当前 session 的历史消息（turn 对话）
+}
+
+// Result（可选）
+{
+  systemPrompt?: string;       // 替换 system prompt
+  prependContext?: string;      // 预置到 prompt 前的上下文（每轮追加）
+  prependSystemContext?: string; // 预置到 system prompt（可缓存，适合静态内容）
+  appendSystemContext?: string; // 追加到 system prompt（可缓存）
+}
+```
+
+**触发时机：** 每次 LLM 调用之前（agent turn）。
+
+**`ctx` 上下文对象：**
+```typescript
+{
+  runId?: string;
+  agentId?: string;
+  sessionKey?: string;         // "agent:main:explicit:xxx" 格式
+  sessionId?: string;          // UUID
+  workspaceDir?: string;
+  modelProviderId?: string;
+  modelId?: string;
+  messageProvider?: string;
+  trigger?: string;
+  channelId?: string;
+}
+```
+
+#### `before_model_resolve`
+
+```typescript
+// Event
+{
+  prompt: string;
+  attachments?: Array<{
+    kind: "image" | "video" | "audio" | "document" | "other";
+    mimeType?: string;
+  }>;
+}
+
+// Result
+{
+  modelOverride?: string;     // e.g. "llama3.3:8b"
+  providerOverride?: string;   // e.g. "local-provider"
+}
+```
+
+#### `before_agent_start`（Legacy）
+
+```typescript
+// Event
+{
+  prompt: string;
+  messages?: unknown[];        // legacy 可能为 undefined
+}
+
+// Result = PluginHookBeforePromptBuildResult + PluginHookBeforeModelResolveResult
+// 内部通过 stripPromptMutationFieldsFromLegacyHookResult() 过滤 prompt 字段
+```
+
+---
+
+### 5.2 Conversation Hook（schema 不支持，不要用）
+
+#### `llm_input`
+
+```typescript
+{
+  runId: string;
+  sessionId: string;
+  provider: string;
+  model: string;
+  systemPrompt?: string;
+  prompt: string;
+  historyMessages: unknown[];
+  imagesCount: number;
+}
+```
+
+#### `llm_output`
+
+```typescript
+{
+  runId: string;
+  sessionId: string;
+  provider: string;
+  model: string;
+  assistantTexts: string[];
+  lastAssistant?: unknown;
+  usage?: { input?: number; output?: number; cacheRead?: number; cacheWrite?: number; total?: number; };
+}
+```
+
+#### `agent_end`
+
+```typescript
+{
+  messages: unknown[];
+  success: boolean;
+  error?: string;
+  durationMs?: number;
+}
+```
+
+---
+
+### 5.3 Session Hook
+
+#### `session_start`
+
+```typescript
+{
+  sessionId: string;
+  sessionKey?: string;
+  resumedFrom?: string;        // 若从旧 session 恢复
+}
+```
+
+#### `session_end`
+
+```typescript
+{
+  sessionId: string;
+  sessionKey?: string;
+  messageCount: number;
+  durationMs?: number;
+  reason: "new" | "reset" | "idle" | "daily" | "compaction" | "deleted" | "unknown";
+  sessionFile?: string;
+  transcriptArchived?: boolean;
+  nextSessionId?: string;
+  nextSessionKey?: string;
+}
+```
+
+---
+
+### 5.4 Tool Hook
+
+#### `before_tool_call`
+
+```typescript
+{
+  toolName: string;
+  params: Record<string, unknown>;
+  runId?: string;
+  toolCallId?: string;
+}
+
+// Result
+{
+  params?: Record<string, unknown>;   // 修改参数
+  block?: boolean;                     // 阻止调用
+  blockReason?: string;
+  requireApproval?: {
+    title: string;
+    description: string;
+    severity?: "info" | "warning" | "critical";
+    timeoutMs?: number;
+    timeoutBehavior?: "allow" | "deny";
+    pluginId?: string;
+    onResolution?: (decision: PluginApprovalResolution) => Promise<void>;
+  };
+}
+```
+
+#### `after_tool_call`
+
+```typescript
+{
+  toolName: string;
+  params: Record<string, unknown>;
+  runId?: string;
+  toolCallId?: string;
+  result?: unknown;
+  error?: string;
+  durationMs?: number;
+}
+```
+
+#### `tool_result_persist`
+
+```typescript
+{
+  toolName?: string;
+  toolCallId?: string;
+  message: AgentMessage;
+  isSynthetic?: boolean;
+}
+
+// Result
+{
+  message?: AgentMessage;    // 修改持久化的消息
+}
+```
+
+---
+
+### 5.5 Compaction / Reset Hook
+
+```typescript
+// before_compaction
+{ messageCount: number; compactingCount?: number; tokenCount?: number; messages?: unknown[]; sessionFile?: string; }
+
+// after_compaction
+{ messageCount: number; tokenCount?: number; compactedCount: number; sessionFile?: string; }
+
+// before_reset
+{ sessionFile?: string; messages?: unknown[]; reason?: string; }
+```
+
+---
+
+### 5.6 Subagent Hook
+
+| Hook | 用途 |
+|------|------|
+| `subagent_spawning` | 拦截子 agent 启动，返回 `{ status: "ok" \| "error", error?: string }` |
+| `subagent_delivery_target` | 设置投递来源（channel/account/to/threadId） |
+| `subagent_spawned` | 子 agent 已启动（包含 runId） |
+| `subagent_ended` | 子 agent 结束（outcome: ok/error/timeout/killed/reset/deleted） |
+
+---
+
+### 5.7 Messaging Hook
+
+| Hook | 用途 |
+|------|------|
+| `message_received` | 收到消息 |
+| `message_sending` | 发送前拦截（可修改/取消） |
+| `message_sent` | 发送后 |
+| `inbound_claim` | 声明/放弃入站消息处理权 |
+
+---
+
+### 5.8 Gateway / Dispatch Hook
+
+| Hook | 用途 |
+|------|------|
+| `gateway_start` | Gateway 启动时（port 可用） |
+| `gateway_stop` | Gateway 关闭时 |
+| `before_dispatch` | 原始入站调度拦截 |
+| `reply_dispatch` | 回复调度拦截（可检查 counts per dispatch kind） |
+| `before_agent_reply` | 拦截 agent 回复（设置 `handled: true` 可自行处理） |
+
+---
+
+### 5.9 Install Hook
+
+```typescript
+// before_install
+{
+  targetType: "skill" | "plugin";
+  targetName: string;
+  sourcePath: string;
+  request: {
+    kind: "skill-install" | "plugin-dir" | "plugin-archive" | "plugin-file" | "plugin-npm";
+    mode: "install" | "update";
+    requestedSpecifier?: string;
+  };
+  builtinScan: {
+    status: "ok" | "error";
+    scannedFiles: number;
+    critical: number;
+    warn: number;
+    info: number;
+    findings: Array<{ ruleId: string; severity: string; file: string; line: number; message: string; }>;
+    error?: string;
+  };
+}
+
+// Result: { findings?: Finding[]; block?: boolean; blockReason?: string; }
+```
+
+---
+
+## 6. PluginEntrySchema 字段对照表
+
+| openclaw.json 路径 | Zod 类型 | 运行时行为 |
+|-------------------|---------|-----------|
+| `enabled` | `z.boolean()` | 启用/禁用 |
+| `hooks.allowPromptInjection` | `z.boolean()` | ✅ 唯一支持的 hook 权限字段 |
+| `hooks.allowConversationAccess` | ❌ 不存在 | ❌ 会导致 gateway abort |
+| `subagent.allowModelOverride` | `z.boolean()` | 允许子 agent 覆盖模型 |
+| `subagent.allowedModels` | `z.array(z.string())` | 允许的模型列表 |
+| `config` | `z.record(z.string(), z.unknown())` | 插件自定义配置（通过 `api.pluginConfig` 访问） |
+
+---
+
+## 7. api.on() 注册
+
+```typescript
+// 签名
+api.on<K extends PluginHookName>(
+  hookName: K,
+  handler: PluginHookHandlerMap[K],
+  opts?: { priority?: number }
+): void
+
+// PluginHookHandlerMap 定义了每个 hook 的事件和返回类型
+// TypeScript 编译器强制类型安全
+```
+
+### 示例
+
+```typescript
+api.on("before_prompt_build", async (event, ctx) => {
+  const sessionKey = ctx.sessionKey?.trim() || `${ctx.agentId}:${ctx.sessionId}`;
+
+  // 构建上下文 XML
+  const sensorium = buildSensoriumXML(sessionKey, metrics);
+
+  // 返回 prependContext 注入到 prompt
+  return { prependContext: sensorium };
+});
+
+api.on("session_end", async (event, ctx) => {
+  console.log(`Session ${ctx.sessionId} ended: ${event.reason}`);
+});
+
+api.on("before_tool_call", async (event, ctx) => {
+  if (event.toolName === "DangerousTool" && !await isAuthorized(ctx)) {
+    return { block: true, blockReason: "Not authorized" };
+  }
+});
+```
+
+---
+
+## 8. api.registerCommand() 注册命令
+
+```typescript
+api.registerCommand({
+  name: string;                    // 命令名（无前导斜杠），e.g. "policy-sensorium"
+  nativeNames?: Partial<Record<string, string>>;
+  nativeProgressMessages?: Partial<Record<string, string>>;
+  description: string;              // 命令说明
+  acceptsArgs?: boolean;            // 是否接受参数
+  requireAuth?: boolean;            // 默认 true
+  handler: (ctx: PluginCommandContext) => PluginCommandResult | Promise<PluginCommandResult>;
+});
+
+// PluginCommandContext
+{
+  senderId?: string;
+  channel?: string;
+  channelId?: string;
+  isAuthorizedSender?: boolean;
+  sessionKey?: string;
+  sessionId?: string;
+  args?: string;
+  commandBody?: string;
+  config?: unknown;
+  accountId?: string;
+  messageThreadId?: string;
+  requestConversationBinding(): Promise<void>;
+  detachConversationBinding(): Promise<void>;
+  getCurrentConversationBinding(): unknown;
+}
+
+// PluginCommandResult = ReplyPayload
+{
+  text?: string;
+  // ...其他 ReplyPayload 字段
+}
+```
+
+### 示例
+
+```typescript
+api.registerCommand({
+  name: "policy-sensorium",
+  description: "Show CBS metrics for current session.",
+  acceptsArgs: true,
+  handler: async (ctx) => {
+    const sessionKey = ctx.sessionKey || "default";
+    const metrics = getMetrics(sessionKey);
+    return {
+      text: [
+        `[policy-sensorium] Session: ${sessionKey}`,
+        `  D' score:  ${metrics.dPrime?.toFixed(3) ?? "--"}`,
+        `  Cycles:    ${metrics.cycles.length}`,
+        `  Status:   ${metrics.dPrime >= metrics.dThreshold ? "PASS" : "GATED"}`,
+      ].join("\n"),
+    };
+  },
+});
+```
+
+---
+
+## 9. before_prompt_build 详解
+
+### 9.1 触发时机
+
+每次 agent 需要 LLM 响应时（`agent-harness-runtime-DTtqy8so.js:24`）：
+
+```
+用户消息 → agent turn
+  └─ 加载 session messages
+  └─ hookRunner.hasHooks("before_prompt_build") ?
+       └─ runBeforePromptBuild(event, ctx)
+            └─ api.on("before_prompt_build", handler)
+                 └─ return { prependContext / systemPrompt / ... }
+  └─ 合并到 prompt
+  └─ 调用 LLM
+```
+
+### 9.2 sessionKey 格式
+
+```
+agent:main:explicit:{sessionId}     ← openclaw agent 命令
+whatsapp:{account}:{to}             ← WhatsApp channel
+telegram:{bot}:{chatId}             ← Telegram channel
+```
+
+**测试时用 `sessionKey` 判断当前会话。**
+
+### 9.3 循环跟踪策略（无 agent_end 时的替代方案）
+
+由于 `agent_end` 不可用，cycle 跟踪只能在 `before_prompt_build` 内部完成：
+
+```typescript
+const sessionMetrics = new Map();   // 全局 in-memory 存储
+
+api.on("before_prompt_build", async (event, ctx) => {
+  const metrics = getOrCreateMetrics(ctx.sessionKey);
+
+  if (metrics.callCounter > 0) {
+    // 分析上一轮的工具结果（event.messages 包含 tool role 消息）
+    const outcome = extractOutcome(event.messages);
+    recordCycle(metrics, outcome);
+  }
+
+  const dPrime = computeDPrime(metrics);
+
+  // 注入 XML
+  const xml = formatSensorium(ctx.sessionKey, metrics, dPrime);
+
+  metrics.callCounter++;
+  return { prependContext: xml };
+});
+```
+
+### 9.4 从 messages 中提取工具结果
+
+```typescript
+function extractOutcome(messages: unknown[]): { totalTools, failedTools, reason } {
+  let totalTools = 0, failedTools = 0, reason = "";
+  for (const msg of messages as any[]) {
+    if (msg.role === "tool") {
+      totalTools++;
+      const content = msg.content as string;
+      // 尝试解析 JSON error
+      try {
+        const parsed = JSON.parse(content);
+        if (parsed.isError || parsed.error) {
+          failedTools++;
+          reason = parsed.error || parsed.message || "tool error";
+        }
+      } catch {
+        if (content.toLowerCase().includes("error")) {
+          failedTools++;
+          reason = content.slice(0, 100);
+        }
+      }
+    }
+  }
+  return { totalTools, failedTools, reason };
+}
+```
+
+---
+
+## 10. before_agent_start（Legacy）
+
+**用途：** 旧版 hook，等效于 `before_prompt_build` + `before_model_resolve`。
+
+**关键区别：** `before_prompt_build` 的 `messages` 总是有值，`before_agent_start` 的 `messages` 可能是 `undefined`（在 pre-session 阶段）。
+
+```typescript
+// 自动过滤 prompt 变异字段（通过 stripPromptMutationFieldsFromLegacyHookResult）
+// 返回 systemPrompt/prependContext 等字段会被正确应用
+// 但在 Zod schema 验证前就已被 strip
+```
+
+**推荐：** 新插件用 `before_prompt_build`，不要用 `before_agent_start`。
+
+---
+
+## 11. 完整示例：policy-sensorium 插件
+
+```typescript
+const DEFAULT_WINDOW = 20;
+const DEFAULT_D_THRESHOLD = 0.35;
+
+const sessionMetrics = new Map();
+
+function getOrCreateMetrics(sessionKey: string) {
+  if (!sessionMetrics.has(sessionKey)) {
+    sessionMetrics.set(sessionKey, {
+      cycles: [],
+      window: DEFAULT_WINDOW,
+      dThreshold: DEFAULT_D_THRESHOLD,
+      callCounter: 0,
+    });
+  }
+  return sessionMetrics.get(sessionKey);
+}
+
+function computeDPrime(metrics): number | null {
+  const recent = metrics.cycles.slice(-metrics.window);
+  if (recent.length === 0) return null;
+
+  const successRate = recent.filter(c => c.success).length / recent.length;
+  const toolFailureRate = recent.reduce((s, c) => s + c.failedTools, 0) /
+    Math.max(1, recent.reduce((s, c) => s + c.totalTools, 0));
+  const cbrHitRate = recent.filter(c => c.cbrHit).length / recent.length;
+
+  const signals = [
+    { importance: 0.3, magnitude: successRate },
+    { importance: 0.25, magnitude: 1 - toolFailureRate },
+    { importance: 0.2, magnitude: cbrHitRate },
+  ];
+
+  const numerator = signals.reduce((sum, s) => sum + s.importance * s.magnitude, 0);
+  return numerator / (0.3 * 1.0 * signals.length);
+}
+
+function formatSensorium(sessionKey: string, metrics, dPrime: number | null): string {
+  const recent = metrics.cycles.slice(-5);
+  const failures = recent.filter(c => !c.success).map(c => c.reason || "unknown").slice(-3);
+
+  return [
+    "<openclaw_state>",
+    `  <session_key>${sessionKey}</session_key>`,
+    `  <d_prime>${dPrime?.toFixed(3) ?? "--"}</d_prime>`,
+    `  <d_gate_threshold>${metrics.dThreshold}</d_gate_threshold>`,
+    `  <cycles_tracked>${metrics.cycles.length}</cycles_tracked>`,
+    `  <recent_failures>${failures.join(" | ") || "none"}</recent_failures>`,
+    "</openclaw_state>",
+  ].join("\n");
+}
+
+const plugin = {
+  id: "policy-sensorium",
+  name: "Policy Sensorium (CBS)",
+  description: "Springdrift-inspired Cognitive Behavior System.",
+  kind: "sensorium",
+
+  register(api) {
+    api.on("before_prompt_build", async (event, ctx) => {
+      try {
+        const sessionKey = ctx.sessionKey?.trim() ||
+          (ctx.agentId && ctx.sessionId ? `${ctx.agentId}:${ctx.sessionId}` : null);
+        if (!sessionKey) return;
+
+        const cfg = api.pluginConfig || {};
+        const metrics = getOrCreateMetrics(sessionKey);
+        if (cfg.sensoriumWindow) metrics.window = cfg.sensoriumWindow;
+        if (cfg.dGateThreshold !== undefined) metrics.dThreshold = cfg.dGateThreshold;
+
+        if (metrics.callCounter > 0) {
+          const { totalTools, failedTools, reason } = extractOutcome(event.messages || []);
+          const cycle = { success: failedTools === 0, totalTools, failedTools, cbrHit: false, reason };
+          metrics.cycles.push(cycle);
+          if (metrics.cycles.length > metrics.window * 3) {
+            metrics.cycles = metrics.cycles.slice(-metrics.window * 2);
+          }
+        }
+
+        const dPrime = computeDPrime(metrics);
+        if (dPrime !== null && dPrime < metrics.dThreshold) {
+          api.logger.warn?.(`[policy-sensorium] D'=${dPrime.toFixed(3)} below threshold`);
+        }
+
+        const sensorium = formatSensorium(sessionKey, metrics, dPrime);
+        metrics.callCounter++;
+
+        return { prependContext: sensorium };
+      } catch (err) {
+        api.logger.warn?.(`[policy-sensorium] error: ${String(err)}`);
+      }
+    });
+
+    api.registerCommand({
+      name: "policy-sensorium",
+      description: "Show CBS metrics for current session.",
+      acceptsArgs: true,
+      handler: async (ctx) => {
+        const sessionKey = ctx.sessionKey?.trim() ||
+          (ctx.agentId && ctx.sessionId ? `${ctx.agentId}:${ctx.sessionId}` : null);
+        if (!sessionKey) return { text: "[policy-sensorium] No session context." };
+
+        const m = getOrCreateMetrics(sessionKey);
+        const d = computeDPrime(m);
+        return {
+          text: [
+            `[policy-sensorium] Session: ${sessionKey}`,
+            `  D' score:    ${d?.toFixed(3) ?? "--"}`,
+            `  Cycles:     ${m.cycles.length}`,
+            `  D' threshold: ${m.dThreshold}`,
+            `  Status:     ${d !== null ? (d >= m.dThreshold ? "PASS" : "GATED") : "n/a"}`,
+          ].join("\n"),
+        };
+      },
+    });
+  },
+};
+
+export default plugin;
+```
+
+---
+
+## 12. 常见陷阱
+
+### 12.1 不要用 `allowConversationAccess`
+
+```json
+// ❌ 这样会导致 gateway abort
+"hooks": { "allowConversationAccess": true }
+
+// ✅ 正确做法：用 before_prompt_build 代替 agent_end
+"hooks": { "allowPromptInjection": true }
+```
+
+### 12.2 `agent_end` / `llm_input` / `llm_output` 不可用
+
+这三个是 conversation hooks，schema 不支持。解决方案：用 `before_prompt_build` 的 `event.messages` 分析上一轮结果。
+
+### 12.3 Gateway 拦截 openclaw.json 写入
+
+Gateway 运行时，Python/外部进程对 `openclaw.json` 的写入会被拦截并恢复。
+**解决方案：** 先 `kill $(pgrep -f "openclaw")`，再编辑，再重启。
+
+### 12.4 插件必须在 `~/projects/` 下
+
+`~/.openclaw/extensions/` 是 bundled 插件目录。源码项目插件放在 `~/projects/` 下，通过 `sourcePath` 配置引用。
+
+### 12.5 `before_agent_start` 的 `messages` 可能为 undefined
+
+```typescript
+// ⚠️ 可能 undefined
+const msgs = event.messages;
+
+// ✅ 安全写法
+const msgs = event.messages || [];
+```
+
+### 12.6 `api.logger` 的日志级别
+
+`api.logger` 支持 `.debug()` / `.info()` / `.warn()` / `.error()`。默认 `info` 级别，debug 日志需要 gateway 以 `--log-level debug` 启动。
+
+---
+
+## 13. 关键文件索引
+
+| 文件 | 职责 |
+|------|------|
+| `hook-types.d.ts` | 所有 hook 类型定义（`PluginHookHandlerMap`、`PluginHookName` 等） |
+| `hook-before-agent-start.types.d.ts` | `before_prompt_build` / `before_agent_start` 事件和结果类型 |
+| `types.plugins.d.ts` | `PluginEntryConfig` 类型（含 `allowConversationAccess` 但 schema 不支持） |
+| `zod-schema-BhKK4qYw.js:773-781` | **PluginEntrySchema**（`.strict()`，只允许 `allowPromptInjection`） |
+| `loader-DeOtDUYt.js:1265-1280` | `allowPromptInjection` 的运行时拦截逻辑 |
+| `agent-harness-runtime-DTtqy8so.js:24-37` | `before_prompt_build` 在 embedded runtime 中的调用 |
+| `hook-runner-global-CR-ifbin.js:219-223` | `runBeforePromptBuild` 的 hook runner 实现 |
+| `manifest-registry-D5n47dku.js:259-267` | manifest 中 `allowConversationAccess` 的规范化（但 schema 不支持） |
+| `status-DzwF2l1C.js` | 报告 `legacy-before-agent-start` 警告 |
+
+### 文档文件
+
+| 文件 | 内容 |
+|------|------|
+| `docs/openclaw-docs/plugins-hooks.md` | 官方 hooks 文档 |
+| `docs/openclaw-docs/plugins-building-plugins.md` | 官方插件构建指南 |
+| `docs/openclaw-docs/plugins-sdk.md` | 官方 SDK 文档 |
+| `docs/openclaw-docs/plugins-sdk-overview.md` | SDK 概览 |
+| `docs/openclaw-docs/automation-hooks.md` | 自动化与 hooks |
