@@ -264,6 +264,7 @@ function buildDrill(ptnCnt) {{
 }}
 
 init();
+setInterval(init, 30000);
 </script>
 </body>
 </html>'''
