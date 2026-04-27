@@ -29,6 +29,14 @@ export function isFastLane(pattern: string): boolean {
   return (fastLaneState.counts.get(pattern) ?? 0) >= 5;
 }
 
+export { fastLaneState as fastLaneMap };
+
+export function getFastLaneEntries(): Array<{ pattern: string; count: number }> {
+  return Array.from(fastLaneState.counts.entries())
+    .filter(([, count]) => count >= 5)
+    .map(([pattern, count]) => ({ pattern, count }));
+}
+
 export function resetFastLane(pattern?: string): void {
   if (pattern !== undefined) {
     fastLaneState.counts.delete(pattern);

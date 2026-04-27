@@ -23,8 +23,8 @@ export function redactSecrets(text: string): RedactResult {
 }
 
 export function redactUrl(url: string): string {
-  let result = url.replace(/^((https?|ftp):\/\/)?([^\s@:]+:[^\s@]+@)?/i, (match, scheme, protocol, auth) => {
-    if (auth) return (scheme || '') + '://';
+  let result = url.replace(/^((https?|ftp):\/\/)([^\s@:]+:[^\s@]+@)?/i, (match, scheme, protocol, auth) => {
+    if (auth) return scheme;
     return match;
   });
 

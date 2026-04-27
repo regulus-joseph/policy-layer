@@ -1,18 +1,1 @@
-# Generated graph files
-graph.html
-graph.json
-GRAPH_REPORT.md
-
-# Large binary
-springdrift-paper.pdf
-
-# Editor
-*.swp
-*.swo
-.DS_Store
-
-# OS
-Thumbs.db
-# OpenClaw config (contains secrets)
-config/openclaw.json
 node_modules/
