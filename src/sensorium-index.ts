@@ -1,102 +1,133 @@
 const DEFAULT_WINDOW = 20;
-const DEFAULT_D_THRESHOLD = 0.35;
+
+const DEFAULT_WEIGHTS = {
+  success: 0.30,
+  tool: 0.25,
+  cbr: 0.20,
+  severity: 0.25,
+};
+
+const DEFAULT_D_BANDS = {
+  low: 0.35,
+  high: 0.55,
+};
+
+const DEFAULT_SEVERITY_RULES = [
+  { keywords: ["exfil", "steal", "leak"], score: 1000 },
+  { keywords: ["system", "command"], score: 800 },
+  { keywords: ["delete", "rm ", "unlink"], score: 600 },
+  { keywords: ["exec", "subprocess"], score: 500 },
+  { keywords: ["timeout", "timed out"], score: 300 },
+  { keywords: ["network", "fetch", "connect"], score: 300 },
+  { keywords: ["permission", "denied", "forbidden"], score: 200 },
+  { keywords: [], score: 100 },
+];
+
+const DEFAULT_MAX_CYCLES_MULTIPLIER = 3;
 
 const sessionMetrics = new Map();
 
-const SEVERITY_SCORES = {
-  data_exfiltration: 1000,
-  system_command: 800,
-  file_delete: 600,
-  exec_failure: 500,
-  llm_timeout: 400,
-  network_timeout: 300,
-  tool_permission_denied: 200,
-  generic_error: 100,
-  unknown: 50,
-};
-
-function classifySeverity(reason) {
-  if (!reason) return 50;
-  const lower = reason.toLowerCase();
-  if (lower.includes("permission") || lower.includes("denied") || lower.includes("forbidden")) return 200;
-  if (lower.includes("timeout") || lower.includes("timed out")) return 300;
-  if (lower.includes("network") || lower.includes("fetch") || lower.includes("connect")) return 300;
-  if (lower.includes("exec") || lower.includes("subprocess")) return 500;
-  if (lower.includes("delete") || lower.includes("rm ") || lower.includes("unlink")) return 600;
-  if (lower.includes("system") && lower.includes("command")) return 800;
-  if (lower.includes("exfil") || lower.includes("steal") || lower.includes("leak")) return 1000;
-  return 100;
+function resolveConfig(cfg) {
+  return {
+    window: cfg?.sensoriumWindow ?? DEFAULT_WINDOW,
+    dBands: {
+      low: cfg?.dBandLow ?? DEFAULT_D_BANDS.low,
+      high: cfg?.dBandHigh ?? DEFAULT_D_BANDS.high,
+    },
+    weights: {
+      success: cfg?.weightSuccess ?? DEFAULT_WEIGHTS.success,
+      tool: cfg?.weightTool ?? DEFAULT_WEIGHTS.tool,
+      cbr: cfg?.weightCbr ?? DEFAULT_WEIGHTS.cbr,
+      severity: cfg?.weightSeverity ?? DEFAULT_WEIGHTS.severity,
+    },
+    severityRules: cfg?.severityRules ?? DEFAULT_SEVERITY_RULES,
+    maxCyclesMultiplier: cfg?.maxCyclesMultiplier ?? DEFAULT_MAX_CYCLES_MULTIPLIER,
+    dGateThreshold: cfg?.dGateThreshold ?? DEFAULT_D_BANDS.low,
+    logLevel: cfg?.logLevel || "info",
+  };
 }
 
-function getOrCreateMetrics(sessionKey) {
+function classifySeverity(reason, rules) {
+  if (!reason) return 50;
+  const lower = reason.toLowerCase();
+  for (const rule of rules) {
+    if (rule.keywords.some((kw) => lower.includes(kw))) {
+      return rule.score;
+    }
+  }
+  return 50;
+}
+
+function getOrCreateMetrics(sessionKey, cfg) {
   if (!sessionMetrics.has(sessionKey)) {
+    const resolved = resolveConfig(cfg);
     sessionMetrics.set(sessionKey, {
       cycles: [],
-      window: DEFAULT_WINDOW,
-      dThreshold: DEFAULT_D_THRESHOLD,
       callCounter: 0,
       lastRecordedSuccess: null,
+      config: resolved,
     });
   }
   return sessionMetrics.get(sessionKey);
 }
 
 function computeSuccessRate(metrics) {
-  const recent = metrics.cycles.slice(-metrics.window);
+  const recent = metrics.cycles.slice(-metrics.config.window);
   if (recent.length === 0) return null;
   return recent.filter((c) => c.success).length / recent.length;
 }
 
 function computeToolFailureRate(metrics) {
-  const recent = metrics.cycles.slice(-metrics.window);
+  const recent = metrics.cycles.slice(-metrics.config.window);
   if (recent.length === 0) return null;
   const totalTools = recent.reduce((sum, c) => sum + (c.totalTools || 0), 0);
   const failedTools = recent.reduce((sum, c) => sum + (c.failedTools || 0), 0);
-  if (totalTools === 0) return 0;
+  if (totalTools === 0) return null;
   return failedTools / totalTools;
 }
 
 function computeCbrHitRate(metrics) {
-  const recent = metrics.cycles.slice(-metrics.window);
+  const recent = metrics.cycles.slice(-metrics.config.window);
   if (recent.length === 0) return null;
   return recent.filter((c) => c.cbrHit).length / recent.length;
 }
 
 function computeAverageSeverity(metrics) {
-  const recent = metrics.cycles.slice(-metrics.window);
+  const recent = metrics.cycles.slice(-metrics.config.window);
   if (recent.length === 0) return null;
-  const avg = recent.reduce((sum, c) => sum + (c.severity || 50), 0) / recent.length;
+  const avg = recent.reduce((sum, c) => sum + (c.severity ?? 50), 0) / recent.length;
   return avg / 1000;
 }
 
 function computeDPrime(metrics) {
+  const weights = metrics.config.weights;
   const successRate = computeSuccessRate(metrics);
-  const toolSuccess = 1 - (computeToolFailureRate(metrics) ?? 0);
+  const toolFailureRate = computeToolFailureRate(metrics);
   const cbrHitRate = computeCbrHitRate(metrics);
   const avgSeverity = computeAverageSeverity(metrics);
 
   const signals = [];
-  if (successRate !== null) signals.push({ importance: 0.30, magnitude: successRate });
-  if (toolSuccess !== null) signals.push({ importance: 0.25, magnitude: toolSuccess });
-  if (cbrHitRate !== null) signals.push({ importance: 0.20, magnitude: cbrHitRate });
-  if (avgSeverity !== null) signals.push({ importance: 0.25, magnitude: 1 - avgSeverity });
+  if (successRate !== null) signals.push({ importance: weights.success, magnitude: successRate });
+  if (toolFailureRate !== null) signals.push({ importance: weights.tool, magnitude: 1 - toolFailureRate });
+  if (cbrHitRate !== null) signals.push({ importance: weights.cbr, magnitude: cbrHitRate });
+  if (avgSeverity !== null) signals.push({ importance: weights.severity, magnitude: 1 - avgSeverity });
 
   if (signals.length === 0) return null;
 
-  const MAX_IMPORTANCE = 0.30;
-  const MAX_MAGNITUDE = 1.0;
+  const maxImportance = Math.max(weights.success, weights.tool, weights.cbr, weights.severity);
+  const maxMagnitude = 1.0;
   const n = signals.length;
 
   const numerator = signals.reduce((sum, s) => sum + s.importance * s.magnitude, 0);
-  const denominator = MAX_IMPORTANCE * MAX_MAGNITUDE * n;
+  const denominator = maxImportance * maxMagnitude * n;
 
   return numerator / denominator;
 }
 
-function dGateStatus(dPrime) {
+function dGateStatus(dPrime, bands) {
   if (dPrime === null) return "UNKNOWN";
-  if (dPrime >= 0.55) return "HIGH_REJECT";
-  if (dPrime >= 0.35) return "MEDIUM_CONFIRM";
+  if (dPrime >= bands.high) return "HIGH_REJECT";
+  if (dPrime >= bands.low) return "MEDIUM_CONFIRM";
   return "LOW_ACCEPT";
 }
 
@@ -105,7 +136,7 @@ function formatSensorium(sessionKey, metrics) {
   const toolFailureRate = computeToolFailureRate(metrics);
   const cbrHitRate = computeCbrHitRate(metrics);
   const dPrime = computeDPrime(metrics);
-  const status = dGateStatus(dPrime);
+  const status = dGateStatus(dPrime, metrics.config.dBands);
   const recent = metrics.cycles.slice(-5);
   const recentFailures = recent
     .filter((c) => !c.success)
@@ -116,7 +147,7 @@ function formatSensorium(sessionKey, metrics) {
     "<openclaw_state>",
     `  <session_key>${sessionKey}</session_key>`,
     `  <d_prime>${dPrime !== null ? dPrime.toFixed(4) : "--"}</d_prime>`,
-    `  <d_gate_threshold>${metrics.dThreshold}</d_gate_threshold>`,
+    `  <d_gate_threshold>${metrics.config.dGateThreshold}</d_gate_threshold>`,
     `  <d_gate_status>${status}</d_gate_status>`,
     `  <cycles_tracked>${metrics.cycles.length}</cycles_tracked>`,
     successRate !== null ? `  <session_success_rate>${successRate.toFixed(3)}</session_success_rate>` : `  <session_success_rate>--</session_success_rate>`,
@@ -141,7 +172,7 @@ function doLog(api, level, msg) {
   }
 }
 
-function extractOutcomeFromMessages(messages) {
+function extractOutcomeFromMessages(messages, severityRules) {
   let totalTools = 0;
   let failedTools = 0;
   let reason = "";
@@ -169,7 +200,7 @@ function extractOutcomeFromMessages(messages) {
         }
         if (isError) {
           failedTools++;
-          const sev = classifySeverity(errReason);
+          const sev = classifySeverity(errReason, severityRules);
           if (sev > maxSeverity) {
             maxSeverity = sev;
             reason = errReason;
@@ -181,6 +212,59 @@ function extractOutcomeFromMessages(messages) {
 
   return { totalTools, failedTools, reason, severity: maxSeverity };
 }
+
+export function resetSessionMetrics(sessionKey) {
+  if (sessionKey) sessionMetrics.delete(sessionKey);
+  else sessionMetrics.clear();
+  _mockCounter = 0;
+  _keyCounter = 0;
+}
+
+let _mockCounter = 0;
+let _keyCounter = 0;
+export function createMockMetrics(cfg, explicitKey) {
+  if (explicitKey) {
+    const m = getOrCreateMetrics(explicitKey, cfg);
+    return { key: explicitKey, m };
+  }
+  _mockCounter++;
+  const key = `__test__${_mockCounter}__${Date.now()}`;
+  const m = getOrCreateMetrics(key, cfg);
+  return { key, m };
+}
+
+export function makeKey(n) {
+  _keyCounter++;
+  return `__key__${n}__${_keyCounter}__${Date.now()}`;
+}
+
+export function addCycle(metrics, cycle) {
+  metrics.cycles.push({ ...cycle, timestamp: Date.now() });
+  const maxCycles = metrics.config.window * metrics.config.maxCyclesMultiplier;
+  if (metrics.cycles.length > maxCycles) {
+    metrics.cycles = metrics.cycles.slice(-metrics.config.window * 2);
+  }
+}
+
+export function getMetrics(sessionKey) {
+  return sessionMetrics.get(sessionKey);
+}
+
+export {
+  classifySeverity,
+  computeSuccessRate,
+  computeToolFailureRate,
+  computeCbrHitRate,
+  computeAverageSeverity,
+  computeDPrime,
+  dGateStatus,
+  formatSensorium,
+  extractOutcomeFromMessages,
+  resolveConfig,
+  DEFAULT_WEIGHTS,
+  DEFAULT_D_BANDS,
+  DEFAULT_SEVERITY_RULES,
+};
 
 const plugin = {
   id: "policy-sensorium",
@@ -197,33 +281,31 @@ const plugin = {
         if (!sessionKey) return;
 
         const cfg = api.pluginConfig || {};
-        const metrics = getOrCreateMetrics(sessionKey);
+        const metrics = getOrCreateMetrics(sessionKey, cfg);
 
-        if (cfg.sensoriumWindow) metrics.window = cfg.sensoriumWindow;
-        if (cfg.dGateThreshold !== undefined) metrics.dThreshold = cfg.dGateThreshold;
+        const resolvedCfg = resolveConfig(cfg);
+        if (cfg.sensoriumWindow) metrics.config.window = cfg.sensoriumWindow;
+        if (cfg.dGateThreshold !== undefined) metrics.config.dGateThreshold = cfg.dGateThreshold;
+        if (cfg.dBandLow !== undefined) metrics.config.dBands.low = cfg.dBandLow;
+        if (cfg.dBandHigh !== undefined) metrics.config.dBands.high = cfg.dBandHigh;
 
         const messages = event.messages || [];
 
         if (metrics.callCounter > 0) {
-          const { totalTools, failedTools, reason, severity } = extractOutcomeFromMessages(messages);
+          const { totalTools, failedTools, reason, severity } = extractOutcomeFromMessages(messages, resolvedCfg.severityRules);
           const success = failedTools === 0;
-          metrics.cycles.push({
+          addCycle(metrics, {
             success,
             totalTools,
             failedTools,
             cbrHit: false,
             reason,
             severity,
-            timestamp: Date.now(),
           });
-          const maxCycles = metrics.window * 3;
-          if (metrics.cycles.length > maxCycles) {
-            metrics.cycles = metrics.cycles.slice(-metrics.window * 2);
-          }
         }
 
         const dPrime = computeDPrime(metrics);
-        const status = dGateStatus(dPrime);
+        const status = dGateStatus(dPrime, metrics.config.dBands);
 
         if (status === "HIGH_REJECT") {
           doLog(api, "warn", `D'=${dPrime?.toFixed(4)} → HIGH_REJECT: blocking high-risk call for session ${sessionKey}`);
@@ -255,9 +337,9 @@ const plugin = {
           return { text: "[policy-sensorium] No session context." };
         }
 
-        const metrics = getOrCreateMetrics(sessionKey);
+        const metrics = getOrCreateMetrics(sessionKey, {});
         const dPrime = computeDPrime(metrics);
-        const status = dGateStatus(dPrime);
+        const status = dGateStatus(dPrime, metrics.config.dBands);
         const successRate = computeSuccessRate(metrics);
         const toolFailureRate = computeToolFailureRate(metrics);
         const cbrHitRate = computeCbrHitRate(metrics);
@@ -271,8 +353,8 @@ const plugin = {
           `[policy-sensorium] Session: ${sessionKey}`,
           `  D' score:     ${dPrime !== null ? dPrime.toFixed(4) : "--"}`,
           `  D' status:   ${status}`,
-          `  Threshold:    ${metrics.dThreshold}`,
-          `  Cycles:       ${metrics.cycles.length} (window ${metrics.window})`,
+          `  Threshold:    ${metrics.config.dGateThreshold}`,
+          `  Cycles:       ${metrics.cycles.length} (window ${metrics.config.window})`,
           `  Calls:        ${metrics.callCounter}`,
           `  Success rate: ${successRate !== null ? successRate.toFixed(3) : "--"}`,
           `  Tool fail:    ${toolFailureRate !== null ? toolFailureRate.toFixed(3) : "--"}`,

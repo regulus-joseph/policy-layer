@@ -1,7 +1,7 @@
 {
   "id": "policy-sensorium",
   "name": "Policy Sensorium (CBS)",
-  "description": "Springdrift-inspired CBS: injects <openclaw_state> before each LLM call. D' = Σ(w·mag)/(0.3×1.0×n). Signals: success_rate (w=0.30), tool_success (w=0.25), cbr_hit (w=0.20), severity_inversion (w=0.25). D' bands: <0.35 LOW_ACCEPT, 0.35–0.55 MEDIUM_CONFIRM, ≥0.55 HIGH_REJECT.",
+  "description": "Springdrift-inspired CBS: injects <openclaw_state> before each LLM call. D' = Σ(w·mag)/(max_weight×1.0×n). Signals: success_rate (w=0.30), tool_success (w=0.25), cbr_hit (w=0.20), severity_inversion (w=0.25). D' bands: <0.35 LOW_ACCEPT, 0.35–0.55 MEDIUM_CONFIRM, ≥0.55 HIGH_REJECT.",
   "version": "0.1.0",
   "kind": "sensorium",
   "configSchema": {
@@ -25,6 +25,66 @@
         "default": 0.35,
         "description": "D' threshold below which actions are gated"
       },
+      "dBandLow": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "default": 0.35,
+        "description": "D' below this value → LOW_ACCEPT"
+      },
+      "dBandHigh": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "default": 0.55,
+        "description": "D' above or equal to this value → HIGH_REJECT"
+      },
+      "weightSuccess": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "default": 0.30,
+        "description": "Weight for success_rate signal"
+      },
+      "weightTool": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "default": 0.25,
+        "description": "Weight for tool_success signal"
+      },
+      "weightCbr": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "default": 0.20,
+        "description": "Weight for cbr_hit_rate signal"
+      },
+      "weightSeverity": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "default": 0.25,
+        "description": "Weight for severity_inversion signal"
+      },
+      "maxCyclesMultiplier": {
+        "type": "number",
+        "minimum": 1,
+        "default": 3,
+        "description": "Max cycles stored = window × multiplier"
+      },
+      "severityRules": {
+        "type": "array",
+        "description": "Ordered severity classification rules (first match wins)",
+        "items": {
+          "type": "object",
+          "properties": {
+            "keywords": { "type": "array", "items": { "type": "string" } },
+            "score": { "type": "number" }
+          },
+          "required": ["keywords", "score"]
+        }
+      },
       "logLevel": {
         "type": "string",
         "enum": ["debug", "info", "warn"],
@@ -37,9 +97,33 @@
       "label": "CBS Sensorium Window",
       "help": "Number of recent cognitive cycles to consider for CBS signal computation"
     },
-    "dGateThreshold": {
-      "label": "D' Gating Threshold",
-      "help": "D' score below which the agent should slow down and reassess strategy"
+    "dBandLow": {
+      "label": "D' Low Band Threshold",
+      "help": "D' below this value → LOW_ACCEPT (fast path)"
+    },
+    "dBandHigh": {
+      "label": "D' High Band Threshold",
+      "help": "D' at or above this value → HIGH_REJECT (block)"
+    },
+    "weightSuccess": {
+      "label": "Weight: Success Rate",
+      "help": "Weight for session success rate signal"
+    },
+    "weightTool": {
+      "label": "Weight: Tool Success",
+      "help": "Weight for tool failure rate signal"
+    },
+    "weightCbr": {
+      "label": "Weight: CBR Hit Rate",
+      "help": "Weight for case-based reasoning hit rate signal"
+    },
+    "weightSeverity": {
+      "label": "Weight: Severity Inversion",
+      "help": "Weight for severity inversion signal (1 - avg_severity/1000)"
+    },
+    "severityRules": {
+      "label": "Severity Rules",
+      "help": "Ordered list of keyword → severity score mappings (first match wins)"
     },
     "logLevel": {
       "label": "Log Level",
