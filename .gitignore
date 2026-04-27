@@ -15,3 +15,4 @@ springdrift-paper.pdf
 Thumbs.db
 # OpenClaw config (contains secrets)
 config/openclaw.json
+node_modules/

@@ -1,3 +1,7 @@
+import { normalizeCommand } from './security/normalize';
+import { detectDangerousPatterns } from './security/patterns';
+import { validatePath } from './security/path';
+
 const DEFAULT_WINDOW = 20;
 const DEFAULT_D_THRESHOLD = 0.35;
 
@@ -239,6 +243,35 @@ const plugin = {
         return { prependContext: sensorium };
       } catch (err) {
         doLog(api, "warn", `before_prompt_build error: ${String(err)}`);
+      }
+    });
+
+    api.on("before_tool_call", async (toolCall) => {
+      try {
+        const raw = toolCall.arguments
+          ? JSON.stringify(toolCall.arguments)
+          : '';
+        const cmd = (toolCall.name + ' ' + raw).trim();
+        const normalized = normalizeCommand(cmd);
+        const patterns = detectDangerousPatterns(normalized);
+
+        if (patterns.length > 0) {
+          const severities = patterns.map(p => p.severity);
+          if (severities.includes('critical')) {
+            return {
+              block: true,
+              blockReason: `Critical dangerous pattern(s) detected: ${patterns.map(p => p.label).join(', ')}`,
+            };
+          }
+          return {
+            block: false,
+            requireApproval: true,
+          };
+        }
+        return { block: false };
+      } catch (err) {
+        doLog(api, "warn", `before_tool_call error: ${String(err)}`);
+        return { block: false };
       }
     });
 
