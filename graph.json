@@ -1,0 +1,4636 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "Springdrift",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "springdrift",
+      "community": 2,
+      "norm_label": "springdrift"
+    },
+    {
+      "label": "Artificial Retainer",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "artificial_retainer",
+      "community": 9,
+      "norm_label": "artificial retainer"
+    },
+    {
+      "label": "Curragh Instance",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "curragh_instance",
+      "community": 7,
+      "norm_label": "curragh instance"
+    },
+    {
+      "label": "TallMountain Project",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "tallmountain_project",
+      "community": 2,
+      "norm_label": "tallmountain project"
+    },
+    {
+      "label": "Gleam Language",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "gleam_language",
+      "community": 2,
+      "norm_label": "gleam language"
+    },
+    {
+      "label": "BEAM Virtual Machine",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "beam_vm",
+      "community": 2,
+      "norm_label": "beam virtual machine"
+    },
+    {
+      "label": "Springdrift GitHub Repository",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "springdrift_repo",
+      "community": 2,
+      "norm_label": "springdrift github repository"
+    },
+    {
+      "label": "Codebase Statistics (62K lines)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "codebase_stats",
+      "community": 2,
+      "norm_label": "codebase statistics (62k lines)"
+    },
+    {
+      "label": "Cognitive Loop",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cognitive_loop",
+      "community": 1,
+      "norm_label": "cognitive loop"
+    },
+    {
+      "label": "Librarian Actor",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "librarian_actor",
+      "community": 3,
+      "norm_label": "librarian actor"
+    },
+    {
+      "label": "Curator Actor",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "curator_actor",
+      "community": 5,
+      "norm_label": "curator actor"
+    },
+    {
+      "label": "Archivist Actor",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "archivist_actor",
+      "community": 3,
+      "norm_label": "archivist actor"
+    },
+    {
+      "label": "Agent Supervisor",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "agent_supervisor",
+      "community": 1,
+      "norm_label": "agent supervisor"
+    },
+    {
+      "label": "Scheduler Actor",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "scheduler_actor",
+      "community": 5,
+      "norm_label": "scheduler actor"
+    },
+    {
+      "label": "Inbox Poller Actor",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "inbox_poller_actor",
+      "community": 4,
+      "norm_label": "inbox poller actor"
+    },
+    {
+      "label": "Sandbox Manager Actor",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "sandbox_manager_actor",
+      "community": 1,
+      "norm_label": "sandbox manager actor"
+    },
+    {
+      "label": "Backup Actor",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "backup_actor",
+      "community": 1,
+      "norm_label": "backup actor"
+    },
+    {
+      "label": "Housekeeping Actor",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "housekeeping_actor",
+      "community": 6,
+      "norm_label": "housekeeping actor"
+    },
+    {
+      "label": "Meta Observer Actor",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "meta_observer_actor",
+      "community": 1,
+      "norm_label": "meta observer actor"
+    },
+    {
+      "label": "Root Supervisor",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "root_supervisor",
+      "community": 1,
+      "norm_label": "root supervisor"
+    },
+    {
+      "label": "Narrative Store",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "narrative_store",
+      "community": 3,
+      "norm_label": "narrative store"
+    },
+    {
+      "label": "Threads Store",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "threads_store",
+      "community": 3,
+      "norm_label": "threads store"
+    },
+    {
+      "label": "Facts Store",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "facts_store",
+      "community": 3,
+      "norm_label": "facts store"
+    },
+    {
+      "label": "CBR Cases Store",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbr_cases_store",
+      "community": 3,
+      "norm_label": "cbr cases store"
+    },
+    {
+      "label": "Artifacts Store",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "artifacts_store",
+      "community": 3,
+      "norm_label": "artifacts store"
+    },
+    {
+      "label": "Tasks Store",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "tasks_store",
+      "community": 3,
+      "norm_label": "tasks store"
+    },
+    {
+      "label": "Endeavours Store",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "endeavors_store",
+      "community": 3,
+      "norm_label": "endeavours store"
+    },
+    {
+      "label": "Comms Store",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "comms_store",
+      "community": 3,
+      "norm_label": "comms store"
+    },
+    {
+      "label": "Affect Store",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "affect_store",
+      "community": 3,
+      "norm_label": "affect store"
+    },
+    {
+      "label": "DAG Store",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "dag_store",
+      "community": 3,
+      "norm_label": "dag store"
+    },
+    {
+      "label": "ETS Tables",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ets_tables",
+      "community": 3,
+      "norm_label": "ets tables"
+    },
+    {
+      "label": "Planner Agent",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "planner_agent",
+      "community": 1,
+      "norm_label": "planner agent"
+    },
+    {
+      "label": "Project Manager Agent",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "project_manager_agent",
+      "community": 1,
+      "norm_label": "project manager agent"
+    },
+    {
+      "label": "Researcher Agent",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "researcher_agent",
+      "community": 1,
+      "norm_label": "researcher agent"
+    },
+    {
+      "label": "Coder Agent",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "coder_agent",
+      "community": 1,
+      "norm_label": "coder agent"
+    },
+    {
+      "label": "Writer Agent",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "writer_agent",
+      "community": 1,
+      "norm_label": "writer agent"
+    },
+    {
+      "label": "Comms Agent",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "comms_agent",
+      "community": 4,
+      "norm_label": "comms agent"
+    },
+    {
+      "label": "Observer Agent",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "observer_agent",
+      "community": 1,
+      "norm_label": "observer agent"
+    },
+    {
+      "label": "Sensorium",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "sensorium",
+      "community": 5,
+      "norm_label": "sensorium"
+    },
+    {
+      "label": "D' Safety System",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "d_prime_safety_system",
+      "community": 4,
+      "norm_label": "d' safety system"
+    },
+    {
+      "label": "Normative Calculus",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "normative_calculus",
+      "community": 0,
+      "norm_label": "normative calculus"
+    },
+    {
+      "label": "Case-Based Retrieval Memory",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbr_memory",
+      "community": 6,
+      "norm_label": "case-based retrieval memory"
+    },
+    {
+      "label": "Affect Subsystem",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "affect_subsystem",
+      "community": 8,
+      "norm_label": "affect subsystem"
+    },
+    {
+      "label": "Sensorium Clock",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "sensorium_clock",
+      "community": 5,
+      "norm_label": "sensorium clock"
+    },
+    {
+      "label": "Sensorium Vitals",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "sensorium_vitals",
+      "community": 5,
+      "norm_label": "sensorium vitals"
+    },
+    {
+      "label": "Sensorium Situation",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "sensorium_situation",
+      "community": 5,
+      "norm_label": "sensorium situation"
+    },
+    {
+      "label": "Sensorium Schedule",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "sensorium_schedule",
+      "community": 5,
+      "norm_label": "sensorium schedule"
+    },
+    {
+      "label": "Sensorium Delegations",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "sensorium_delegations",
+      "community": 7,
+      "norm_label": "sensorium delegations"
+    },
+    {
+      "label": "Sensorium Tasks",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "sensorium_tasks",
+      "community": 5,
+      "norm_label": "sensorium tasks"
+    },
+    {
+      "label": "CBS Success Rate",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbs_success_rate",
+      "community": 5,
+      "norm_label": "cbs success rate"
+    },
+    {
+      "label": "CBS Cost Trend",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbs_cost_trend",
+      "community": 5,
+      "norm_label": "cbs cost trend"
+    },
+    {
+      "label": "CBS CBR Hit Rate",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbs_cbr_hit_rate",
+      "community": 5,
+      "norm_label": "cbs cbr hit rate"
+    },
+    {
+      "label": "CBS Novelty",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbs_novelty",
+      "community": 5,
+      "norm_label": "cbs novelty"
+    },
+    {
+      "label": "CBS Recent Failures",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbs_recent_failures",
+      "community": 5,
+      "norm_label": "cbs recent failures"
+    },
+    {
+      "label": "D' Formula",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "d_prime_formula",
+      "community": 11,
+      "norm_label": "d' formula"
+    },
+    {
+      "label": "D' Input Gate",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "d_prime_input_gate",
+      "community": 4,
+      "norm_label": "d' input gate"
+    },
+    {
+      "label": "D' Tool Gate",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "d_prime_tool_gate",
+      "community": 4,
+      "norm_label": "d' tool gate"
+    },
+    {
+      "label": "D' Output Gate",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "d_prime_output_gate",
+      "community": 4,
+      "norm_label": "d' output gate"
+    },
+    {
+      "label": "D' Thresholds",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "d_prime_thresholds",
+      "community": 0,
+      "norm_label": "d' thresholds"
+    },
+    {
+      "label": "Canary Probes",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "canary_probes",
+      "community": 4,
+      "norm_label": "canary probes"
+    },
+    {
+      "label": "Fast Accept Path",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "fast_accept_path",
+      "community": 4,
+      "norm_label": "fast accept path"
+    },
+    {
+      "label": "Interactive/Autonomous Split",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "interactive_autonomous_split",
+      "community": 4,
+      "norm_label": "interactive/autonomous split"
+    },
+    {
+      "label": "Signal Detection Theory",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "signal_detection_theory",
+      "community": 4,
+      "norm_label": "signal detection theory"
+    },
+    {
+      "label": "Normative Operators",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "normative_operators",
+      "community": 0,
+      "norm_label": "normative operators"
+    },
+    {
+      "label": "Ordinal Levels (14-tier)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ordinal_levels",
+      "community": 10,
+      "norm_label": "ordinal levels (14-tier)"
+    },
+    {
+      "label": "Axiom 6.2 Absolute Prohibition",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "axiom_6_2",
+      "community": 0,
+      "norm_label": "axiom 6.2 absolute prohibition"
+    },
+    {
+      "label": "Axiom 6.3 Moral Priority",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "axiom_6_3",
+      "community": 0,
+      "norm_label": "axiom 6.3 moral priority"
+    },
+    {
+      "label": "Axiom 6.4 Moral Rank",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "axiom_6_4",
+      "community": 0,
+      "norm_label": "axiom 6.4 moral rank"
+    },
+    {
+      "label": "Axiom 6.5 Normative Openness",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "axiom_6_5",
+      "community": 0,
+      "norm_label": "axiom 6.5 normative openness"
+    },
+    {
+      "label": "Axiom 6.6 Futility",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "axiom_6_6",
+      "community": 0,
+      "norm_label": "axiom 6.6 futility"
+    },
+    {
+      "label": "Axiom 6.7 Indifference",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "axiom_6_7",
+      "community": 0,
+      "norm_label": "axiom 6.7 indifference"
+    },
+    {
+      "label": "Severity Levels",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "severity_levels",
+      "community": 0,
+      "norm_label": "severity levels"
+    },
+    {
+      "label": "Floor Rules (8)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "floor_rules",
+      "community": 0,
+      "norm_label": "floor rules (8)"
+    },
+    {
+      "label": "Axiom Trail",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "axiom_trail",
+      "community": 0,
+      "norm_label": "axiom trail"
+    },
+    {
+      "label": "Verdict FLOURISHING",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "verdict_flourishing",
+      "community": 0,
+      "norm_label": "verdict flourishing"
+    },
+    {
+      "label": "Verdict CONSTRAINED",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "verdict_constrained",
+      "community": 0,
+      "norm_label": "verdict constrained"
+    },
+    {
+      "label": "Verdict PROHIBITED",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "verdict_prohibited",
+      "community": 0,
+      "norm_label": "verdict prohibited"
+    },
+    {
+      "label": "character.json",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "character_json",
+      "community": 0,
+      "norm_label": "character.json"
+    },
+    {
+      "label": "Monotonicity Property",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "monotonicity_property",
+      "community": 0,
+      "norm_label": "monotonicity property"
+    },
+    {
+      "label": "Ethical/Moral (6000)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ordinal_ethical_moral",
+      "community": 10,
+      "norm_label": "ethical/moral (6000)"
+    },
+    {
+      "label": "Legal (5000)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ordinal_legal",
+      "community": 0,
+      "norm_label": "legal (5000)"
+    },
+    {
+      "label": "Prudential (4500)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ordinal_prudential",
+      "community": 10,
+      "norm_label": "prudential (4500)"
+    },
+    {
+      "label": "Social-Political (4000)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ordinal_social_political",
+      "community": 10,
+      "norm_label": "social-political (4000)"
+    },
+    {
+      "label": "Safety Physical (3500)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ordinal_safety_physical",
+      "community": 10,
+      "norm_label": "safety physical (3500)"
+    },
+    {
+      "label": "Environmental (3000)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ordinal_environmental",
+      "community": 10,
+      "norm_label": "environmental (3000)"
+    },
+    {
+      "label": "Community (2500)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ordinal_community",
+      "community": 10,
+      "norm_label": "community (2500)"
+    },
+    {
+      "label": "Professional Ethics (2000)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ordinal_professional_ethics",
+      "community": 10,
+      "norm_label": "professional ethics (2000)"
+    },
+    {
+      "label": "Economic (1500)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ordinal_economic",
+      "community": 10,
+      "norm_label": "economic (1500)"
+    },
+    {
+      "label": "Etiquette (1000)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ordinal_etiquette",
+      "community": 10,
+      "norm_label": "etiquette (1000)"
+    },
+    {
+      "label": "Operational (100)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ordinal_operational",
+      "community": 10,
+      "norm_label": "operational (100)"
+    },
+    {
+      "label": "Aesthetic (500)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ordinal_aesthetic",
+      "community": 10,
+      "norm_label": "aesthetic (500)"
+    },
+    {
+      "label": "Operator: Required",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "op_required",
+      "community": 0,
+      "norm_label": "operator: required"
+    },
+    {
+      "label": "Operator: Ought",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "op_ought",
+      "community": 0,
+      "norm_label": "operator: ought"
+    },
+    {
+      "label": "Operator: Indifferent",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "op_indifferent",
+      "community": 0,
+      "norm_label": "operator: indifferent"
+    },
+    {
+      "label": "Modality: Possible",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "mod_possible",
+      "community": 12,
+      "norm_label": "modality: possible"
+    },
+    {
+      "label": "Modality: Impossible",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "mod_impossible",
+      "community": 0,
+      "norm_label": "modality: impossible"
+    },
+    {
+      "label": "Severity: NoConflict",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "sev_no_conflict",
+      "community": 0,
+      "norm_label": "severity: noconflict"
+    },
+    {
+      "label": "Severity: Coordinate",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "sev_coordinate",
+      "community": 0,
+      "norm_label": "severity: coordinate"
+    },
+    {
+      "label": "Severity: Superordinate",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "sev_superordinate",
+      "community": 0,
+      "norm_label": "severity: superordinate"
+    },
+    {
+      "label": "Severity: Absolute",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "sev_absolute",
+      "community": 0,
+      "norm_label": "severity: absolute"
+    },
+    {
+      "label": "Floor 1: Absolute \u2192 PROHIBITED",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "floor_1",
+      "community": 0,
+      "norm_label": "floor 1: absolute \u2192 prohibited"
+    },
+    {
+      "label": "Floor 2: Legal+ \u2192 PROHIBITED",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "floor_2",
+      "community": 0,
+      "norm_label": "floor 2: legal+ \u2192 prohibited"
+    },
+    {
+      "label": "Floor 3: D \u2265 reject \u2192 PROHIBITED",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "floor_3",
+      "community": 0,
+      "norm_label": "floor 3: d \u2265 reject \u2192 prohibited"
+    },
+    {
+      "label": "Floor 4: Catastrophic+Superordinate \u2192 CONSTRAINED",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "floor_4",
+      "community": 0,
+      "norm_label": "floor 4: catastrophic+superordinate \u2192 constrained"
+    },
+    {
+      "label": "Floor 5: 2+ Coordinate \u2192 CONSTRAINED",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "floor_5",
+      "community": 0,
+      "norm_label": "floor 5: 2+ coordinate \u2192 constrained"
+    },
+    {
+      "label": "Floor 6: D \u2265 modify \u2192 CONSTRAINED",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "floor_6",
+      "community": 0,
+      "norm_label": "floor 6: d \u2265 modify \u2192 constrained"
+    },
+    {
+      "label": "Floor 7: ProfEth-Safety \u2192 CONSTRAINED",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "floor_7",
+      "community": 0,
+      "norm_label": "floor 7: profeth-safety \u2192 constrained"
+    },
+    {
+      "label": "Floor 8: Default \u2192 FLOURISHING",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "floor_8",
+      "community": 0,
+      "norm_label": "floor 8: default \u2192 flourishing"
+    },
+    {
+      "label": "CBR Retrieval Pipeline",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbr_retrieval_pipeline",
+      "community": 6,
+      "norm_label": "cbr retrieval pipeline"
+    },
+    {
+      "label": "Signal: Inverted Index (0.25)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbr_signal_inverted_index",
+      "community": 6,
+      "norm_label": "signal: inverted index (0.25)"
+    },
+    {
+      "label": "Signal: Semantic Embedding (0.40)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbr_signal_embedding",
+      "community": 6,
+      "norm_label": "signal: semantic embedding (0.40)"
+    },
+    {
+      "label": "Signal: Field Score (0.10)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbr_signal_field_score",
+      "community": 6,
+      "norm_label": "signal: field score (0.10)"
+    },
+    {
+      "label": "Signal: Recency (0.05)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbr_signal_recency",
+      "community": 6,
+      "norm_label": "signal: recency (0.05)"
+    },
+    {
+      "label": "Signal: Domain Match (0.10)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbr_signal_domain_match",
+      "community": 6,
+      "norm_label": "signal: domain match (0.10)"
+    },
+    {
+      "label": "Signal: Utility Score (0.10)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbr_signal_utility_score",
+      "community": 6,
+      "norm_label": "signal: utility score (0.10)"
+    },
+    {
+      "label": "CBR Laplace Utility",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbr_laplace_utility",
+      "community": 6,
+      "norm_label": "cbr laplace utility"
+    },
+    {
+      "label": "CBR K=4 Retrieval Cap",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbr_k4_cap",
+      "community": 6,
+      "norm_label": "cbr k=4 retrieval cap"
+    },
+    {
+      "label": "CBR Hybrid System",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbr_hybrid",
+      "community": 6,
+      "norm_label": "cbr hybrid system"
+    },
+    {
+      "label": "CBR Deduplication",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbr_deduplication",
+      "community": 6,
+      "norm_label": "cbr deduplication"
+    },
+    {
+      "label": "CBR Case Pruning",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbr_case_pruning",
+      "community": 6,
+      "norm_label": "cbr case pruning"
+    },
+    {
+      "label": "CBR Utility Tracking",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbr_utility_tracking",
+      "community": 6,
+      "norm_label": "cbr utility tracking"
+    },
+    {
+      "label": "Affect: Desperation",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "affect_desperation",
+      "community": 8,
+      "norm_label": "affect: desperation"
+    },
+    {
+      "label": "Affect: Calm",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "affect_calm",
+      "community": 8,
+      "norm_label": "affect: calm"
+    },
+    {
+      "label": "Affect: Confidence",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "affect_confidence",
+      "community": 8,
+      "norm_label": "affect: confidence"
+    },
+    {
+      "label": "Affect: Frustration",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "affect_frustration",
+      "community": 8,
+      "norm_label": "affect: frustration"
+    },
+    {
+      "label": "Affect: Pressure",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "affect_pressure",
+      "community": 8,
+      "norm_label": "affect: pressure"
+    },
+    {
+      "label": "Affect Choice Menu (7 options)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "affect_choice_menu",
+      "community": 8,
+      "norm_label": "affect choice menu (7 options)"
+    },
+    {
+      "label": "Affect Blind Spot",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "affect_blind_spot",
+      "community": 8,
+      "norm_label": "affect blind spot"
+    },
+    {
+      "label": "XStructor",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "xstructor",
+      "community": 3,
+      "norm_label": "xstructor"
+    },
+    {
+      "label": "SD Audit Tool",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "sd_audit",
+      "community": 2,
+      "norm_label": "sd audit tool"
+    },
+    {
+      "label": "Skills System",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "skills_system",
+      "community": 2,
+      "norm_label": "skills system"
+    },
+    {
+      "label": "Podman Sandbox",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "podman_sandbox",
+      "community": 1,
+      "norm_label": "podman sandbox"
+    },
+    {
+      "label": "Web GUI",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "web_gui",
+      "community": 2,
+      "norm_label": "web gui"
+    },
+    {
+      "label": "TUI",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "tui",
+      "community": 2,
+      "norm_label": "tui"
+    },
+    {
+      "label": "Git Backup",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "git_backup",
+      "community": 2,
+      "norm_label": "git backup"
+    },
+    {
+      "label": "Append-Only JSONL Stores",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "append_only_jsonl",
+      "community": 3,
+      "norm_label": "append-only jsonl stores"
+    },
+    {
+      "label": "Cycle Log",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cycle_log",
+      "community": 2,
+      "norm_label": "cycle log"
+    },
+    {
+      "label": "Direct Delegation",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "coord_direct_delegation",
+      "community": 1,
+      "norm_label": "direct delegation"
+    },
+    {
+      "label": "Parallel Dispatch",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "coord_parallel_dispatch",
+      "community": 1,
+      "norm_label": "parallel dispatch"
+    },
+    {
+      "label": "Agent Teams",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "coord_agent_teams",
+      "community": 1,
+      "norm_label": "agent teams"
+    },
+    {
+      "label": "Strategy: ParallelMerge",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "team_strategy_parallel_merge",
+      "community": 1,
+      "norm_label": "strategy: parallelmerge"
+    },
+    {
+      "label": "Strategy: TeamPipeline",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "team_strategy_pipeline",
+      "community": 1,
+      "norm_label": "strategy: teampipeline"
+    },
+    {
+      "label": "Strategy: DebateAndConsensus",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "team_strategy_debate",
+      "community": 1,
+      "norm_label": "strategy: debateandconsensus"
+    },
+    {
+      "label": "Strategy: LeadWithSpecialists",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "team_strategy_lead",
+      "community": 1,
+      "norm_label": "strategy: leadwithspecialists"
+    },
+    {
+      "label": "OTP Supervision Tree",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "otp_supervision",
+      "community": 2,
+      "norm_label": "otp supervision tree"
+    },
+    {
+      "label": "Typed Message Passing",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "typed_message_passing",
+      "community": 2,
+      "norm_label": "typed message passing"
+    },
+    {
+      "label": "Preemptive Scheduling",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "preemptive_scheduling",
+      "community": 2,
+      "norm_label": "preemptive scheduling"
+    },
+    {
+      "label": "Per-Process GC",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "per_process_gc",
+      "community": 2,
+      "norm_label": "per-process gc"
+    },
+    {
+      "label": "Process Isolation",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "process_isolation",
+      "community": 2,
+      "norm_label": "process isolation"
+    },
+    {
+      "label": "Static Typing (Gleam)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "static_typing",
+      "community": 2,
+      "norm_label": "static typing (gleam)"
+    },
+    {
+      "label": "Immutability",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "immutability",
+      "community": 2,
+      "norm_label": "immutability"
+    },
+    {
+      "label": "Beach Image Theory",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "beach_image_theory",
+      "community": 11,
+      "norm_label": "beach image theory"
+    },
+    {
+      "label": "Beach D Prime Paradigm",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "beach_d_prime_paradigm",
+      "community": 11,
+      "norm_label": "beach d prime paradigm"
+    },
+    {
+      "label": "Becker A New Stoicism",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "becker_stoic_ethics",
+      "community": 8,
+      "norm_label": "becker a new stoicism"
+    },
+    {
+      "label": "Sloman H-CogAff",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "sloman_h_cogaff",
+      "community": 13,
+      "norm_label": "sloman h-cogaff"
+    },
+    {
+      "label": "Beach Narrative Thought",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "narrative_thought",
+      "community": 11,
+      "norm_label": "beach narrative thought"
+    },
+    {
+      "label": "ACE Architecture",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ace_architecture",
+      "community": 3,
+      "norm_label": "ace architecture"
+    },
+    {
+      "label": "System M Framework",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "system_m_framework",
+      "community": 5,
+      "norm_label": "system m framework"
+    },
+    {
+      "label": "Functional Emotion Research",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "functional_emotion",
+      "community": 8,
+      "norm_label": "functional emotion research"
+    },
+    {
+      "label": "Equanimity Virtue",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "equanimity_virtue",
+      "community": 8,
+      "norm_label": "equanimity virtue"
+    },
+    {
+      "label": "Dichotomy of Control",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "dichotomy_of_control",
+      "community": 8,
+      "norm_label": "dichotomy of control"
+    },
+    {
+      "label": "CBR Theory (Aamodt & Plaza)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cbr_theory",
+      "community": 6,
+      "norm_label": "cbr theory (aamodt & plaza)"
+    },
+    {
+      "label": "Detector: Repeated Failures",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "det_repeated_failures",
+      "community": 4,
+      "norm_label": "detector: repeated failures"
+    },
+    {
+      "label": "Detector: Tool Failure Clusters",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "det_tool_failure_clusters",
+      "community": 4,
+      "norm_label": "detector: tool failure clusters"
+    },
+    {
+      "label": "Detector: Model Escalation",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "det_model_escalation",
+      "community": 4,
+      "norm_label": "detector: model escalation"
+    },
+    {
+      "label": "Detector: Cost Outliers",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "det_cost_outliers",
+      "community": 4,
+      "norm_label": "detector: cost outliers"
+    },
+    {
+      "label": "Detector: CBR Misses",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "det_cbr_misses",
+      "community": 4,
+      "norm_label": "detector: cbr misses"
+    },
+    {
+      "label": "Meta: Rate Limit",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "det_rate_limit",
+      "community": 1,
+      "norm_label": "meta: rate limit"
+    },
+    {
+      "label": "Meta: Cumulative Risk",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "det_cumulative_risk",
+      "community": 1,
+      "norm_label": "meta: cumulative risk"
+    },
+    {
+      "label": "Meta: Repeated Rejections",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "det_repeated_rejections",
+      "community": 1,
+      "norm_label": "meta: repeated rejections"
+    },
+    {
+      "label": "Meta: Layer 3a Persistence",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "det_layer3a_persistence",
+      "community": 1,
+      "norm_label": "meta: layer 3a persistence"
+    },
+    {
+      "label": "Meta: High False Positive Rate",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "det_false_positive_rate",
+      "community": 1,
+      "norm_label": "meta: high false positive rate"
+    },
+    {
+      "label": "Cognitive Cycle",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cognitive_cycle",
+      "community": 4,
+      "norm_label": "cognitive cycle"
+    },
+    {
+      "label": "Query Complexity Classifier",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "query_classifier",
+      "community": 4,
+      "norm_label": "query complexity classifier"
+    },
+    {
+      "label": "Virtual Context Window",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "virtual_context_window",
+      "community": 5,
+      "norm_label": "virtual context window"
+    },
+    {
+      "label": "Priority Slots (10 levels)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "priority_slots",
+      "community": 5,
+      "norm_label": "priority slots (10 levels)"
+    },
+    {
+      "label": "Slot Substitution",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "slot_substitution",
+      "community": 5,
+      "norm_label": "slot substitution"
+    },
+    {
+      "label": "Session Preamble Template",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "preamble_template",
+      "community": 5,
+      "norm_label": "session preamble template"
+    },
+    {
+      "label": "Persona Document",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "persona_document",
+      "community": 14,
+      "norm_label": "persona document"
+    },
+    {
+      "label": "Character Specification",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "character_specification",
+      "community": 0,
+      "norm_label": "character specification"
+    },
+    {
+      "label": "Fact Confidence Decay",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "fact_confidence_decay",
+      "community": 3,
+      "norm_label": "fact confidence decay"
+    },
+    {
+      "label": "Housekeeping Operations",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "housekeeping_ops",
+      "community": 6,
+      "norm_label": "housekeeping operations"
+    },
+    {
+      "label": "Narrative Threading",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "narrative_threading",
+      "community": 3,
+      "norm_label": "narrative threading"
+    },
+    {
+      "label": "Cross-Channel Context",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cross_channel_context",
+      "community": 7,
+      "norm_label": "cross-channel context"
+    },
+    {
+      "label": "Forensic Reconstruction",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "forensic_reconstruction",
+      "community": 2,
+      "norm_label": "forensic reconstruction"
+    },
+    {
+      "label": "Stable Character",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "stable_character",
+      "community": 0,
+      "norm_label": "stable character"
+    },
+    {
+      "label": "Self-Observation",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "self_observation",
+      "community": 5,
+      "norm_label": "self-observation"
+    },
+    {
+      "label": "Canary Hijack Probe",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "canary_hijack",
+      "community": 4,
+      "norm_label": "canary hijack probe"
+    },
+    {
+      "label": "Canary Leakage Probe",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "canary_leakage",
+      "community": 4,
+      "norm_label": "canary leakage probe"
+    },
+    {
+      "label": "ACE Phase 1: Reflection",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ace_phase1",
+      "community": 3,
+      "norm_label": "ace phase 1: reflection"
+    },
+    {
+      "label": "ACE Phase 2: Structured Records",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ace_phase2",
+      "community": 3,
+      "norm_label": "ace phase 2: structured records"
+    },
+    {
+      "label": "ACE Fallback",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "ace_fallback",
+      "community": 3,
+      "norm_label": "ace fallback"
+    },
+    {
+      "label": "Death Spiral Condition",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "death_spiral_condition",
+      "community": 8,
+      "norm_label": "death spiral condition"
+    },
+    {
+      "label": "Self-Diagnostic Behavior",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "self_diagnostic_behavior",
+      "community": 7,
+      "norm_label": "self-diagnostic behavior"
+    },
+    {
+      "label": "Cross-Cycle Pattern Detection",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "cross_cycle_detection",
+      "community": 4,
+      "norm_label": "cross-cycle pattern detection"
+    },
+    {
+      "label": "Infrastructure Bug Diagnosis (March 15)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "bug_infrastructure",
+      "community": 7,
+      "norm_label": "infrastructure bug diagnosis (march 15)"
+    },
+    {
+      "label": "Failure Mode Classification (March 18)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "bug_failure_classify",
+      "community": 7,
+      "norm_label": "failure mode classification (march 18)"
+    },
+    {
+      "label": "Architectural Vulnerability (March 21)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "bug_vulnerability",
+      "community": 7,
+      "norm_label": "architectural vulnerability (march 21)"
+    },
+    {
+      "label": "Self-Observation Limits (March 28)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "bug_self_observation_limits",
+      "community": 7,
+      "norm_label": "self-observation limits (march 28)"
+    },
+    {
+      "label": "Cross-Channel Context (March 29)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "bug_cross_channel",
+      "community": 7,
+      "norm_label": "cross-channel context (march 29)"
+    },
+    {
+      "label": "Reject Cascade Failure",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "reject_cascade",
+      "community": 7,
+      "norm_label": "reject cascade failure"
+    },
+    {
+      "label": "Email Re-Injection Loop",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "email_reinjection_loop",
+      "community": 7,
+      "norm_label": "email re-injection loop"
+    },
+    {
+      "label": "Affect Miscalibration",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "affect_miscalibration",
+      "community": 7,
+      "norm_label": "affect miscalibration"
+    },
+    {
+      "label": "Audit Walkthrough",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "audit_walkthrough",
+      "community": 2,
+      "norm_label": "audit walkthrough"
+    },
+    {
+      "label": "84 Propositions",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "norm_84_props",
+      "community": 15,
+      "norm_label": "84 propositions"
+    },
+    {
+      "label": "7056 Pairwise Resolutions",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "norm_7056_pairs",
+      "community": 16,
+      "norm_label": "7056 pairwise resolutions"
+    },
+    {
+      "label": "100% Coverage",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "norm_100_coverage",
+      "community": 17,
+      "norm_label": "100% coverage"
+    },
+    {
+      "label": "Axiom Firing Distribution",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "axiom_firing_distribution",
+      "community": 18,
+      "norm_label": "axiom firing distribution"
+    },
+    {
+      "label": "Deployment Metrics (23 days)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "deployment_metrics",
+      "community": 7,
+      "norm_label": "deployment metrics (23 days)"
+    },
+    {
+      "label": "Success Rate (77.5%)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "success_rate_deployment",
+      "community": 7,
+      "norm_label": "success rate (77.5%)"
+    },
+    {
+      "label": "Property 1: Persistent Identity and Memory",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "property_1_persistent",
+      "community": 9,
+      "norm_label": "property 1: persistent identity and memory"
+    },
+    {
+      "label": "Property 2: Defined Scope of Authority",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "property_2_authority",
+      "community": 9,
+      "norm_label": "property 2: defined scope of authority"
+    },
+    {
+      "label": "Property 3: Domain-Specific Refusal",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "property_3_refusal",
+      "community": 9,
+      "norm_label": "property 3: domain-specific refusal"
+    },
+    {
+      "label": "Property 4: Proactive Engagement",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "property_4_proactive",
+      "community": 9,
+      "norm_label": "property 4: proactive engagement"
+    },
+    {
+      "label": "Property 5: Forensic Accountability",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "property_5_forensic",
+      "community": 9,
+      "norm_label": "property 5: forensic accountability"
+    },
+    {
+      "label": "Property 6: Relationship Continuity",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "property_6_continuity",
+      "community": 9,
+      "norm_label": "property 6: relationship continuity"
+    },
+    {
+      "label": "Guide Dog Analogy",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "guide_dog_analogy",
+      "community": 9,
+      "norm_label": "guide dog analogy"
+    },
+    {
+      "label": "Bounded Autonomy",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "bounded_autonomy",
+      "community": 9,
+      "norm_label": "bounded autonomy"
+    },
+    {
+      "label": "Right to Refuse",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "right_to_refuse",
+      "community": 9,
+      "norm_label": "right to refuse"
+    },
+    {
+      "label": "Professional Trust",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "professional_trust",
+      "community": 9,
+      "norm_label": "professional trust"
+    },
+    {
+      "label": "Companionability Without Reciprocity",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "companionability",
+      "community": 9,
+      "norm_label": "companionability without reciprocity"
+    },
+    {
+      "label": "D' Example: ACCEPT (D=0.11)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "d_example_accept",
+      "community": 11,
+      "norm_label": "d' example: accept (d=0.11)"
+    },
+    {
+      "label": "D' Example: REJECT (D=0.51)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "d_example_reject",
+      "community": 11,
+      "norm_label": "d' example: reject (d=0.51)"
+    },
+    {
+      "label": "Norm Example: PROHIBITED (send unreviewed report)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "norm_example_prohibited",
+      "community": 0,
+      "norm_label": "norm example: prohibited (send unreviewed report)"
+    },
+    {
+      "label": "Norm Example: FLOURISHING (research EU AI)",
+      "file_type": "paper",
+      "source_file": "/tmp/springdrift-graph/springdrift-paper.txt",
+      "source_location": null,
+      "id": "norm_example_flourishing",
+      "community": 0,
+      "norm_label": "norm example: flourishing (research eu ai)"
+    }
+  ],
+  "links": [
+    {
+      "relation": "implemented_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "springdrift",
+      "_tgt": "gleam_language",
+      "source": "springdrift",
+      "target": "gleam_language"
+    },
+    {
+      "relation": "runs_on",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "springdrift",
+      "_tgt": "beam_vm",
+      "source": "springdrift",
+      "target": "beam_vm"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "springdrift",
+      "_tgt": "springdrift_repo",
+      "source": "springdrift",
+      "target": "springdrift_repo"
+    },
+    {
+      "relation": "has",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "springdrift",
+      "_tgt": "codebase_stats",
+      "source": "springdrift",
+      "target": "codebase_stats"
+    },
+    {
+      "relation": "is_reference_implementation_of",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "springdrift",
+      "_tgt": "artificial_retainer",
+      "source": "springdrift",
+      "target": "artificial_retainer"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "springdrift",
+      "_tgt": "curragh_instance",
+      "source": "springdrift",
+      "target": "curragh_instance"
+    },
+    {
+      "relation": "preceded",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "_src": "tallmountain_project",
+      "_tgt": "springdrift",
+      "source": "springdrift",
+      "target": "tallmountain_project"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "springdrift",
+      "_tgt": "cognitive_loop",
+      "source": "springdrift",
+      "target": "cognitive_loop"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "springdrift",
+      "_tgt": "root_supervisor",
+      "source": "springdrift",
+      "target": "root_supervisor"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "springdrift",
+      "_tgt": "git_backup",
+      "source": "springdrift",
+      "target": "git_backup"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "springdrift",
+      "_tgt": "housekeeping_ops",
+      "source": "springdrift",
+      "target": "housekeeping_ops"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "springdrift",
+      "_tgt": "affect_subsystem",
+      "source": "springdrift",
+      "target": "affect_subsystem"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "springdrift",
+      "_tgt": "sd_audit",
+      "source": "springdrift",
+      "target": "sd_audit"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "springdrift",
+      "_tgt": "web_gui",
+      "source": "springdrift",
+      "target": "web_gui"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "springdrift",
+      "_tgt": "tui",
+      "source": "springdrift",
+      "target": "tui"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "springdrift",
+      "_tgt": "skills_system",
+      "source": "springdrift",
+      "target": "skills_system"
+    },
+    {
+      "relation": "has_property",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "artificial_retainer",
+      "_tgt": "property_1_persistent",
+      "source": "artificial_retainer",
+      "target": "property_1_persistent"
+    },
+    {
+      "relation": "has_property",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "artificial_retainer",
+      "_tgt": "property_2_authority",
+      "source": "artificial_retainer",
+      "target": "property_2_authority"
+    },
+    {
+      "relation": "has_property",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "artificial_retainer",
+      "_tgt": "property_3_refusal",
+      "source": "artificial_retainer",
+      "target": "property_3_refusal"
+    },
+    {
+      "relation": "has_property",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "artificial_retainer",
+      "_tgt": "property_4_proactive",
+      "source": "artificial_retainer",
+      "target": "property_4_proactive"
+    },
+    {
+      "relation": "has_property",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "artificial_retainer",
+      "_tgt": "property_5_forensic",
+      "source": "artificial_retainer",
+      "target": "property_5_forensic"
+    },
+    {
+      "relation": "has_property",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "artificial_retainer",
+      "_tgt": "property_6_continuity",
+      "source": "artificial_retainer",
+      "target": "property_6_continuity"
+    },
+    {
+      "relation": "analogous_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "artificial_retainer",
+      "_tgt": "guide_dog_analogy",
+      "source": "artificial_retainer",
+      "target": "guide_dog_analogy"
+    },
+    {
+      "relation": "has_property",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "artificial_retainer",
+      "_tgt": "companionability",
+      "source": "artificial_retainer",
+      "target": "companionability"
+    },
+    {
+      "relation": "exhibited",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "curragh_instance",
+      "_tgt": "bug_infrastructure",
+      "source": "curragh_instance",
+      "target": "bug_infrastructure"
+    },
+    {
+      "relation": "exhibited",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "curragh_instance",
+      "_tgt": "bug_failure_classify",
+      "source": "curragh_instance",
+      "target": "bug_failure_classify"
+    },
+    {
+      "relation": "exhibited",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "curragh_instance",
+      "_tgt": "bug_vulnerability",
+      "source": "curragh_instance",
+      "target": "bug_vulnerability"
+    },
+    {
+      "relation": "exhibited",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "curragh_instance",
+      "_tgt": "bug_self_observation_limits",
+      "source": "curragh_instance",
+      "target": "bug_self_observation_limits"
+    },
+    {
+      "relation": "exhibited",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "curragh_instance",
+      "_tgt": "bug_cross_channel",
+      "source": "curragh_instance",
+      "target": "bug_cross_channel"
+    },
+    {
+      "relation": "experienced",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "curragh_instance",
+      "_tgt": "reject_cascade",
+      "source": "curragh_instance",
+      "target": "reject_cascade"
+    },
+    {
+      "relation": "experienced",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "curragh_instance",
+      "_tgt": "email_reinjection_loop",
+      "source": "curragh_instance",
+      "target": "email_reinjection_loop"
+    },
+    {
+      "relation": "experienced",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "curragh_instance",
+      "_tgt": "affect_miscalibration",
+      "source": "curragh_instance",
+      "target": "affect_miscalibration"
+    },
+    {
+      "relation": "has",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "curragh_instance",
+      "_tgt": "deployment_metrics",
+      "source": "curragh_instance",
+      "target": "deployment_metrics"
+    },
+    {
+      "relation": "prototyped",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "tallmountain_project",
+      "_tgt": "normative_calculus",
+      "source": "tallmountain_project",
+      "target": "normative_calculus"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.6,
+      "_src": "tallmountain_project",
+      "_tgt": "gleam_language",
+      "source": "tallmountain_project",
+      "target": "gleam_language"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.6,
+      "_src": "tallmountain_project",
+      "_tgt": "beam_vm",
+      "source": "tallmountain_project",
+      "target": "beam_vm"
+    },
+    {
+      "relation": "compiles_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gleam_language",
+      "_tgt": "beam_vm",
+      "source": "gleam_language",
+      "target": "beam_vm"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gleam_language",
+      "_tgt": "static_typing",
+      "source": "gleam_language",
+      "target": "static_typing"
+    },
+    {
+      "relation": "enforces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gleam_language",
+      "_tgt": "immutability",
+      "source": "gleam_language",
+      "target": "immutability"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "beam_vm",
+      "_tgt": "otp_supervision",
+      "source": "beam_vm",
+      "target": "otp_supervision"
+    },
+    {
+      "relation": "enables",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "beam_vm",
+      "_tgt": "typed_message_passing",
+      "source": "beam_vm",
+      "target": "typed_message_passing"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "beam_vm",
+      "_tgt": "preemptive_scheduling",
+      "source": "beam_vm",
+      "target": "preemptive_scheduling"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "beam_vm",
+      "_tgt": "per_process_gc",
+      "source": "beam_vm",
+      "target": "per_process_gc"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "beam_vm",
+      "_tgt": "process_isolation",
+      "source": "beam_vm",
+      "target": "process_isolation"
+    },
+    {
+      "relation": "supervises",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "root_supervisor",
+      "_tgt": "cognitive_loop",
+      "source": "cognitive_loop",
+      "target": "root_supervisor"
+    },
+    {
+      "relation": "communicates_via",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_loop",
+      "_tgt": "librarian_actor",
+      "source": "cognitive_loop",
+      "target": "librarian_actor"
+    },
+    {
+      "relation": "communicates_via",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_loop",
+      "_tgt": "curator_actor",
+      "source": "cognitive_loop",
+      "target": "curator_actor"
+    },
+    {
+      "relation": "communicates_via",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_loop",
+      "_tgt": "archivist_actor",
+      "source": "cognitive_loop",
+      "target": "archivist_actor"
+    },
+    {
+      "relation": "supervises",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_loop",
+      "_tgt": "agent_supervisor",
+      "source": "cognitive_loop",
+      "target": "agent_supervisor"
+    },
+    {
+      "relation": "communicates_via",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_loop",
+      "_tgt": "scheduler_actor",
+      "source": "cognitive_loop",
+      "target": "scheduler_actor"
+    },
+    {
+      "relation": "communicates_via",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_loop",
+      "_tgt": "inbox_poller_actor",
+      "source": "cognitive_loop",
+      "target": "inbox_poller_actor"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_loop",
+      "_tgt": "meta_observer_actor",
+      "source": "cognitive_loop",
+      "target": "meta_observer_actor"
+    },
+    {
+      "relation": "communicates_via",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_loop",
+      "_tgt": "sandbox_manager_actor",
+      "source": "cognitive_loop",
+      "target": "sandbox_manager_actor"
+    },
+    {
+      "relation": "communicates_via",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_loop",
+      "_tgt": "backup_actor",
+      "source": "cognitive_loop",
+      "target": "backup_actor"
+    },
+    {
+      "relation": "communicates_via",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_loop",
+      "_tgt": "housekeeping_actor",
+      "source": "cognitive_loop",
+      "target": "housekeeping_actor"
+    },
+    {
+      "relation": "executes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_loop",
+      "_tgt": "cognitive_cycle",
+      "source": "cognitive_loop",
+      "target": "cognitive_cycle"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_loop",
+      "_tgt": "coord_direct_delegation",
+      "source": "cognitive_loop",
+      "target": "coord_direct_delegation"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_loop",
+      "_tgt": "coord_parallel_dispatch",
+      "source": "cognitive_loop",
+      "target": "coord_parallel_dispatch"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_loop",
+      "_tgt": "coord_agent_teams",
+      "source": "cognitive_loop",
+      "target": "coord_agent_teams"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "librarian_actor",
+      "_tgt": "ets_tables",
+      "source": "librarian_actor",
+      "target": "ets_tables"
+    },
+    {
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "librarian_actor",
+      "_tgt": "narrative_store",
+      "source": "librarian_actor",
+      "target": "narrative_store"
+    },
+    {
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "librarian_actor",
+      "_tgt": "cbr_cases_store",
+      "source": "librarian_actor",
+      "target": "cbr_cases_store"
+    },
+    {
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "librarian_actor",
+      "_tgt": "facts_store",
+      "source": "librarian_actor",
+      "target": "facts_store"
+    },
+    {
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "librarian_actor",
+      "_tgt": "artifacts_store",
+      "source": "librarian_actor",
+      "target": "artifacts_store"
+    },
+    {
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "librarian_actor",
+      "_tgt": "dag_store",
+      "source": "librarian_actor",
+      "target": "dag_store"
+    },
+    {
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "librarian_actor",
+      "_tgt": "threads_store",
+      "source": "librarian_actor",
+      "target": "threads_store"
+    },
+    {
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "librarian_actor",
+      "_tgt": "tasks_store",
+      "source": "librarian_actor",
+      "target": "tasks_store"
+    },
+    {
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "librarian_actor",
+      "_tgt": "endeavors_store",
+      "source": "librarian_actor",
+      "target": "endeavors_store"
+    },
+    {
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "librarian_actor",
+      "_tgt": "comms_store",
+      "source": "librarian_actor",
+      "target": "comms_store"
+    },
+    {
+      "relation": "indexes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "librarian_actor",
+      "_tgt": "affect_store",
+      "source": "librarian_actor",
+      "target": "affect_store"
+    },
+    {
+      "relation": "queries",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "curator_actor",
+      "_tgt": "librarian_actor",
+      "source": "librarian_actor",
+      "target": "curator_actor"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_cycle",
+      "_tgt": "curator_actor",
+      "source": "curator_actor",
+      "target": "cognitive_cycle"
+    },
+    {
+      "relation": "renders",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "curator_actor",
+      "_tgt": "sensorium",
+      "source": "curator_actor",
+      "target": "sensorium"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "curator_actor",
+      "_tgt": "virtual_context_window",
+      "source": "curator_actor",
+      "target": "virtual_context_window"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "curator_actor",
+      "_tgt": "preamble_template",
+      "source": "curator_actor",
+      "target": "preamble_template"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_cycle",
+      "_tgt": "archivist_actor",
+      "source": "archivist_actor",
+      "target": "cognitive_cycle"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "ace_architecture",
+      "_tgt": "archivist_actor",
+      "source": "archivist_actor",
+      "target": "ace_architecture"
+    },
+    {
+      "relation": "runs",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "archivist_actor",
+      "_tgt": "ace_phase1",
+      "source": "archivist_actor",
+      "target": "ace_phase1"
+    },
+    {
+      "relation": "runs",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "archivist_actor",
+      "_tgt": "ace_phase2",
+      "source": "archivist_actor",
+      "target": "ace_phase2"
+    },
+    {
+      "relation": "writes_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "archivist_actor",
+      "_tgt": "narrative_store",
+      "source": "archivist_actor",
+      "target": "narrative_store"
+    },
+    {
+      "relation": "writes_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "archivist_actor",
+      "_tgt": "cbr_cases_store",
+      "source": "archivist_actor",
+      "target": "cbr_cases_store"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "archivist_actor",
+      "_tgt": "xstructor",
+      "source": "archivist_actor",
+      "target": "xstructor"
+    },
+    {
+      "relation": "supervises",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_supervisor",
+      "_tgt": "planner_agent",
+      "source": "agent_supervisor",
+      "target": "planner_agent"
+    },
+    {
+      "relation": "supervises",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_supervisor",
+      "_tgt": "project_manager_agent",
+      "source": "agent_supervisor",
+      "target": "project_manager_agent"
+    },
+    {
+      "relation": "supervises",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_supervisor",
+      "_tgt": "researcher_agent",
+      "source": "agent_supervisor",
+      "target": "researcher_agent"
+    },
+    {
+      "relation": "supervises",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_supervisor",
+      "_tgt": "coder_agent",
+      "source": "agent_supervisor",
+      "target": "coder_agent"
+    },
+    {
+      "relation": "supervises",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_supervisor",
+      "_tgt": "writer_agent",
+      "source": "agent_supervisor",
+      "target": "writer_agent"
+    },
+    {
+      "relation": "supervises",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_supervisor",
+      "_tgt": "comms_agent",
+      "source": "agent_supervisor",
+      "target": "comms_agent"
+    },
+    {
+      "relation": "supervises",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_supervisor",
+      "_tgt": "observer_agent",
+      "source": "agent_supervisor",
+      "target": "observer_agent"
+    },
+    {
+      "relation": "enables",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "scheduler_actor",
+      "_tgt": "self_observation",
+      "source": "scheduler_actor",
+      "target": "self_observation"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "inbox_poller_actor",
+      "_tgt": "comms_agent",
+      "source": "inbox_poller_actor",
+      "target": "comms_agent"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "inbox_poller_actor",
+      "_tgt": "interactive_autonomous_split",
+      "source": "inbox_poller_actor",
+      "target": "interactive_autonomous_split"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "sandbox_manager_actor",
+      "_tgt": "podman_sandbox",
+      "source": "sandbox_manager_actor",
+      "target": "podman_sandbox"
+    },
+    {
+      "relation": "performs",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "housekeeping_actor",
+      "_tgt": "housekeeping_ops",
+      "source": "housekeeping_actor",
+      "target": "housekeeping_ops"
+    },
+    {
+      "relation": "feeds",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_cycle",
+      "_tgt": "meta_observer_actor",
+      "source": "meta_observer_actor",
+      "target": "cognitive_cycle"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "meta_observer_actor",
+      "_tgt": "det_rate_limit",
+      "source": "meta_observer_actor",
+      "target": "det_rate_limit"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "meta_observer_actor",
+      "_tgt": "det_cumulative_risk",
+      "source": "meta_observer_actor",
+      "target": "det_cumulative_risk"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "meta_observer_actor",
+      "_tgt": "det_repeated_rejections",
+      "source": "meta_observer_actor",
+      "target": "det_repeated_rejections"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "meta_observer_actor",
+      "_tgt": "det_layer3a_persistence",
+      "source": "meta_observer_actor",
+      "target": "det_layer3a_persistence"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "meta_observer_actor",
+      "_tgt": "det_false_positive_rate",
+      "source": "meta_observer_actor",
+      "target": "det_false_positive_rate"
+    },
+    {
+      "relation": "stores",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "append_only_jsonl",
+      "_tgt": "narrative_store",
+      "source": "narrative_store",
+      "target": "append_only_jsonl"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "narrative_store",
+      "_tgt": "narrative_threading",
+      "source": "narrative_store",
+      "target": "narrative_threading"
+    },
+    {
+      "relation": "stores",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "append_only_jsonl",
+      "_tgt": "threads_store",
+      "source": "threads_store",
+      "target": "append_only_jsonl"
+    },
+    {
+      "relation": "populates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "narrative_threading",
+      "_tgt": "threads_store",
+      "source": "threads_store",
+      "target": "narrative_threading"
+    },
+    {
+      "relation": "stores",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "append_only_jsonl",
+      "_tgt": "facts_store",
+      "source": "facts_store",
+      "target": "append_only_jsonl"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "facts_store",
+      "_tgt": "fact_confidence_decay",
+      "source": "facts_store",
+      "target": "fact_confidence_decay"
+    },
+    {
+      "relation": "stores",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "append_only_jsonl",
+      "_tgt": "cbr_cases_store",
+      "source": "cbr_cases_store",
+      "target": "append_only_jsonl"
+    },
+    {
+      "relation": "stores",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "append_only_jsonl",
+      "_tgt": "artifacts_store",
+      "source": "artifacts_store",
+      "target": "append_only_jsonl"
+    },
+    {
+      "relation": "stores",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "append_only_jsonl",
+      "_tgt": "tasks_store",
+      "source": "tasks_store",
+      "target": "append_only_jsonl"
+    },
+    {
+      "relation": "stores",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "append_only_jsonl",
+      "_tgt": "endeavors_store",
+      "source": "endeavors_store",
+      "target": "append_only_jsonl"
+    },
+    {
+      "relation": "stores",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "append_only_jsonl",
+      "_tgt": "comms_store",
+      "source": "comms_store",
+      "target": "append_only_jsonl"
+    },
+    {
+      "relation": "stores",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "append_only_jsonl",
+      "_tgt": "affect_store",
+      "source": "affect_store",
+      "target": "append_only_jsonl"
+    },
+    {
+      "relation": "persists_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "affect_subsystem",
+      "_tgt": "affect_store",
+      "source": "affect_store",
+      "target": "affect_subsystem"
+    },
+    {
+      "relation": "stores",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "append_only_jsonl",
+      "_tgt": "dag_store",
+      "source": "dag_store",
+      "target": "append_only_jsonl"
+    },
+    {
+      "relation": "executes_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "coder_agent",
+      "_tgt": "podman_sandbox",
+      "source": "coder_agent",
+      "target": "podman_sandbox"
+    },
+    {
+      "relation": "has_specialized",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "comms_agent",
+      "_tgt": "d_prime_safety_system",
+      "source": "comms_agent",
+      "target": "d_prime_safety_system"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "sensorium",
+      "_tgt": "sensorium_clock",
+      "source": "sensorium",
+      "target": "sensorium_clock"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "sensorium",
+      "_tgt": "sensorium_vitals",
+      "source": "sensorium",
+      "target": "sensorium_vitals"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "sensorium",
+      "_tgt": "sensorium_situation",
+      "source": "sensorium",
+      "target": "sensorium_situation"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "sensorium",
+      "_tgt": "sensorium_schedule",
+      "source": "sensorium",
+      "target": "sensorium_schedule"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "sensorium",
+      "_tgt": "sensorium_delegations",
+      "source": "sensorium",
+      "target": "sensorium_delegations"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "sensorium",
+      "_tgt": "sensorium_tasks",
+      "source": "sensorium",
+      "target": "sensorium_tasks"
+    },
+    {
+      "relation": "enables",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "sensorium",
+      "_tgt": "self_observation",
+      "source": "sensorium",
+      "target": "self_observation"
+    },
+    {
+      "relation": "integrates_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "affect_subsystem",
+      "_tgt": "sensorium",
+      "source": "sensorium",
+      "target": "affect_subsystem"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "d_prime_safety_system",
+      "_tgt": "d_prime_formula",
+      "source": "d_prime_safety_system",
+      "target": "d_prime_formula"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "d_prime_safety_system",
+      "_tgt": "d_prime_input_gate",
+      "source": "d_prime_safety_system",
+      "target": "d_prime_input_gate"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "d_prime_safety_system",
+      "_tgt": "d_prime_tool_gate",
+      "source": "d_prime_safety_system",
+      "target": "d_prime_tool_gate"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "d_prime_safety_system",
+      "_tgt": "d_prime_output_gate",
+      "source": "d_prime_safety_system",
+      "target": "d_prime_output_gate"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "d_prime_safety_system",
+      "_tgt": "d_prime_thresholds",
+      "source": "d_prime_safety_system",
+      "target": "d_prime_thresholds"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "d_prime_safety_system",
+      "_tgt": "canary_probes",
+      "source": "d_prime_safety_system",
+      "target": "canary_probes"
+    },
+    {
+      "relation": "optimizes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "d_prime_safety_system",
+      "_tgt": "fast_accept_path",
+      "source": "d_prime_safety_system",
+      "target": "fast_accept_path"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "d_prime_safety_system",
+      "_tgt": "interactive_autonomous_split",
+      "source": "d_prime_safety_system",
+      "target": "interactive_autonomous_split"
+    },
+    {
+      "relation": "inspired_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "d_prime_safety_system",
+      "_tgt": "signal_detection_theory",
+      "source": "d_prime_safety_system",
+      "target": "signal_detection_theory"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "d_prime_output_gate",
+      "_tgt": "normative_calculus",
+      "source": "normative_calculus",
+      "target": "d_prime_output_gate"
+    },
+    {
+      "relation": "inspired_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "becker_stoic_ethics",
+      "source": "normative_calculus",
+      "target": "becker_stoic_ethics"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "normative_operators",
+      "source": "normative_calculus",
+      "target": "normative_operators"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "ordinal_levels",
+      "source": "normative_calculus",
+      "target": "ordinal_levels"
+    },
+    {
+      "relation": "applies",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "axiom_6_2",
+      "source": "normative_calculus",
+      "target": "axiom_6_2"
+    },
+    {
+      "relation": "applies",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "axiom_6_3",
+      "source": "normative_calculus",
+      "target": "axiom_6_3"
+    },
+    {
+      "relation": "applies",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "axiom_6_4",
+      "source": "normative_calculus",
+      "target": "axiom_6_4"
+    },
+    {
+      "relation": "applies",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "axiom_6_5",
+      "source": "normative_calculus",
+      "target": "axiom_6_5"
+    },
+    {
+      "relation": "applies",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "axiom_6_6",
+      "source": "normative_calculus",
+      "target": "axiom_6_6"
+    },
+    {
+      "relation": "applies",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "axiom_6_7",
+      "source": "normative_calculus",
+      "target": "axiom_6_7"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "severity_levels",
+      "source": "normative_calculus",
+      "target": "severity_levels"
+    },
+    {
+      "relation": "applies",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "floor_rules",
+      "source": "normative_calculus",
+      "target": "floor_rules"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "axiom_trail",
+      "source": "normative_calculus",
+      "target": "axiom_trail"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "verdict_flourishing",
+      "source": "normative_calculus",
+      "target": "verdict_flourishing"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "verdict_constrained",
+      "source": "normative_calculus",
+      "target": "verdict_constrained"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "verdict_prohibited",
+      "source": "normative_calculus",
+      "target": "verdict_prohibited"
+    },
+    {
+      "relation": "loads_propositions_from",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "character_json",
+      "source": "normative_calculus",
+      "target": "character_json"
+    },
+    {
+      "relation": "guarantees",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_calculus",
+      "_tgt": "monotonicity_property",
+      "source": "normative_calculus",
+      "target": "monotonicity_property"
+    },
+    {
+      "relation": "illustrates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "norm_example_prohibited",
+      "_tgt": "normative_calculus",
+      "source": "normative_calculus",
+      "target": "norm_example_prohibited"
+    },
+    {
+      "relation": "illustrates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "norm_example_flourishing",
+      "_tgt": "normative_calculus",
+      "source": "normative_calculus",
+      "target": "norm_example_flourishing"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cbr_memory",
+      "_tgt": "cbr_retrieval_pipeline",
+      "source": "cbr_memory",
+      "target": "cbr_retrieval_pipeline"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cbr_memory",
+      "_tgt": "cbr_laplace_utility",
+      "source": "cbr_memory",
+      "target": "cbr_laplace_utility"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cbr_memory",
+      "_tgt": "cbr_utility_tracking",
+      "source": "cbr_memory",
+      "target": "cbr_utility_tracking"
+    },
+    {
+      "relation": "performs",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cbr_memory",
+      "_tgt": "cbr_deduplication",
+      "source": "cbr_memory",
+      "target": "cbr_deduplication"
+    },
+    {
+      "relation": "performs",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cbr_memory",
+      "_tgt": "cbr_case_pruning",
+      "source": "cbr_memory",
+      "target": "cbr_case_pruning"
+    },
+    {
+      "relation": "is_foundation_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cbr_theory",
+      "_tgt": "cbr_memory",
+      "source": "cbr_memory",
+      "target": "cbr_theory"
+    },
+    {
+      "relation": "computes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "affect_subsystem",
+      "_tgt": "affect_desperation",
+      "source": "affect_subsystem",
+      "target": "affect_desperation"
+    },
+    {
+      "relation": "computes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "affect_subsystem",
+      "_tgt": "affect_calm",
+      "source": "affect_subsystem",
+      "target": "affect_calm"
+    },
+    {
+      "relation": "computes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "affect_subsystem",
+      "_tgt": "affect_confidence",
+      "source": "affect_subsystem",
+      "target": "affect_confidence"
+    },
+    {
+      "relation": "computes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "affect_subsystem",
+      "_tgt": "affect_frustration",
+      "source": "affect_subsystem",
+      "target": "affect_frustration"
+    },
+    {
+      "relation": "computes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "affect_subsystem",
+      "_tgt": "affect_pressure",
+      "source": "affect_subsystem",
+      "target": "affect_pressure"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "affect_subsystem",
+      "_tgt": "affect_choice_menu",
+      "source": "affect_subsystem",
+      "target": "affect_choice_menu"
+    },
+    {
+      "relation": "limits",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "affect_blind_spot",
+      "_tgt": "affect_subsystem",
+      "source": "affect_subsystem",
+      "target": "affect_blind_spot"
+    },
+    {
+      "relation": "based_on",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "affect_subsystem",
+      "_tgt": "functional_emotion",
+      "source": "affect_subsystem",
+      "target": "functional_emotion"
+    },
+    {
+      "relation": "formalizes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "affect_subsystem",
+      "_tgt": "equanimity_virtue",
+      "source": "affect_subsystem",
+      "target": "equanimity_virtue"
+    },
+    {
+      "relation": "applies",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "affect_subsystem",
+      "_tgt": "dichotomy_of_control",
+      "source": "affect_subsystem",
+      "target": "dichotomy_of_control"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "sensorium_vitals",
+      "_tgt": "cbs_success_rate",
+      "source": "sensorium_vitals",
+      "target": "cbs_success_rate"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "sensorium_vitals",
+      "_tgt": "cbs_cost_trend",
+      "source": "sensorium_vitals",
+      "target": "cbs_cost_trend"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "sensorium_vitals",
+      "_tgt": "cbs_cbr_hit_rate",
+      "source": "sensorium_vitals",
+      "target": "cbs_cbr_hit_rate"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "sensorium_vitals",
+      "_tgt": "cbs_novelty",
+      "source": "sensorium_vitals",
+      "target": "cbs_novelty"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "sensorium_vitals",
+      "_tgt": "cbs_recent_failures",
+      "source": "sensorium_vitals",
+      "target": "cbs_recent_failures"
+    },
+    {
+      "relation": "required",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "bug_vulnerability",
+      "_tgt": "sensorium_delegations",
+      "source": "sensorium_delegations",
+      "target": "bug_vulnerability"
+    },
+    {
+      "relation": "grounds",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "system_m_framework",
+      "_tgt": "cbs_novelty",
+      "source": "cbs_novelty",
+      "target": "system_m_framework"
+    },
+    {
+      "relation": "is_basis_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "beach_d_prime_paradigm",
+      "_tgt": "d_prime_formula",
+      "source": "d_prime_formula",
+      "target": "beach_d_prime_paradigm"
+    },
+    {
+      "relation": "illustrates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "d_example_accept",
+      "_tgt": "d_prime_formula",
+      "source": "d_prime_formula",
+      "target": "d_example_accept"
+    },
+    {
+      "relation": "illustrates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "d_example_reject",
+      "_tgt": "d_prime_formula",
+      "source": "d_prime_formula",
+      "target": "d_example_reject"
+    },
+    {
+      "relation": "passes_through",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_cycle",
+      "_tgt": "d_prime_input_gate",
+      "source": "d_prime_input_gate",
+      "target": "cognitive_cycle"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "d_prime_input_gate",
+      "_tgt": "canary_hijack",
+      "source": "d_prime_input_gate",
+      "target": "canary_hijack"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "d_prime_input_gate",
+      "_tgt": "canary_leakage",
+      "source": "d_prime_input_gate",
+      "target": "canary_leakage"
+    },
+    {
+      "relation": "optimizes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "d_prime_input_gate",
+      "_tgt": "fast_accept_path",
+      "source": "d_prime_input_gate",
+      "target": "fast_accept_path"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_cycle",
+      "_tgt": "d_prime_tool_gate",
+      "source": "d_prime_tool_gate",
+      "target": "cognitive_cycle"
+    },
+    {
+      "relation": "passes_through",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_cycle",
+      "_tgt": "d_prime_output_gate",
+      "source": "d_prime_output_gate",
+      "target": "cognitive_cycle"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "d_prime_output_gate",
+      "_tgt": "interactive_autonomous_split",
+      "source": "d_prime_output_gate",
+      "target": "interactive_autonomous_split"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_3",
+      "_tgt": "d_prime_thresholds",
+      "source": "d_prime_thresholds",
+      "target": "floor_3"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_6",
+      "_tgt": "d_prime_thresholds",
+      "source": "d_prime_thresholds",
+      "target": "floor_6"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "canary_probes",
+      "_tgt": "canary_hijack",
+      "source": "canary_probes",
+      "target": "canary_hijack"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "canary_probes",
+      "_tgt": "canary_leakage",
+      "source": "canary_probes",
+      "target": "canary_leakage"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_operators",
+      "_tgt": "op_required",
+      "source": "normative_operators",
+      "target": "op_required"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_operators",
+      "_tgt": "op_ought",
+      "source": "normative_operators",
+      "target": "op_ought"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "normative_operators",
+      "_tgt": "op_indifferent",
+      "source": "normative_operators",
+      "target": "op_indifferent"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "ordinal_levels",
+      "_tgt": "ordinal_ethical_moral",
+      "source": "ordinal_levels",
+      "target": "ordinal_ethical_moral"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "ordinal_levels",
+      "_tgt": "ordinal_legal",
+      "source": "ordinal_levels",
+      "target": "ordinal_legal"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "ordinal_levels",
+      "_tgt": "ordinal_prudential",
+      "source": "ordinal_levels",
+      "target": "ordinal_prudential"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "ordinal_levels",
+      "_tgt": "ordinal_social_political",
+      "source": "ordinal_levels",
+      "target": "ordinal_social_political"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "ordinal_levels",
+      "_tgt": "ordinal_safety_physical",
+      "source": "ordinal_levels",
+      "target": "ordinal_safety_physical"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "ordinal_levels",
+      "_tgt": "ordinal_environmental",
+      "source": "ordinal_levels",
+      "target": "ordinal_environmental"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "ordinal_levels",
+      "_tgt": "ordinal_community",
+      "source": "ordinal_levels",
+      "target": "ordinal_community"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "ordinal_levels",
+      "_tgt": "ordinal_professional_ethics",
+      "source": "ordinal_levels",
+      "target": "ordinal_professional_ethics"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "ordinal_levels",
+      "_tgt": "ordinal_economic",
+      "source": "ordinal_levels",
+      "target": "ordinal_economic"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "ordinal_levels",
+      "_tgt": "ordinal_etiquette",
+      "source": "ordinal_levels",
+      "target": "ordinal_etiquette"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "ordinal_levels",
+      "_tgt": "ordinal_operational",
+      "source": "ordinal_levels",
+      "target": "ordinal_operational"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "ordinal_levels",
+      "_tgt": "ordinal_aesthetic",
+      "source": "ordinal_levels",
+      "target": "ordinal_aesthetic"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "axiom_6_2",
+      "_tgt": "sev_absolute",
+      "source": "axiom_6_2",
+      "target": "sev_absolute"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "axiom_6_3",
+      "_tgt": "sev_superordinate",
+      "source": "axiom_6_3",
+      "target": "sev_superordinate"
+    },
+    {
+      "relation": "fires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "norm_example_prohibited",
+      "_tgt": "axiom_6_3",
+      "source": "axiom_6_3",
+      "target": "norm_example_prohibited"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "axiom_6_4",
+      "_tgt": "sev_coordinate",
+      "source": "axiom_6_4",
+      "target": "sev_coordinate"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "axiom_6_5",
+      "_tgt": "sev_no_conflict",
+      "source": "axiom_6_5",
+      "target": "sev_no_conflict"
+    },
+    {
+      "relation": "applies_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "axiom_6_6",
+      "_tgt": "mod_impossible",
+      "source": "axiom_6_6",
+      "target": "mod_impossible"
+    },
+    {
+      "relation": "applies_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "axiom_6_7",
+      "_tgt": "op_indifferent",
+      "source": "axiom_6_7",
+      "target": "op_indifferent"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "severity_levels",
+      "_tgt": "sev_no_conflict",
+      "source": "severity_levels",
+      "target": "sev_no_conflict"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "severity_levels",
+      "_tgt": "sev_coordinate",
+      "source": "severity_levels",
+      "target": "sev_coordinate"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "severity_levels",
+      "_tgt": "sev_superordinate",
+      "source": "severity_levels",
+      "target": "sev_superordinate"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "severity_levels",
+      "_tgt": "sev_absolute",
+      "source": "severity_levels",
+      "target": "sev_absolute"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_rules",
+      "_tgt": "floor_1",
+      "source": "floor_rules",
+      "target": "floor_1"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_rules",
+      "_tgt": "floor_2",
+      "source": "floor_rules",
+      "target": "floor_2"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_rules",
+      "_tgt": "floor_3",
+      "source": "floor_rules",
+      "target": "floor_3"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_rules",
+      "_tgt": "floor_4",
+      "source": "floor_rules",
+      "target": "floor_4"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_rules",
+      "_tgt": "floor_5",
+      "source": "floor_rules",
+      "target": "floor_5"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_rules",
+      "_tgt": "floor_6",
+      "source": "floor_rules",
+      "target": "floor_6"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_rules",
+      "_tgt": "floor_7",
+      "source": "floor_rules",
+      "target": "floor_7"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_rules",
+      "_tgt": "floor_8",
+      "source": "floor_rules",
+      "target": "floor_8"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_8",
+      "_tgt": "verdict_flourishing",
+      "source": "verdict_flourishing",
+      "target": "floor_8"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "norm_example_flourishing",
+      "_tgt": "verdict_flourishing",
+      "source": "verdict_flourishing",
+      "target": "norm_example_flourishing"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_4",
+      "_tgt": "verdict_constrained",
+      "source": "verdict_constrained",
+      "target": "floor_4"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_5",
+      "_tgt": "verdict_constrained",
+      "source": "verdict_constrained",
+      "target": "floor_5"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_6",
+      "_tgt": "verdict_constrained",
+      "source": "verdict_constrained",
+      "target": "floor_6"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_7",
+      "_tgt": "verdict_constrained",
+      "source": "verdict_constrained",
+      "target": "floor_7"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_1",
+      "_tgt": "verdict_prohibited",
+      "source": "verdict_prohibited",
+      "target": "floor_1"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_2",
+      "_tgt": "verdict_prohibited",
+      "source": "verdict_prohibited",
+      "target": "floor_2"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_3",
+      "_tgt": "verdict_prohibited",
+      "source": "verdict_prohibited",
+      "target": "floor_3"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "norm_example_prohibited",
+      "_tgt": "verdict_prohibited",
+      "source": "verdict_prohibited",
+      "target": "norm_example_prohibited"
+    },
+    {
+      "relation": "stored_as",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "character_specification",
+      "_tgt": "character_json",
+      "source": "character_json",
+      "target": "character_specification"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_2",
+      "_tgt": "ordinal_legal",
+      "source": "ordinal_legal",
+      "target": "floor_2"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "floor_1",
+      "_tgt": "sev_absolute",
+      "source": "sev_absolute",
+      "target": "floor_1"
+    },
+    {
+      "relation": "fires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "norm_example_prohibited",
+      "_tgt": "floor_2",
+      "source": "floor_2",
+      "target": "norm_example_prohibited"
+    },
+    {
+      "relation": "fires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "norm_example_flourishing",
+      "_tgt": "floor_8",
+      "source": "floor_8",
+      "target": "norm_example_flourishing"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cbr_retrieval_pipeline",
+      "_tgt": "cbr_signal_inverted_index",
+      "source": "cbr_retrieval_pipeline",
+      "target": "cbr_signal_inverted_index"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cbr_retrieval_pipeline",
+      "_tgt": "cbr_signal_embedding",
+      "source": "cbr_retrieval_pipeline",
+      "target": "cbr_signal_embedding"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cbr_retrieval_pipeline",
+      "_tgt": "cbr_signal_field_score",
+      "source": "cbr_retrieval_pipeline",
+      "target": "cbr_signal_field_score"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cbr_retrieval_pipeline",
+      "_tgt": "cbr_signal_recency",
+      "source": "cbr_retrieval_pipeline",
+      "target": "cbr_signal_recency"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cbr_retrieval_pipeline",
+      "_tgt": "cbr_signal_domain_match",
+      "source": "cbr_retrieval_pipeline",
+      "target": "cbr_signal_domain_match"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cbr_retrieval_pipeline",
+      "_tgt": "cbr_signal_utility_score",
+      "source": "cbr_retrieval_pipeline",
+      "target": "cbr_signal_utility_score"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cbr_retrieval_pipeline",
+      "_tgt": "cbr_k4_cap",
+      "source": "cbr_retrieval_pipeline",
+      "target": "cbr_k4_cap"
+    },
+    {
+      "relation": "is",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cbr_retrieval_pipeline",
+      "_tgt": "cbr_hybrid",
+      "source": "cbr_retrieval_pipeline",
+      "target": "cbr_hybrid"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "housekeeping_ops",
+      "_tgt": "cbr_deduplication",
+      "source": "cbr_deduplication",
+      "target": "housekeeping_ops"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "housekeeping_ops",
+      "_tgt": "cbr_case_pruning",
+      "source": "cbr_case_pruning",
+      "target": "housekeeping_ops"
+    },
+    {
+      "relation": "drives",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "death_spiral_condition",
+      "_tgt": "affect_desperation",
+      "source": "affect_desperation",
+      "target": "death_spiral_condition"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "sd_audit",
+      "_tgt": "forensic_reconstruction",
+      "source": "sd_audit",
+      "target": "forensic_reconstruction"
+    },
+    {
+      "relation": "conducted_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "audit_walkthrough",
+      "_tgt": "sd_audit",
+      "source": "sd_audit",
+      "target": "audit_walkthrough"
+    },
+    {
+      "relation": "enables",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "git_backup",
+      "_tgt": "forensic_reconstruction",
+      "source": "git_backup",
+      "target": "forensic_reconstruction"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "audit_walkthrough",
+      "_tgt": "append_only_jsonl",
+      "source": "append_only_jsonl",
+      "target": "audit_walkthrough"
+    },
+    {
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_cycle",
+      "_tgt": "cycle_log",
+      "source": "cycle_log",
+      "target": "cognitive_cycle"
+    },
+    {
+      "relation": "enables",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cycle_log",
+      "_tgt": "forensic_reconstruction",
+      "source": "cycle_log",
+      "target": "forensic_reconstruction"
+    },
+    {
+      "relation": "reconstructs_from",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "audit_walkthrough",
+      "_tgt": "cycle_log",
+      "source": "cycle_log",
+      "target": "audit_walkthrough"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "coord_agent_teams",
+      "_tgt": "team_strategy_parallel_merge",
+      "source": "coord_agent_teams",
+      "target": "team_strategy_parallel_merge"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "coord_agent_teams",
+      "_tgt": "team_strategy_pipeline",
+      "source": "coord_agent_teams",
+      "target": "team_strategy_pipeline"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "coord_agent_teams",
+      "_tgt": "team_strategy_debate",
+      "source": "coord_agent_teams",
+      "target": "team_strategy_debate"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "coord_agent_teams",
+      "_tgt": "team_strategy_lead",
+      "source": "coord_agent_teams",
+      "target": "team_strategy_lead"
+    },
+    {
+      "relation": "enforces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "typed_message_passing",
+      "_tgt": "process_isolation",
+      "source": "typed_message_passing",
+      "target": "process_isolation"
+    },
+    {
+      "relation": "part_of",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "beach_d_prime_paradigm",
+      "_tgt": "beach_image_theory",
+      "source": "beach_image_theory",
+      "target": "beach_d_prime_paradigm"
+    },
+    {
+      "relation": "related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "narrative_thought",
+      "_tgt": "beach_image_theory",
+      "source": "beach_image_theory",
+      "target": "narrative_thought"
+    },
+    {
+      "relation": "grounds",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "becker_stoic_ethics",
+      "_tgt": "equanimity_virtue",
+      "source": "becker_stoic_ethics",
+      "target": "equanimity_virtue"
+    },
+    {
+      "relation": "grounds",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "becker_stoic_ethics",
+      "_tgt": "dichotomy_of_control",
+      "source": "becker_stoic_ethics",
+      "target": "dichotomy_of_control"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cross_cycle_detection",
+      "_tgt": "det_repeated_failures",
+      "source": "det_repeated_failures",
+      "target": "cross_cycle_detection"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cross_cycle_detection",
+      "_tgt": "det_tool_failure_clusters",
+      "source": "det_tool_failure_clusters",
+      "target": "cross_cycle_detection"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cross_cycle_detection",
+      "_tgt": "det_model_escalation",
+      "source": "det_model_escalation",
+      "target": "cross_cycle_detection"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cross_cycle_detection",
+      "_tgt": "det_cost_outliers",
+      "source": "det_cost_outliers",
+      "target": "cross_cycle_detection"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cross_cycle_detection",
+      "_tgt": "det_cbr_misses",
+      "source": "det_cbr_misses",
+      "target": "cross_cycle_detection"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_cycle",
+      "_tgt": "query_classifier",
+      "source": "cognitive_cycle",
+      "target": "query_classifier"
+    },
+    {
+      "relation": "enables",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cognitive_cycle",
+      "_tgt": "cross_cycle_detection",
+      "source": "cognitive_cycle",
+      "target": "cross_cycle_detection"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "virtual_context_window",
+      "_tgt": "priority_slots",
+      "source": "virtual_context_window",
+      "target": "priority_slots"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "virtual_context_window",
+      "_tgt": "slot_substitution",
+      "source": "virtual_context_window",
+      "target": "slot_substitution"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "character_specification",
+      "_tgt": "stable_character",
+      "source": "character_specification",
+      "target": "stable_character"
+    },
+    {
+      "relation": "enables",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "bug_cross_channel",
+      "_tgt": "cross_channel_context",
+      "source": "cross_channel_context",
+      "target": "bug_cross_channel"
+    },
+    {
+      "relation": "enables",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "bug_infrastructure",
+      "_tgt": "forensic_reconstruction",
+      "source": "forensic_reconstruction",
+      "target": "bug_infrastructure"
+    },
+    {
+      "relation": "demonstrates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "audit_walkthrough",
+      "_tgt": "forensic_reconstruction",
+      "source": "forensic_reconstruction",
+      "target": "audit_walkthrough"
+    },
+    {
+      "relation": "feeds",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "ace_phase1",
+      "_tgt": "ace_phase2",
+      "source": "ace_phase1",
+      "target": "ace_phase2"
+    },
+    {
+      "relation": "falls_back_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "ace_phase1",
+      "_tgt": "ace_fallback",
+      "source": "ace_phase1",
+      "target": "ace_fallback"
+    },
+    {
+      "relation": "demonstrates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "bug_infrastructure",
+      "_tgt": "self_diagnostic_behavior",
+      "source": "self_diagnostic_behavior",
+      "target": "bug_infrastructure"
+    },
+    {
+      "relation": "demonstrates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "bug_failure_classify",
+      "_tgt": "self_diagnostic_behavior",
+      "source": "self_diagnostic_behavior",
+      "target": "bug_failure_classify"
+    },
+    {
+      "relation": "demonstrates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "bug_vulnerability",
+      "_tgt": "self_diagnostic_behavior",
+      "source": "self_diagnostic_behavior",
+      "target": "bug_vulnerability"
+    },
+    {
+      "relation": "contributed_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "reject_cascade",
+      "_tgt": "affect_miscalibration",
+      "source": "reject_cascade",
+      "target": "affect_miscalibration"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "deployment_metrics",
+      "_tgt": "success_rate_deployment",
+      "source": "deployment_metrics",
+      "target": "success_rate_deployment"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "property_3_refusal",
+      "_tgt": "right_to_refuse",
+      "source": "property_3_refusal",
+      "target": "right_to_refuse"
+    },
+    {
+      "relation": "establishes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "property_3_refusal",
+      "_tgt": "professional_trust",
+      "source": "property_3_refusal",
+      "target": "professional_trust"
+    },
+    {
+      "relation": "exemplifies",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "guide_dog_analogy",
+      "_tgt": "bounded_autonomy",
+      "source": "guide_dog_analogy",
+      "target": "bounded_autonomy"
+    }
+  ],
+  "hyperedges": []
+}

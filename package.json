@@ -1,8 +1,8 @@
 {
-  "name": "policy-sensorium",
-  "version": "0.1.0",
+  "name": "policy-layer",
+  "version": "0.2.0",
   "type": "module",
-  "description": "Springdrift-inspired Cognitive Behavior System for OpenClaw: CBS sensorium injection, D'gating, cycle metrics",
+  "description": "OpenClaw policy enforcement plugin: Layer 1 (normalize + 23 dangerous patterns), Layer 2 (D' CBS sensorium), Layer 3 (LLM smart-review + fast-lane + JSONL log), Layer 4 (39 secret patterns redaction)",
   "main": "src/index.ts",
   "openclaw": {
     "extensions": [

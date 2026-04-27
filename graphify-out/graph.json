@@ -1,0 +1,5986 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "INDEX.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/INDEX.md",
+      "source_location": null,
+      "id": "index",
+      "community": 6,
+      "norm_label": "index.md"
+    },
+    {
+      "label": "README.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/README.md",
+      "source_location": null,
+      "id": "readme",
+      "community": 5,
+      "norm_label": "readme.md"
+    },
+    {
+      "label": "automation-cron-jobs.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/automation-cron-jobs.md",
+      "source_location": null,
+      "id": "automation_cron_jobs",
+      "community": 5,
+      "norm_label": "automation-cron-jobs.md"
+    },
+    {
+      "label": "automation-hooks.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/automation-hooks.md",
+      "source_location": null,
+      "id": "automation_hooks",
+      "community": 1,
+      "norm_label": "automation-hooks.md"
+    },
+    {
+      "label": "automation-index.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/automation-index.md",
+      "source_location": null,
+      "id": "automation_index",
+      "community": 5,
+      "norm_label": "automation-index.md"
+    },
+    {
+      "label": "channels-discord.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/channels-discord.md",
+      "source_location": null,
+      "id": "channels_discord",
+      "community": 3,
+      "norm_label": "channels-discord.md"
+    },
+    {
+      "label": "channels-groups.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/channels-groups.md",
+      "source_location": null,
+      "id": "channels_groups",
+      "community": 3,
+      "norm_label": "channels-groups.md"
+    },
+    {
+      "label": "channels-index.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/channels-index.md",
+      "source_location": null,
+      "id": "channels_index",
+      "community": 3,
+      "norm_label": "channels-index.md"
+    },
+    {
+      "label": "channels-pairing.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/channels-pairing.md",
+      "source_location": null,
+      "id": "channels_pairing",
+      "community": 8,
+      "norm_label": "channels-pairing.md"
+    },
+    {
+      "label": "channels-slack.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/channels-slack.md",
+      "source_location": null,
+      "id": "channels_slack",
+      "community": 3,
+      "norm_label": "channels-slack.md"
+    },
+    {
+      "label": "channels-telegram.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/channels-telegram.md",
+      "source_location": null,
+      "id": "channels_telegram",
+      "community": 3,
+      "norm_label": "channels-telegram.md"
+    },
+    {
+      "label": "channels-whatsapp.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/channels-whatsapp.md",
+      "source_location": null,
+      "id": "channels_whatsapp",
+      "community": 3,
+      "norm_label": "channels-whatsapp.md"
+    },
+    {
+      "label": "cli-index.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/cli-index.md",
+      "source_location": null,
+      "id": "cli_index",
+      "community": 0,
+      "norm_label": "cli-index.md"
+    },
+    {
+      "label": "cli-reference.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/cli-reference.md",
+      "source_location": null,
+      "id": "cli_reference",
+      "community": 0,
+      "norm_label": "cli-reference.md"
+    },
+    {
+      "label": "concepts-active-memory.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/concepts-active-memory.md",
+      "source_location": null,
+      "id": "concepts_active_memory",
+      "community": 4,
+      "norm_label": "concepts-active-memory.md"
+    },
+    {
+      "label": "concepts-agent-runtimes.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/concepts-agent-runtimes.md",
+      "source_location": null,
+      "id": "concepts_agent_runtimes",
+      "community": 9,
+      "norm_label": "concepts-agent-runtimes.md"
+    },
+    {
+      "label": "concepts-agent-workspace.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/concepts-agent-workspace.md",
+      "source_location": null,
+      "id": "concepts_agent_workspace",
+      "community": 2,
+      "norm_label": "concepts-agent-workspace.md"
+    },
+    {
+      "label": "concepts-compaction.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/concepts-compaction.md",
+      "source_location": null,
+      "id": "concepts_compaction",
+      "community": 1,
+      "norm_label": "concepts-compaction.md"
+    },
+    {
+      "label": "concepts-dreaming.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/concepts-dreaming.md",
+      "source_location": null,
+      "id": "concepts_dreaming",
+      "community": 2,
+      "norm_label": "concepts-dreaming.md"
+    },
+    {
+      "label": "concepts-memory-builtin.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/concepts-memory-builtin.md",
+      "source_location": null,
+      "id": "concepts_memory_builtin",
+      "community": 4,
+      "norm_label": "concepts-memory-builtin.md"
+    },
+    {
+      "label": "concepts-memory-honcho.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/concepts-memory-honcho.md",
+      "source_location": null,
+      "id": "concepts_memory_honcho",
+      "community": 2,
+      "norm_label": "concepts-memory-honcho.md"
+    },
+    {
+      "label": "concepts-memory-qmd.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/concepts-memory-qmd.md",
+      "source_location": null,
+      "id": "concepts_memory_qmd",
+      "community": 5,
+      "norm_label": "concepts-memory-qmd.md"
+    },
+    {
+      "label": "concepts-memory-search.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/concepts-memory-search.md",
+      "source_location": null,
+      "id": "concepts_memory_search",
+      "community": 4,
+      "norm_label": "concepts-memory-search.md"
+    },
+    {
+      "label": "concepts-model-failover.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/concepts-model-failover.md",
+      "source_location": null,
+      "id": "concepts_model_failover",
+      "community": 7,
+      "norm_label": "concepts-model-failover.md"
+    },
+    {
+      "label": "concepts-models.md",
+      "file_type": "document",
+      "source_file": "docs/openclaw-docs/concepts-models.md",
+      "source_location": null,
+      "id": "concepts_models",
+      "community": 7,
+      "norm_label": "concepts-models.md"
+    },
+    {
+      "label": "openclaw (CLI)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "openclaw_cli",
+      "community": 0,
+      "norm_label": "openclaw (cli)"
+    },
+    {
+      "label": "Gateway",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "gateway",
+      "community": 1,
+      "norm_label": "gateway"
+    },
+    {
+      "label": "openclaw.json (config)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "openclaw_json",
+      "community": 6,
+      "norm_label": "openclaw.json (config)"
+    },
+    {
+      "label": "Plugin System",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "plugin_system",
+      "community": 6,
+      "norm_label": "plugin system"
+    },
+    {
+      "label": "Plugin SDK",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "plugin_sdk",
+      "community": 6,
+      "norm_label": "plugin sdk"
+    },
+    {
+      "label": "openclaw.plugin.json (manifest)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "openclaw_plugin_json",
+      "community": 6,
+      "norm_label": "openclaw.plugin.json (manifest)"
+    },
+    {
+      "label": "Internal Hooks",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "internal_hooks",
+      "community": 1,
+      "norm_label": "internal hooks"
+    },
+    {
+      "label": "Plugin Hooks",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "plugin_hooks",
+      "community": 6,
+      "norm_label": "plugin hooks"
+    },
+    {
+      "label": "Channel System",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "channel_system",
+      "community": 3,
+      "norm_label": "channel system"
+    },
+    {
+      "label": "Discord",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "discord",
+      "community": 3,
+      "norm_label": "discord"
+    },
+    {
+      "label": "Slack",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "slack",
+      "community": 3,
+      "norm_label": "slack"
+    },
+    {
+      "label": "Telegram",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "telegram",
+      "community": 3,
+      "norm_label": "telegram"
+    },
+    {
+      "label": "WhatsApp",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "whatsapp",
+      "community": 3,
+      "norm_label": "whatsapp"
+    },
+    {
+      "label": "Matrix",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "matrix",
+      "community": 3,
+      "norm_label": "matrix"
+    },
+    {
+      "label": "Email",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "email_channel",
+      "community": 3,
+      "norm_label": "email"
+    },
+    {
+      "label": "SMS",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "sms",
+      "community": 3,
+      "norm_label": "sms"
+    },
+    {
+      "label": "dmPolicy",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "dm_policy",
+      "community": 3,
+      "norm_label": "dmpolicy"
+    },
+    {
+      "label": "groupPolicy",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "group_policy",
+      "community": 3,
+      "norm_label": "grouppolicy"
+    },
+    {
+      "label": "Pairing System",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "pairing",
+      "community": 8,
+      "norm_label": "pairing system"
+    },
+    {
+      "label": "Agent Workspace",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "agent_workspace",
+      "community": 2,
+      "norm_label": "agent workspace"
+    },
+    {
+      "label": "AGENTS.md",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "agents_md",
+      "community": 5,
+      "norm_label": "agents.md"
+    },
+    {
+      "label": "SOUL.md",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "soul_md",
+      "community": 2,
+      "norm_label": "soul.md"
+    },
+    {
+      "label": "USER.md",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "user_md",
+      "community": 2,
+      "norm_label": "user.md"
+    },
+    {
+      "label": "IDENTITY.md",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "identity_md",
+      "community": 2,
+      "norm_label": "identity.md"
+    },
+    {
+      "label": "TOOLS.md",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "tools_md",
+      "community": 2,
+      "norm_label": "tools.md"
+    },
+    {
+      "label": "HEARTBEAT.md",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "heartbeat_md",
+      "community": 2,
+      "norm_label": "heartbeat.md"
+    },
+    {
+      "label": "BOOT.md",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "boot_md",
+      "community": 2,
+      "norm_label": "boot.md"
+    },
+    {
+      "label": "memory/ directory",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "memory_dir",
+      "community": 2,
+      "norm_label": "memory/ directory"
+    },
+    {
+      "label": "MEMORY.md",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "memory_md",
+      "community": 2,
+      "norm_label": "memory.md"
+    },
+    {
+      "label": "Daily Memory Files (YYYY-MM-DD.md)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "daily_memory_files",
+      "community": 2,
+      "norm_label": "daily memory files (yyyy-mm-dd.md)"
+    },
+    {
+      "label": "Model System",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "model_system",
+      "community": 7,
+      "norm_label": "model system"
+    },
+    {
+      "label": "Model Selection",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "model_selection",
+      "community": 7,
+      "norm_label": "model selection"
+    },
+    {
+      "label": "Model Allowlist",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "model_allowlist",
+      "community": 7,
+      "norm_label": "model allowlist"
+    },
+    {
+      "label": "Model Failover",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "model_failover",
+      "community": 7,
+      "norm_label": "model failover"
+    },
+    {
+      "label": "Auth Profile",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "auth_profile",
+      "community": 7,
+      "norm_label": "auth profile"
+    },
+    {
+      "label": "auth-profiles.json",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "auth_profiles_json",
+      "community": 7,
+      "norm_label": "auth-profiles.json"
+    },
+    {
+      "label": "auth-state.json",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "auth_state_json",
+      "community": 7,
+      "norm_label": "auth-state.json"
+    },
+    {
+      "label": "Compaction",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "compaction",
+      "community": 1,
+      "norm_label": "compaction"
+    },
+    {
+      "label": "Dreaming",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "dreaming",
+      "community": 2,
+      "norm_label": "dreaming"
+    },
+    {
+      "label": "Memory Search",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "memory_search",
+      "community": 4,
+      "norm_label": "memory search"
+    },
+    {
+      "label": "Builtin Memory (SQLite)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "builtin_memory",
+      "community": 4,
+      "norm_label": "builtin memory (sqlite)"
+    },
+    {
+      "label": "QMD Memory Backend",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "qmd_backend",
+      "community": 5,
+      "norm_label": "qmd memory backend"
+    },
+    {
+      "label": "Honcho Memory Plugin",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "honcho_plugin",
+      "community": 2,
+      "norm_label": "honcho memory plugin"
+    },
+    {
+      "label": "Active Memory Plugin",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "active_memory_plugin",
+      "community": 4,
+      "norm_label": "active memory plugin"
+    },
+    {
+      "label": "Agent Runtime",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "agent_runtime",
+      "community": 9,
+      "norm_label": "agent runtime"
+    },
+    {
+      "label": "Session System",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "session_system",
+      "community": 1,
+      "norm_label": "session system"
+    },
+    {
+      "label": "Heartbeat",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "heartbeat",
+      "community": 5,
+      "norm_label": "heartbeat"
+    },
+    {
+      "label": "Sandbox",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "sandbox",
+      "community": 9,
+      "norm_label": "sandbox"
+    },
+    {
+      "label": "Background Tasks",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "background_tasks",
+      "community": 5,
+      "norm_label": "background tasks"
+    },
+    {
+      "label": "Standing Orders",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "standing_orders",
+      "community": 5,
+      "norm_label": "standing orders"
+    },
+    {
+      "label": "Hot Reload",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "hot_reload",
+      "community": 6,
+      "norm_label": "hot reload"
+    },
+    {
+      "label": "JSON5 Format",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "json5",
+      "community": 6,
+      "norm_label": "json5 format"
+    },
+    {
+      "label": "Env Var Substitution",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "env_var_substitution",
+      "community": 6,
+      "norm_label": "env var substitution"
+    },
+    {
+      "label": "$include Directive",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "dollar_include",
+      "community": 6,
+      "norm_label": "$include directive"
+    },
+    {
+      "label": "memory-core (plugin)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "memory_core",
+      "community": 2,
+      "norm_label": "memory-core (plugin)"
+    },
+    {
+      "label": "Vector Search",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "vector_search",
+      "community": 4,
+      "norm_label": "vector search"
+    },
+    {
+      "label": "BM25 Keyword Search",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "bm25",
+      "community": 4,
+      "norm_label": "bm25 keyword search"
+    },
+    {
+      "label": "Hybrid Search",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "hybrid_search",
+      "community": 4,
+      "norm_label": "hybrid search"
+    },
+    {
+      "label": "SQLite",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "sqlite",
+      "community": 4,
+      "norm_label": "sqlite"
+    },
+    {
+      "label": "sqlite-vec",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "sqlite_vec",
+      "community": 4,
+      "norm_label": "sqlite-vec"
+    },
+    {
+      "label": "FTS5",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "fts5",
+      "community": 4,
+      "norm_label": "fts5"
+    },
+    {
+      "label": "memory_search (tool)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "memory_search_tool",
+      "community": 4,
+      "norm_label": "memory_search (tool)"
+    },
+    {
+      "label": "memory_get (tool)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "memory_get_tool",
+      "community": 4,
+      "norm_label": "memory_get (tool)"
+    },
+    {
+      "label": "honcho_context (tool)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "honcho_context",
+      "community": 2,
+      "norm_label": "honcho_context (tool)"
+    },
+    {
+      "label": "honcho_search_conclusions (tool)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "honcho_search_conclusions",
+      "community": 2,
+      "norm_label": "honcho_search_conclusions (tool)"
+    },
+    {
+      "label": "honcho_search_messages (tool)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "honcho_search_messages",
+      "community": 2,
+      "norm_label": "honcho_search_messages (tool)"
+    },
+    {
+      "label": "honcho_ask (tool)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "honcho_ask",
+      "community": 2,
+      "norm_label": "honcho_ask (tool)"
+    },
+    {
+      "label": "command Event",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "command_event",
+      "community": 1,
+      "norm_label": "command event"
+    },
+    {
+      "label": "command:new Event",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "command_new_event",
+      "community": 1,
+      "norm_label": "command:new event"
+    },
+    {
+      "label": "command:reset Event",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "command_reset_event",
+      "community": 1,
+      "norm_label": "command:reset event"
+    },
+    {
+      "label": "command:stop Event",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "command_stop_event",
+      "community": 1,
+      "norm_label": "command:stop event"
+    },
+    {
+      "label": "session:compact:before Event",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "session_compact_before_event",
+      "community": 1,
+      "norm_label": "session:compact:before event"
+    },
+    {
+      "label": "session:compact:after Event",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "session_compact_after_event",
+      "community": 1,
+      "norm_label": "session:compact:after event"
+    },
+    {
+      "label": "agent:bootstrap Event",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "agent_bootstrap_event",
+      "community": 1,
+      "norm_label": "agent:bootstrap event"
+    },
+    {
+      "label": "gateway:startup Event",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "gateway_startup_event",
+      "community": 1,
+      "norm_label": "gateway:startup event"
+    },
+    {
+      "label": "message:received Event",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "message_received_event",
+      "community": 1,
+      "norm_label": "message:received event"
+    },
+    {
+      "label": "message:transcribed Event",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "message_transcribed_event",
+      "community": 1,
+      "norm_label": "message:transcribed event"
+    },
+    {
+      "label": "message:preprocessed Event",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "message_preprocessed_event",
+      "community": 1,
+      "norm_label": "message:preprocessed event"
+    },
+    {
+      "label": "message:sent Event",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "message_sent_event",
+      "community": 1,
+      "norm_label": "message:sent event"
+    },
+    {
+      "label": "session-memory (bundled hook)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "session_memory_hook",
+      "community": 1,
+      "norm_label": "session-memory (bundled hook)"
+    },
+    {
+      "label": "bootstrap-extra-files (bundled hook)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "bootstrap_extra_files_hook",
+      "community": 1,
+      "norm_label": "bootstrap-extra-files (bundled hook)"
+    },
+    {
+      "label": "command-logger (bundled hook)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "command_logger_hook",
+      "community": 1,
+      "norm_label": "command-logger (bundled hook)"
+    },
+    {
+      "label": "boot-md (bundled hook)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "boot_md_hook",
+      "community": 1,
+      "norm_label": "boot-md (bundled hook)"
+    },
+    {
+      "label": "HOOK.md",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "hook_md",
+      "community": 1,
+      "norm_label": "hook.md"
+    },
+    {
+      "label": "handler.ts",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "handler_ts",
+      "community": 1,
+      "norm_label": "handler.ts"
+    },
+    {
+      "label": "Cron Scheduler",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "cron",
+      "community": 5,
+      "norm_label": "cron scheduler"
+    },
+    {
+      "label": "Task Flow",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "task_flow",
+      "community": 5,
+      "norm_label": "task flow"
+    },
+    {
+      "label": "Task Ledger",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "task_ledger",
+      "community": 5,
+      "norm_label": "task ledger"
+    },
+    {
+      "label": "before_tool_call (plugin hook)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "before_tool_call_hook",
+      "community": 6,
+      "norm_label": "before_tool_call (plugin hook)"
+    },
+    {
+      "label": "before_agent_reply (plugin hook)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "before_agent_reply_hook",
+      "community": 6,
+      "norm_label": "before_agent_reply (plugin hook)"
+    },
+    {
+      "label": "llm_input (plugin hook)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "llm_input_hook",
+      "community": 6,
+      "norm_label": "llm_input (plugin hook)"
+    },
+    {
+      "label": "llm_output (plugin hook)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "llm_output_hook",
+      "community": 6,
+      "norm_label": "llm_output (plugin hook)"
+    },
+    {
+      "label": "session_start (plugin hook)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "session_start_hook",
+      "community": 6,
+      "norm_label": "session_start (plugin hook)"
+    },
+    {
+      "label": "session_end (plugin hook)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "session_end_hook",
+      "community": 6,
+      "norm_label": "session_end (plugin hook)"
+    },
+    {
+      "label": "gateway_start (plugin hook)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "gateway_start_hook",
+      "community": 6,
+      "norm_label": "gateway_start (plugin hook)"
+    },
+    {
+      "label": "gateway_stop (plugin hook)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "gateway_stop_hook",
+      "community": 6,
+      "norm_label": "gateway_stop (plugin hook)"
+    },
+    {
+      "label": "Temporal Decay",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "temporal_decay",
+      "community": 4,
+      "norm_label": "temporal decay"
+    },
+    {
+      "label": "MMR (Maximal Marginal Relevance)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "mmr",
+      "community": 4,
+      "norm_label": "mmr (maximal marginal relevance)"
+    },
+    {
+      "label": "Dreaming Light Phase",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "light_phase",
+      "community": 2,
+      "norm_label": "dreaming light phase"
+    },
+    {
+      "label": "Dreaming Deep Phase",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "deep_phase",
+      "community": 2,
+      "norm_label": "dreaming deep phase"
+    },
+    {
+      "label": "Dreaming REM Phase",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "rem_phase",
+      "community": 2,
+      "norm_label": "dreaming rem phase"
+    },
+    {
+      "label": "DREAMS.md",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "dreams_md",
+      "community": 2,
+      "norm_label": "dreams.md"
+    },
+    {
+      "label": "Dreaming Scoring Signals",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "scoring_signals",
+      "community": 2,
+      "norm_label": "dreaming scoring signals"
+    },
+    {
+      "label": "compaction.mode",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "compact_mode",
+      "community": 1,
+      "norm_label": "compaction.mode"
+    },
+    {
+      "label": "sandbox.mode",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "sandbox_mode",
+      "community": 9,
+      "norm_label": "sandbox.mode"
+    },
+    {
+      "label": "hotReload mode",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "hot_reload_mode",
+      "community": 6,
+      "norm_label": "hotreload mode"
+    },
+    {
+      "label": "PI Runtime",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "pi_runtime",
+      "community": 9,
+      "norm_label": "pi runtime"
+    },
+    {
+      "label": "Codex Runtime",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "codex_runtime",
+      "community": 9,
+      "norm_label": "codex runtime"
+    },
+    {
+      "label": "ACP Runtime",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "acp_runtime",
+      "community": 9,
+      "norm_label": "acp runtime"
+    },
+    {
+      "label": "embeddedHarness",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "embedded_harness",
+      "community": 9,
+      "norm_label": "embeddedharness"
+    },
+    {
+      "label": "Exec Approvals",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "exec_approvals",
+      "community": 3,
+      "norm_label": "exec approvals"
+    },
+    {
+      "label": "Tiered Model Allowlist",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "tiered_allowlist",
+      "community": 10,
+      "norm_label": "tiered model allowlist"
+    },
+    {
+      "label": "Tiered Model Fallbacks",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "tiered_fallbacks",
+      "community": 7,
+      "norm_label": "tiered model fallbacks"
+    },
+    {
+      "label": "DISCORD_BOT_TOKEN",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "discord_bot_token",
+      "community": 3,
+      "norm_label": "discord_bot_token"
+    },
+    {
+      "label": "SLACK_APP_TOKEN",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "slack_app_token",
+      "community": 3,
+      "norm_label": "slack_app_token"
+    },
+    {
+      "label": "SLACK_BOT_TOKEN",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "slack_bot_token",
+      "community": 3,
+      "norm_label": "slack_bot_token"
+    },
+    {
+      "label": "botToken (Telegram)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "bot_token",
+      "community": 3,
+      "norm_label": "bottoken (telegram)"
+    },
+    {
+      "label": "Pairing Code",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "pairing_code",
+      "community": 8,
+      "norm_label": "pairing code"
+    },
+    {
+      "label": "autoApproveCidrs",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "auto_approve_cidrs",
+      "community": 8,
+      "norm_label": "autoapprovecidrs"
+    },
+    {
+      "label": "~/.openclaw/credentials/",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "credentials_dir",
+      "community": 8,
+      "norm_label": "~/.openclaw/credentials/"
+    },
+    {
+      "label": "~/.openclaw/sessions/",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "sessions_dir",
+      "community": 1,
+      "norm_label": "~/.openclaw/sessions/"
+    },
+    {
+      "label": "~/.openclaw/devices/",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "devices_dir",
+      "community": 8,
+      "norm_label": "~/.openclaw/devices/"
+    },
+    {
+      "label": "~/.openclaw/skills/",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "skills_dir",
+      "community": 2,
+      "norm_label": "~/.openclaw/skills/"
+    },
+    {
+      "label": "<channel>-pairing.json",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "openclaw_pairing_json",
+      "community": 8,
+      "norm_label": "<channel>-pairing.json"
+    },
+    {
+      "label": "<channel>-allowFrom.json",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "openclaw_allowfrom_json",
+      "community": 8,
+      "norm_label": "<channel>-allowfrom.json"
+    },
+    {
+      "label": "pending.json",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "devices_pending_json",
+      "community": 8,
+      "norm_label": "pending.json"
+    },
+    {
+      "label": "paired.json",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "devices_paired_json",
+      "community": 8,
+      "norm_label": "paired.json"
+    },
+    {
+      "label": "Tiered Channel Allowlist",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "tiered_channel_allowlist",
+      "community": 3,
+      "norm_label": "tiered channel allowlist"
+    },
+    {
+      "label": "Mention Gating",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "mention_gating",
+      "community": 3,
+      "norm_label": "mention gating"
+    },
+    {
+      "label": "Session Isolation",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "session_isolation",
+      "community": 9,
+      "norm_label": "session isolation"
+    },
+    {
+      "label": "OpenRouter",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "openrouter",
+      "community": 3,
+      "norm_label": "openrouter"
+    },
+    {
+      "label": "~/.openclaw/workspace",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "workspace_default",
+      "community": 2,
+      "norm_label": "~/.openclaw/workspace"
+    },
+    {
+      "label": "~/.openclaw/memory/<agentId>.sqlite",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "memory_sqlite_file",
+      "community": 4,
+      "norm_label": "~/.openclaw/memory/<agentid>.sqlite"
+    },
+    {
+      "label": "Tiered Hooks",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "tiered_hooks",
+      "community": 11,
+      "norm_label": "tiered hooks"
+    },
+    {
+      "label": "@honcho-ai/openclaw-honcho",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "openclaw_honcho_plugin",
+      "community": 2,
+      "norm_label": "@honcho-ai/openclaw-honcho"
+    },
+    {
+      "label": "@tobi/qlu (QLU)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "memory_qlu",
+      "community": 5,
+      "norm_label": "@tobi/qlu (qlu)"
+    },
+    {
+      "label": "node-llama-cpp",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "node_llama_cpp",
+      "community": 4,
+      "norm_label": "node-llama-cpp"
+    },
+    {
+      "label": "Baileys (WhatsApp)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "baileys",
+      "community": 3,
+      "norm_label": "baileys (whatsapp)"
+    },
+    {
+      "label": "Git Workspace Backup",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "git_backup",
+      "community": 2,
+      "norm_label": "git workspace backup"
+    },
+    {
+      "label": "POST /hooks/wake",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "post_hooks_wake",
+      "community": 1,
+      "norm_label": "post /hooks/wake"
+    },
+    {
+      "label": "POST /hooks/agent",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "post_hooks_agent",
+      "community": 1,
+      "norm_label": "post /hooks/agent"
+    },
+    {
+      "label": "Slash Commands",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "slash_commands",
+      "community": 1,
+      "norm_label": "slash commands"
+    },
+    {
+      "label": "/model",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "slash_model",
+      "community": 7,
+      "norm_label": "/model"
+    },
+    {
+      "label": "/reset",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "slash_reset",
+      "community": 1,
+      "norm_label": "/reset"
+    },
+    {
+      "label": "/new",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "slash_new",
+      "community": 1,
+      "norm_label": "/new"
+    },
+    {
+      "label": "/stop",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "slash_stop",
+      "community": 1,
+      "norm_label": "/stop"
+    },
+    {
+      "label": "/compact",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "slash_compact",
+      "community": 1,
+      "norm_label": "/compact"
+    },
+    {
+      "label": "/activation",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "slash_activation",
+      "community": 1,
+      "norm_label": "/activation"
+    },
+    {
+      "label": "/pair",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "slash_pair",
+      "community": 1,
+      "norm_label": "/pair"
+    },
+    {
+      "label": "/dreaming",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "slash_dreaming",
+      "community": 2,
+      "norm_label": "/dreaming"
+    },
+    {
+      "label": "/active-memory",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "slash_active_memory",
+      "community": 4,
+      "norm_label": "/active-memory"
+    },
+    {
+      "label": "/verbose",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "slash_verbose",
+      "community": 1,
+      "norm_label": "/verbose"
+    },
+    {
+      "label": "/trace",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "slash_trace",
+      "community": 1,
+      "norm_label": "/trace"
+    },
+    {
+      "label": "/codex",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "slash_codex",
+      "community": 1,
+      "norm_label": "/codex"
+    },
+    {
+      "label": "requireMention",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "require_mention",
+      "community": 3,
+      "norm_label": "requiremention"
+    },
+    {
+      "label": "queryMode (Active Memory)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "query_mode",
+      "community": 4,
+      "norm_label": "querymode (active memory)"
+    },
+    {
+      "label": "promptStyle (Active Memory)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "prompt_style",
+      "community": 4,
+      "norm_label": "promptstyle (active memory)"
+    },
+    {
+      "label": "OpenAI (embedding provider)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "openai_provider",
+      "community": 4,
+      "norm_label": "openai (embedding provider)"
+    },
+    {
+      "label": "Gemini (embedding provider)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "gemini_provider",
+      "community": 4,
+      "norm_label": "gemini (embedding provider)"
+    },
+    {
+      "label": "Voyage (embedding provider)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "voyage_provider",
+      "community": 4,
+      "norm_label": "voyage (embedding provider)"
+    },
+    {
+      "label": "Mistral (embedding provider)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "mistral_provider",
+      "community": 4,
+      "norm_label": "mistral (embedding provider)"
+    },
+    {
+      "label": "Ollama (embedding provider)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "ollama_provider",
+      "community": 4,
+      "norm_label": "ollama (embedding provider)"
+    },
+    {
+      "label": "Bedrock (embedding provider)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "bedrock_provider",
+      "community": 4,
+      "norm_label": "bedrock (embedding provider)"
+    },
+    {
+      "label": "Local Embedding",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "local_embedding",
+      "community": 4,
+      "norm_label": "local embedding"
+    },
+    {
+      "label": "Auth Profile Cooldowns",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "cooldowns",
+      "community": 7,
+      "norm_label": "auth profile cooldowns"
+    },
+    {
+      "label": "FallbackSummaryError",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "fallback_summary_error",
+      "community": 7,
+      "norm_label": "fallbacksummaryerror"
+    },
+    {
+      "label": "Session ID Pattern",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "session_id",
+      "community": 3,
+      "norm_label": "session id pattern"
+    },
+    {
+      "label": "Cross-Session Memory",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "cross_session_memory",
+      "community": 2,
+      "norm_label": "cross-session memory"
+    },
+    {
+      "label": "User Modeling",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "user_modeling",
+      "community": 2,
+      "norm_label": "user modeling"
+    },
+    {
+      "label": "Multi-Agent Awareness",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "multi_agent_awareness",
+      "community": 2,
+      "norm_label": "multi-agent awareness"
+    },
+    {
+      "label": "Reranking",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "reranking",
+      "community": 5,
+      "norm_label": "reranking"
+    },
+    {
+      "label": "Query Expansion",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "query_expansion",
+      "community": 5,
+      "norm_label": "query expansion"
+    },
+    {
+      "label": "Memory Citations",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "citations",
+      "community": 5,
+      "norm_label": "memory citations"
+    },
+    {
+      "label": "Forum Topics (Telegram)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "forum_topics",
+      "community": 3,
+      "norm_label": "forum topics (telegram)"
+    },
+    {
+      "label": "Thread Sessions",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "thread_sessions",
+      "community": 3,
+      "norm_label": "thread sessions"
+    },
+    {
+      "label": "exec-policy",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "exec_policy",
+      "community": 0,
+      "norm_label": "exec-policy"
+    },
+    {
+      "label": "tui",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "tui",
+      "community": 0,
+      "norm_label": "tui"
+    },
+    {
+      "label": "chat/terminal",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "chat_interface",
+      "community": 0,
+      "norm_label": "chat/terminal"
+    },
+    {
+      "label": "doctor",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "doctor",
+      "community": 0,
+      "norm_label": "doctor"
+    },
+    {
+      "label": "dashboard",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "dashboard",
+      "community": 0,
+      "norm_label": "dashboard"
+    },
+    {
+      "label": "setup",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "setup_command",
+      "community": 0,
+      "norm_label": "setup"
+    },
+    {
+      "label": "onboard",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "onboard_command",
+      "community": 0,
+      "norm_label": "onboard"
+    },
+    {
+      "label": "completion",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "completion_command",
+      "community": 0,
+      "norm_label": "completion"
+    },
+    {
+      "label": "status",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "status_command",
+      "community": 0,
+      "norm_label": "status"
+    },
+    {
+      "label": "health",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "health_command",
+      "community": 0,
+      "norm_label": "health"
+    },
+    {
+      "label": "configure",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "configure_command",
+      "community": 0,
+      "norm_label": "configure"
+    },
+    {
+      "label": "config",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "config_command",
+      "community": 0,
+      "norm_label": "config"
+    },
+    {
+      "label": "backup",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "backup_command",
+      "community": 0,
+      "norm_label": "backup"
+    },
+    {
+      "label": "reset",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "reset_command",
+      "community": 0,
+      "norm_label": "reset"
+    },
+    {
+      "label": "uninstall",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "uninstall_command",
+      "community": 0,
+      "norm_label": "uninstall"
+    },
+    {
+      "label": "update",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "update_command",
+      "community": 0,
+      "norm_label": "update"
+    },
+    {
+      "label": "message",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "message_command",
+      "community": 0,
+      "norm_label": "message"
+    },
+    {
+      "label": "agent",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "agent_command",
+      "community": 0,
+      "norm_label": "agent"
+    },
+    {
+      "label": "agents",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "agents_command",
+      "community": 0,
+      "norm_label": "agents"
+    },
+    {
+      "label": "acp",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "acp_command",
+      "community": 0,
+      "norm_label": "acp"
+    },
+    {
+      "label": "mcp",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "mcp_command",
+      "community": 0,
+      "norm_label": "mcp"
+    },
+    {
+      "label": "sessions",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "sessions_command",
+      "community": 0,
+      "norm_label": "sessions"
+    },
+    {
+      "label": "logs",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "logs_command",
+      "community": 0,
+      "norm_label": "logs"
+    },
+    {
+      "label": "gateway",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "gateway_command",
+      "community": 0,
+      "norm_label": "gateway"
+    },
+    {
+      "label": "system",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "system_command",
+      "community": 0,
+      "norm_label": "system"
+    },
+    {
+      "label": "models",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "models_command",
+      "community": 7,
+      "norm_label": "models"
+    },
+    {
+      "label": "infer",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "infer_command",
+      "community": 0,
+      "norm_label": "infer"
+    },
+    {
+      "label": "capability",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "capability_command",
+      "community": 0,
+      "norm_label": "capability"
+    },
+    {
+      "label": "memory",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "memory_command",
+      "community": 2,
+      "norm_label": "memory"
+    },
+    {
+      "label": "wiki",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "wiki_command",
+      "community": 0,
+      "norm_label": "wiki"
+    },
+    {
+      "label": "directory",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "directory_command",
+      "community": 0,
+      "norm_label": "directory"
+    },
+    {
+      "label": "nodes",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "nodes_command",
+      "community": 8,
+      "norm_label": "nodes"
+    },
+    {
+      "label": "devices",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "devices_command",
+      "community": 8,
+      "norm_label": "devices"
+    },
+    {
+      "label": "node",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "node_command",
+      "community": 0,
+      "norm_label": "node"
+    },
+    {
+      "label": "approvals",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "approvals_command",
+      "community": 0,
+      "norm_label": "approvals"
+    },
+    {
+      "label": "sandbox",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "sandbox_command",
+      "community": 0,
+      "norm_label": "sandbox"
+    },
+    {
+      "label": "browser",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "browser_command",
+      "community": 0,
+      "norm_label": "browser"
+    },
+    {
+      "label": "cron (CLI subcommand)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "cron_command",
+      "community": 5,
+      "norm_label": "cron (cli subcommand)"
+    },
+    {
+      "label": "tasks",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "tasks_command",
+      "community": 5,
+      "norm_label": "tasks"
+    },
+    {
+      "label": "hooks (CLI subcommand)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "hooks_command",
+      "community": 1,
+      "norm_label": "hooks (cli subcommand)"
+    },
+    {
+      "label": "webhooks",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "webhooks_command",
+      "community": 0,
+      "norm_label": "webhooks"
+    },
+    {
+      "label": "dns",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "dns_command",
+      "community": 0,
+      "norm_label": "dns"
+    },
+    {
+      "label": "docs",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "docs_command",
+      "community": 0,
+      "norm_label": "docs"
+    },
+    {
+      "label": "pairing",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "pairing_command",
+      "community": 8,
+      "norm_label": "pairing"
+    },
+    {
+      "label": "qr",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "qr_command",
+      "community": 0,
+      "norm_label": "qr"
+    },
+    {
+      "label": "channels",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "channels_command",
+      "community": 3,
+      "norm_label": "channels"
+    },
+    {
+      "label": "security",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "security_command",
+      "community": 0,
+      "norm_label": "security"
+    },
+    {
+      "label": "secrets",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "secrets_command",
+      "community": 0,
+      "norm_label": "secrets"
+    },
+    {
+      "label": "skills",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "skills_command",
+      "community": 0,
+      "norm_label": "skills"
+    },
+    {
+      "label": "plugins",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "plugins_command",
+      "community": 2,
+      "norm_label": "plugins"
+    },
+    {
+      "label": "proxy",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "proxy_command",
+      "community": 0,
+      "norm_label": "proxy"
+    },
+    {
+      "label": "honcho (CLI)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "honcho_command",
+      "community": 2,
+      "norm_label": "honcho (cli)"
+    },
+    {
+      "label": "maxConcurrentRuns",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "max_concurrent_runs",
+      "community": 5,
+      "norm_label": "maxconcurrentruns"
+    },
+    {
+      "label": "sessionRetention",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "session_retention",
+      "community": 5,
+      "norm_label": "sessionretention"
+    },
+    {
+      "label": "runLog",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "run_log",
+      "community": 5,
+      "norm_label": "runlog"
+    },
+    {
+      "label": "voicecall",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "voicecall_command",
+      "community": 0,
+      "norm_label": "voicecall"
+    },
+    {
+      "label": "daemon (legacy alias)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "daemon_alias",
+      "community": 0,
+      "norm_label": "daemon (legacy alias)"
+    },
+    {
+      "label": "clawbot (legacy alias)",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "clawbot_alias",
+      "community": 0,
+      "norm_label": "clawbot (legacy alias)"
+    },
+    {
+      "label": "crestodian",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "crestodian_command",
+      "community": 0,
+      "norm_label": "crestodian"
+    },
+    {
+      "label": "Tiered Security Model",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "tiered_security",
+      "community": 3,
+      "norm_label": "tiered security model"
+    },
+    {
+      "label": "Schema Validation",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "schema_validation",
+      "community": 6,
+      "norm_label": "schema validation"
+    },
+    {
+      "label": "Trusted Proxy Auth",
+      "file_type": "concept",
+      "source_file": null,
+      "source_location": null,
+      "id": "trusted_proxy_auth",
+      "community": 1,
+      "norm_label": "trusted proxy auth"
+    }
+  ],
+  "links": [
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "index",
+      "_tgt": "gateway",
+      "source": "index",
+      "target": "gateway"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "index",
+      "_tgt": "plugin_system",
+      "source": "index",
+      "target": "plugin_system"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "index",
+      "_tgt": "plugin_hooks",
+      "source": "index",
+      "target": "plugin_hooks"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "index",
+      "_tgt": "internal_hooks",
+      "source": "index",
+      "target": "internal_hooks"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "index",
+      "_tgt": "openclaw_json",
+      "source": "index",
+      "target": "openclaw_json"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "index",
+      "_tgt": "hot_reload",
+      "source": "index",
+      "target": "hot_reload"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "index",
+      "_tgt": "json5",
+      "source": "index",
+      "target": "json5"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "index",
+      "_tgt": "env_var_substitution",
+      "source": "index",
+      "target": "env_var_substitution"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "gateway",
+      "source": "readme",
+      "target": "gateway"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "plugin_system",
+      "source": "readme",
+      "target": "plugin_system"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "channel_system",
+      "source": "readme",
+      "target": "channel_system"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "cron",
+      "source": "readme",
+      "target": "cron"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "internal_hooks",
+      "source": "readme",
+      "target": "internal_hooks"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "model_system",
+      "source": "readme",
+      "target": "model_system"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "model_failover",
+      "source": "readme",
+      "target": "model_failover"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "agent_workspace",
+      "source": "readme",
+      "target": "agent_workspace"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "agent_runtime",
+      "source": "readme",
+      "target": "agent_runtime"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "compaction",
+      "source": "readme",
+      "target": "compaction"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "dreaming",
+      "source": "readme",
+      "target": "dreaming"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "memory_search",
+      "source": "readme",
+      "target": "memory_search"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "builtin_memory",
+      "source": "readme",
+      "target": "builtin_memory"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "qmd_backend",
+      "source": "readme",
+      "target": "qmd_backend"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "honcho_plugin",
+      "source": "readme",
+      "target": "honcho_plugin"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "slash_commands",
+      "source": "readme",
+      "target": "slash_commands"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "openclaw_cli",
+      "source": "readme",
+      "target": "openclaw_cli"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "pairing",
+      "source": "readme",
+      "target": "pairing"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "background_tasks",
+      "source": "readme",
+      "target": "background_tasks"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "sandbox",
+      "source": "readme",
+      "target": "sandbox"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "standing_orders",
+      "source": "readme",
+      "target": "standing_orders"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "readme",
+      "_tgt": "heartbeat",
+      "source": "readme",
+      "target": "heartbeat"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "automation_cron_jobs",
+      "_tgt": "cron",
+      "source": "automation_cron_jobs",
+      "target": "cron"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "automation_hooks",
+      "_tgt": "internal_hooks",
+      "source": "automation_hooks",
+      "target": "internal_hooks"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "automation_index",
+      "_tgt": "cron",
+      "source": "automation_index",
+      "target": "cron"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "automation_index",
+      "_tgt": "background_tasks",
+      "source": "automation_index",
+      "target": "background_tasks"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "automation_index",
+      "_tgt": "task_flow",
+      "source": "automation_index",
+      "target": "task_flow"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "automation_index",
+      "_tgt": "internal_hooks",
+      "source": "automation_index",
+      "target": "internal_hooks"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "automation_index",
+      "_tgt": "standing_orders",
+      "source": "automation_index",
+      "target": "standing_orders"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "automation_index",
+      "_tgt": "heartbeat",
+      "source": "automation_index",
+      "target": "heartbeat"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channels_discord",
+      "_tgt": "discord",
+      "source": "channels_discord",
+      "target": "discord"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channels_groups",
+      "_tgt": "group_policy",
+      "source": "channels_groups",
+      "target": "group_policy"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channels_index",
+      "_tgt": "channel_system",
+      "source": "channels_index",
+      "target": "channel_system"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channels_pairing",
+      "_tgt": "pairing",
+      "source": "channels_pairing",
+      "target": "pairing"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channels_slack",
+      "_tgt": "slack",
+      "source": "channels_slack",
+      "target": "slack"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channels_telegram",
+      "_tgt": "telegram",
+      "source": "channels_telegram",
+      "target": "telegram"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channels_whatsapp",
+      "_tgt": "whatsapp",
+      "source": "channels_whatsapp",
+      "target": "whatsapp"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cli_index",
+      "_tgt": "openclaw_cli",
+      "source": "cli_index",
+      "target": "openclaw_cli"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cli_reference",
+      "_tgt": "openclaw_cli",
+      "source": "cli_reference",
+      "target": "openclaw_cli"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "concepts_active_memory",
+      "_tgt": "active_memory_plugin",
+      "source": "concepts_active_memory",
+      "target": "active_memory_plugin"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "concepts_agent_runtimes",
+      "_tgt": "agent_runtime",
+      "source": "concepts_agent_runtimes",
+      "target": "agent_runtime"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "concepts_agent_workspace",
+      "_tgt": "agent_workspace",
+      "source": "concepts_agent_workspace",
+      "target": "agent_workspace"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "concepts_compaction",
+      "_tgt": "compaction",
+      "source": "concepts_compaction",
+      "target": "compaction"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "concepts_dreaming",
+      "_tgt": "dreaming",
+      "source": "concepts_dreaming",
+      "target": "dreaming"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "concepts_memory_builtin",
+      "_tgt": "builtin_memory",
+      "source": "concepts_memory_builtin",
+      "target": "builtin_memory"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "concepts_memory_honcho",
+      "_tgt": "honcho_plugin",
+      "source": "concepts_memory_honcho",
+      "target": "honcho_plugin"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "concepts_memory_qmd",
+      "_tgt": "qmd_backend",
+      "source": "concepts_memory_qmd",
+      "target": "qmd_backend"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "concepts_memory_search",
+      "_tgt": "memory_search",
+      "source": "concepts_memory_search",
+      "target": "memory_search"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "concepts_model_failover",
+      "_tgt": "model_failover",
+      "source": "concepts_model_failover",
+      "target": "model_failover"
+    },
+    {
+      "relation": "belongs_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "concepts_models",
+      "_tgt": "model_system",
+      "source": "concepts_models",
+      "target": "model_system"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "gateway",
+      "source": "openclaw_cli",
+      "target": "gateway"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "setup_command",
+      "source": "openclaw_cli",
+      "target": "setup_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "status_command",
+      "source": "openclaw_cli",
+      "target": "status_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "configure_command",
+      "source": "openclaw_cli",
+      "target": "configure_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "doctor",
+      "source": "openclaw_cli",
+      "target": "doctor"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "models_command",
+      "source": "openclaw_cli",
+      "target": "models_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "agents_command",
+      "source": "openclaw_cli",
+      "target": "agents_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "message_command",
+      "source": "openclaw_cli",
+      "target": "message_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "logs_command",
+      "source": "openclaw_cli",
+      "target": "logs_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "gateway_command",
+      "source": "openclaw_cli",
+      "target": "gateway_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "plugins_command",
+      "source": "openclaw_cli",
+      "target": "plugins_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "skills_command",
+      "source": "openclaw_cli",
+      "target": "skills_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "mcp_command",
+      "source": "openclaw_cli",
+      "target": "mcp_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "secrets_command",
+      "source": "openclaw_cli",
+      "target": "secrets_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "approvals_command",
+      "source": "openclaw_cli",
+      "target": "approvals_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "cron_command",
+      "source": "openclaw_cli",
+      "target": "cron_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "tasks_command",
+      "source": "openclaw_cli",
+      "target": "tasks_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "hooks_command",
+      "source": "openclaw_cli",
+      "target": "hooks_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "webhooks_command",
+      "source": "openclaw_cli",
+      "target": "webhooks_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "pairing_command",
+      "source": "openclaw_cli",
+      "target": "pairing_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "channels_command",
+      "source": "openclaw_cli",
+      "target": "channels_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "nodes_command",
+      "source": "openclaw_cli",
+      "target": "nodes_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "devices_command",
+      "source": "openclaw_cli",
+      "target": "devices_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "tui",
+      "source": "openclaw_cli",
+      "target": "tui"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "chat_interface",
+      "source": "openclaw_cli",
+      "target": "chat_interface"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "browser_command",
+      "source": "openclaw_cli",
+      "target": "browser_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "sandbox_command",
+      "source": "openclaw_cli",
+      "target": "sandbox_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "exec_policy",
+      "source": "openclaw_cli",
+      "target": "exec_policy"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "reset_command",
+      "source": "openclaw_cli",
+      "target": "reset_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "uninstall_command",
+      "source": "openclaw_cli",
+      "target": "uninstall_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "honcho_command",
+      "source": "openclaw_cli",
+      "target": "honcho_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "memory_command",
+      "source": "openclaw_cli",
+      "target": "memory_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "sessions_command",
+      "source": "openclaw_cli",
+      "target": "sessions_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "health_command",
+      "source": "openclaw_cli",
+      "target": "health_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "system_command",
+      "source": "openclaw_cli",
+      "target": "system_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "infer_command",
+      "source": "openclaw_cli",
+      "target": "infer_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "directory_command",
+      "source": "openclaw_cli",
+      "target": "directory_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "node_command",
+      "source": "openclaw_cli",
+      "target": "node_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "dns_command",
+      "source": "openclaw_cli",
+      "target": "dns_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "docs_command",
+      "source": "openclaw_cli",
+      "target": "docs_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "security_command",
+      "source": "openclaw_cli",
+      "target": "security_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "proxy_command",
+      "source": "openclaw_cli",
+      "target": "proxy_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "backup_command",
+      "source": "openclaw_cli",
+      "target": "backup_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "update_command",
+      "source": "openclaw_cli",
+      "target": "update_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "agent_command",
+      "source": "openclaw_cli",
+      "target": "agent_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "acp_command",
+      "source": "openclaw_cli",
+      "target": "acp_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "capability_command",
+      "source": "openclaw_cli",
+      "target": "capability_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "wiki_command",
+      "source": "openclaw_cli",
+      "target": "wiki_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "qr_command",
+      "source": "openclaw_cli",
+      "target": "qr_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "completion_command",
+      "source": "openclaw_cli",
+      "target": "completion_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "config_command",
+      "source": "openclaw_cli",
+      "target": "config_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "onboard_command",
+      "source": "openclaw_cli",
+      "target": "onboard_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "dashboard",
+      "source": "openclaw_cli",
+      "target": "dashboard"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "crestodian_command",
+      "source": "openclaw_cli",
+      "target": "crestodian_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "voicecall_command",
+      "source": "openclaw_cli",
+      "target": "voicecall_command"
+    },
+    {
+      "relation": "aliases",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "daemon_alias",
+      "source": "openclaw_cli",
+      "target": "daemon_alias"
+    },
+    {
+      "relation": "aliases",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_cli",
+      "_tgt": "clawbot_alias",
+      "source": "openclaw_cli",
+      "target": "clawbot_alias"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "openclaw_json",
+      "source": "gateway",
+      "target": "openclaw_json"
+    },
+    {
+      "relation": "loads",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "plugin_system",
+      "source": "gateway",
+      "target": "plugin_system"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "channel_system",
+      "source": "gateway",
+      "target": "channel_system"
+    },
+    {
+      "relation": "executes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "internal_hooks",
+      "source": "gateway",
+      "target": "internal_hooks"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "cron",
+      "source": "gateway",
+      "target": "cron"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "session_system",
+      "source": "gateway",
+      "target": "session_system"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "hot_reload",
+      "source": "gateway",
+      "target": "hot_reload"
+    },
+    {
+      "relation": "executes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "heartbeat",
+      "source": "gateway",
+      "target": "heartbeat"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "compaction",
+      "source": "gateway",
+      "target": "compaction"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "post_hooks_wake",
+      "source": "gateway",
+      "target": "post_hooks_wake"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "post_hooks_agent",
+      "source": "gateway",
+      "target": "post_hooks_agent"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "sandbox",
+      "source": "gateway",
+      "target": "sandbox"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "exec_approvals",
+      "source": "gateway",
+      "target": "exec_approvals"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "model_system",
+      "source": "gateway",
+      "target": "model_system"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "background_tasks",
+      "source": "gateway",
+      "target": "background_tasks"
+    },
+    {
+      "relation": "handles",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "model_failover",
+      "source": "gateway",
+      "target": "model_failover"
+    },
+    {
+      "relation": "selects",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "agent_runtime",
+      "source": "gateway",
+      "target": "agent_runtime"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "pairing",
+      "source": "gateway",
+      "target": "pairing"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "memory_search",
+      "source": "gateway",
+      "target": "memory_search"
+    },
+    {
+      "relation": "supports",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "_src": "gateway",
+      "_tgt": "trusted_proxy_auth",
+      "source": "gateway",
+      "target": "trusted_proxy_auth"
+    },
+    {
+      "relation": "fires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "session_compact_before_event",
+      "source": "gateway",
+      "target": "session_compact_before_event"
+    },
+    {
+      "relation": "fires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "session_compact_after_event",
+      "source": "gateway",
+      "target": "session_compact_after_event"
+    },
+    {
+      "relation": "fires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "message_received_event",
+      "source": "gateway",
+      "target": "message_received_event"
+    },
+    {
+      "relation": "fires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "message_preprocessed_event",
+      "source": "gateway",
+      "target": "message_preprocessed_event"
+    },
+    {
+      "relation": "fires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "message_sent_event",
+      "source": "gateway",
+      "target": "message_sent_event"
+    },
+    {
+      "relation": "fires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "message_transcribed_event",
+      "source": "gateway",
+      "target": "message_transcribed_event"
+    },
+    {
+      "relation": "fires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "gateway_startup_event",
+      "source": "gateway",
+      "target": "gateway_startup_event"
+    },
+    {
+      "relation": "fires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "agent_bootstrap_event",
+      "source": "gateway",
+      "target": "agent_bootstrap_event"
+    },
+    {
+      "relation": "fires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "command_event",
+      "source": "gateway",
+      "target": "command_event"
+    },
+    {
+      "relation": "processes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "gateway",
+      "_tgt": "slash_commands",
+      "source": "gateway",
+      "target": "slash_commands"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_json",
+      "_tgt": "json5",
+      "source": "openclaw_json",
+      "target": "json5"
+    },
+    {
+      "relation": "validated_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_json",
+      "_tgt": "schema_validation",
+      "source": "openclaw_json",
+      "target": "schema_validation"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_json",
+      "_tgt": "hot_reload",
+      "source": "openclaw_json",
+      "target": "hot_reload"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_json",
+      "_tgt": "dollar_include",
+      "source": "openclaw_json",
+      "target": "dollar_include"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_json",
+      "_tgt": "env_var_substitution",
+      "source": "openclaw_json",
+      "target": "env_var_substitution"
+    },
+    {
+      "relation": "implemented_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "plugin_system",
+      "_tgt": "plugin_sdk",
+      "source": "plugin_system",
+      "target": "plugin_sdk"
+    },
+    {
+      "relation": "required_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_plugin_json",
+      "_tgt": "plugin_system",
+      "source": "plugin_system",
+      "target": "openclaw_plugin_json"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "plugin_system",
+      "_tgt": "plugin_hooks",
+      "source": "plugin_system",
+      "target": "plugin_hooks"
+    },
+    {
+      "relation": "enforces",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "_src": "plugin_system",
+      "_tgt": "tiered_security",
+      "source": "plugin_system",
+      "target": "tiered_security"
+    },
+    {
+      "relation": "validated_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "openclaw_plugin_json",
+      "_tgt": "schema_validation",
+      "source": "openclaw_plugin_json",
+      "target": "schema_validation"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "command_event",
+      "source": "internal_hooks",
+      "target": "command_event"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "command_new_event",
+      "source": "internal_hooks",
+      "target": "command_new_event"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "command_reset_event",
+      "source": "internal_hooks",
+      "target": "command_reset_event"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "command_stop_event",
+      "source": "internal_hooks",
+      "target": "command_stop_event"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "session_compact_before_event",
+      "source": "internal_hooks",
+      "target": "session_compact_before_event"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "session_compact_after_event",
+      "source": "internal_hooks",
+      "target": "session_compact_after_event"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "agent_bootstrap_event",
+      "source": "internal_hooks",
+      "target": "agent_bootstrap_event"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "gateway_startup_event",
+      "source": "internal_hooks",
+      "target": "gateway_startup_event"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "message_received_event",
+      "source": "internal_hooks",
+      "target": "message_received_event"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "message_transcribed_event",
+      "source": "internal_hooks",
+      "target": "message_transcribed_event"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "message_preprocessed_event",
+      "source": "internal_hooks",
+      "target": "message_preprocessed_event"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "message_sent_event",
+      "source": "internal_hooks",
+      "target": "message_sent_event"
+    },
+    {
+      "relation": "bundled_as",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "session_memory_hook",
+      "source": "internal_hooks",
+      "target": "session_memory_hook"
+    },
+    {
+      "relation": "bundled_as",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "command_logger_hook",
+      "source": "internal_hooks",
+      "target": "command_logger_hook"
+    },
+    {
+      "relation": "bundled_as",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "bootstrap_extra_files_hook",
+      "source": "internal_hooks",
+      "target": "bootstrap_extra_files_hook"
+    },
+    {
+      "relation": "bundled_as",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "boot_md_hook",
+      "source": "internal_hooks",
+      "target": "boot_md_hook"
+    },
+    {
+      "relation": "defines_format",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "hook_md",
+      "source": "internal_hooks",
+      "target": "hook_md"
+    },
+    {
+      "relation": "implemented_as",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "internal_hooks",
+      "_tgt": "handler_ts",
+      "source": "internal_hooks",
+      "target": "handler_ts"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "hooks_command",
+      "_tgt": "internal_hooks",
+      "source": "internal_hooks",
+      "target": "hooks_command"
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "plugin_hooks",
+      "_tgt": "before_tool_call_hook",
+      "source": "plugin_hooks",
+      "target": "before_tool_call_hook"
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "plugin_hooks",
+      "_tgt": "before_agent_reply_hook",
+      "source": "plugin_hooks",
+      "target": "before_agent_reply_hook"
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "plugin_hooks",
+      "_tgt": "llm_input_hook",
+      "source": "plugin_hooks",
+      "target": "llm_input_hook"
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "plugin_hooks",
+      "_tgt": "llm_output_hook",
+      "source": "plugin_hooks",
+      "target": "llm_output_hook"
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "plugin_hooks",
+      "_tgt": "session_start_hook",
+      "source": "plugin_hooks",
+      "target": "session_start_hook"
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "plugin_hooks",
+      "_tgt": "session_end_hook",
+      "source": "plugin_hooks",
+      "target": "session_end_hook"
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "plugin_hooks",
+      "_tgt": "gateway_start_hook",
+      "source": "plugin_hooks",
+      "target": "gateway_start_hook"
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "plugin_hooks",
+      "_tgt": "gateway_stop_hook",
+      "source": "plugin_hooks",
+      "target": "gateway_stop_hook"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channel_system",
+      "_tgt": "discord",
+      "source": "channel_system",
+      "target": "discord"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channel_system",
+      "_tgt": "slack",
+      "source": "channel_system",
+      "target": "slack"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channel_system",
+      "_tgt": "telegram",
+      "source": "channel_system",
+      "target": "telegram"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channel_system",
+      "_tgt": "whatsapp",
+      "source": "channel_system",
+      "target": "whatsapp"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channel_system",
+      "_tgt": "matrix",
+      "source": "channel_system",
+      "target": "matrix"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channel_system",
+      "_tgt": "email_channel",
+      "source": "channel_system",
+      "target": "email_channel"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channel_system",
+      "_tgt": "sms",
+      "source": "channel_system",
+      "target": "sms"
+    },
+    {
+      "relation": "enforces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channel_system",
+      "_tgt": "dm_policy",
+      "source": "channel_system",
+      "target": "dm_policy"
+    },
+    {
+      "relation": "enforces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channel_system",
+      "_tgt": "group_policy",
+      "source": "channel_system",
+      "target": "group_policy"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channel_system",
+      "_tgt": "pairing",
+      "source": "channel_system",
+      "target": "pairing"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channel_system",
+      "_tgt": "mention_gating",
+      "source": "channel_system",
+      "target": "mention_gating"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channel_system",
+      "_tgt": "exec_approvals",
+      "source": "channel_system",
+      "target": "exec_approvals"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channels_command",
+      "_tgt": "channel_system",
+      "source": "channel_system",
+      "target": "channels_command"
+    },
+    {
+      "relation": "generated_by",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "_src": "session_id",
+      "_tgt": "channel_system",
+      "source": "channel_system",
+      "target": "session_id"
+    },
+    {
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "discord",
+      "_tgt": "discord_bot_token",
+      "source": "discord",
+      "target": "discord_bot_token"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "discord",
+      "_tgt": "dm_policy",
+      "source": "discord",
+      "target": "dm_policy"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "discord",
+      "_tgt": "group_policy",
+      "source": "discord",
+      "target": "group_policy"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "discord",
+      "_tgt": "mention_gating",
+      "source": "discord",
+      "target": "mention_gating"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "discord",
+      "_tgt": "thread_sessions",
+      "source": "discord",
+      "target": "thread_sessions"
+    },
+    {
+      "relation": "integrates_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "exec_approvals",
+      "_tgt": "discord",
+      "source": "discord",
+      "target": "exec_approvals"
+    },
+    {
+      "relation": "not_used_by",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "_src": "discord",
+      "_tgt": "baileys",
+      "source": "discord",
+      "target": "baileys"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channels_command",
+      "_tgt": "discord",
+      "source": "discord",
+      "target": "channels_command"
+    },
+    {
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slack",
+      "_tgt": "slack_app_token",
+      "source": "slack",
+      "target": "slack_app_token"
+    },
+    {
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slack",
+      "_tgt": "slack_bot_token",
+      "source": "slack",
+      "target": "slack_bot_token"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slack",
+      "_tgt": "dm_policy",
+      "source": "slack",
+      "target": "dm_policy"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slack",
+      "_tgt": "group_policy",
+      "source": "slack",
+      "target": "group_policy"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slack",
+      "_tgt": "thread_sessions",
+      "source": "slack",
+      "target": "thread_sessions"
+    },
+    {
+      "relation": "integrates_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "exec_approvals",
+      "_tgt": "slack",
+      "source": "slack",
+      "target": "exec_approvals"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channels_command",
+      "_tgt": "slack",
+      "source": "slack",
+      "target": "channels_command"
+    },
+    {
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "telegram",
+      "_tgt": "bot_token",
+      "source": "telegram",
+      "target": "bot_token"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "telegram",
+      "_tgt": "dm_policy",
+      "source": "telegram",
+      "target": "dm_policy"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "telegram",
+      "_tgt": "group_policy",
+      "source": "telegram",
+      "target": "group_policy"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "telegram",
+      "_tgt": "mention_gating",
+      "source": "telegram",
+      "target": "mention_gating"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "telegram",
+      "_tgt": "forum_topics",
+      "source": "telegram",
+      "target": "forum_topics"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "telegram",
+      "_tgt": "thread_sessions",
+      "source": "telegram",
+      "target": "thread_sessions"
+    },
+    {
+      "relation": "integrates_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "exec_approvals",
+      "_tgt": "telegram",
+      "source": "telegram",
+      "target": "exec_approvals"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channels_command",
+      "_tgt": "telegram",
+      "source": "telegram",
+      "target": "channels_command"
+    },
+    {
+      "relation": "not_related_to",
+      "confidence": "AMBIGUOUS",
+      "confidence_score": 0.2,
+      "_src": "telegram",
+      "_tgt": "openrouter",
+      "source": "telegram",
+      "target": "openrouter"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "whatsapp",
+      "_tgt": "baileys",
+      "source": "whatsapp",
+      "target": "baileys"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "whatsapp",
+      "_tgt": "dm_policy",
+      "source": "whatsapp",
+      "target": "dm_policy"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "whatsapp",
+      "_tgt": "group_policy",
+      "source": "whatsapp",
+      "target": "group_policy"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "whatsapp",
+      "_tgt": "mention_gating",
+      "source": "whatsapp",
+      "target": "mention_gating"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "channels_command",
+      "_tgt": "whatsapp",
+      "source": "whatsapp",
+      "target": "channels_command"
+    },
+    {
+      "relation": "integrates_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "exec_approvals",
+      "_tgt": "whatsapp",
+      "source": "whatsapp",
+      "target": "exec_approvals"
+    },
+    {
+      "relation": "option",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "dm_policy",
+      "_tgt": "pairing",
+      "source": "dm_policy",
+      "target": "pairing"
+    },
+    {
+      "relation": "option",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "dm_policy",
+      "_tgt": "tiered_channel_allowlist",
+      "source": "dm_policy",
+      "target": "tiered_channel_allowlist"
+    },
+    {
+      "relation": "option",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "dm_policy",
+      "_tgt": "tiered_security",
+      "source": "dm_policy",
+      "target": "tiered_security"
+    },
+    {
+      "relation": "option",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "group_policy",
+      "_tgt": "tiered_security",
+      "source": "group_policy",
+      "target": "tiered_security"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "group_policy",
+      "_tgt": "mention_gating",
+      "source": "group_policy",
+      "target": "mention_gating"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "pairing",
+      "_tgt": "pairing_code",
+      "source": "pairing",
+      "target": "pairing_code"
+    },
+    {
+      "relation": "stores_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "pairing",
+      "_tgt": "credentials_dir",
+      "source": "pairing",
+      "target": "credentials_dir"
+    },
+    {
+      "relation": "stores_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "pairing",
+      "_tgt": "devices_dir",
+      "source": "pairing",
+      "target": "devices_dir"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "pairing",
+      "_tgt": "auto_approve_cidrs",
+      "source": "pairing",
+      "target": "auto_approve_cidrs"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "pairing_command",
+      "_tgt": "pairing",
+      "source": "pairing",
+      "target": "pairing_command"
+    },
+    {
+      "relation": "stored_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "pairing",
+      "_tgt": "openclaw_pairing_json",
+      "source": "pairing",
+      "target": "openclaw_pairing_json"
+    },
+    {
+      "relation": "stored_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "pairing",
+      "_tgt": "openclaw_allowfrom_json",
+      "source": "pairing",
+      "target": "openclaw_allowfrom_json"
+    },
+    {
+      "relation": "stored_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "pairing",
+      "_tgt": "devices_pending_json",
+      "source": "pairing",
+      "target": "devices_pending_json"
+    },
+    {
+      "relation": "stored_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "pairing",
+      "_tgt": "devices_paired_json",
+      "source": "pairing",
+      "target": "devices_paired_json"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_pair",
+      "_tgt": "pairing",
+      "source": "pairing",
+      "target": "slash_pair"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "devices_command",
+      "_tgt": "pairing",
+      "source": "pairing",
+      "target": "devices_command"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "nodes_command",
+      "_tgt": "pairing",
+      "source": "pairing",
+      "target": "nodes_command"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_workspace",
+      "_tgt": "agents_md",
+      "source": "agent_workspace",
+      "target": "agents_md"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_workspace",
+      "_tgt": "soul_md",
+      "source": "agent_workspace",
+      "target": "soul_md"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_workspace",
+      "_tgt": "user_md",
+      "source": "agent_workspace",
+      "target": "user_md"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_workspace",
+      "_tgt": "identity_md",
+      "source": "agent_workspace",
+      "target": "identity_md"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_workspace",
+      "_tgt": "tools_md",
+      "source": "agent_workspace",
+      "target": "tools_md"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_workspace",
+      "_tgt": "heartbeat_md",
+      "source": "agent_workspace",
+      "target": "heartbeat_md"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_workspace",
+      "_tgt": "boot_md",
+      "source": "agent_workspace",
+      "target": "boot_md"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_workspace",
+      "_tgt": "memory_dir",
+      "source": "agent_workspace",
+      "target": "memory_dir"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_workspace",
+      "_tgt": "memory_md",
+      "source": "agent_workspace",
+      "target": "memory_md"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_workspace",
+      "_tgt": "daily_memory_files",
+      "source": "agent_workspace",
+      "target": "daily_memory_files"
+    },
+    {
+      "relation": "located_at",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_workspace",
+      "_tgt": "workspace_default",
+      "source": "agent_workspace",
+      "target": "workspace_default"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_workspace",
+      "_tgt": "git_backup",
+      "source": "agent_workspace",
+      "target": "git_backup"
+    },
+    {
+      "relation": "not_contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_workspace",
+      "_tgt": "skills_dir",
+      "source": "agent_workspace",
+      "target": "skills_dir"
+    },
+    {
+      "relation": "migrates_from",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "honcho_plugin",
+      "_tgt": "agent_workspace",
+      "source": "agent_workspace",
+      "target": "honcho_plugin"
+    },
+    {
+      "relation": "stored_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "standing_orders",
+      "_tgt": "agents_md",
+      "source": "agents_md",
+      "target": "standing_orders"
+    },
+    {
+      "relation": "reads",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "heartbeat",
+      "_tgt": "agents_md",
+      "source": "agents_md",
+      "target": "heartbeat"
+    },
+    {
+      "relation": "migrates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "honcho_plugin",
+      "_tgt": "user_md",
+      "source": "user_md",
+      "target": "honcho_plugin"
+    },
+    {
+      "relation": "migrates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "honcho_plugin",
+      "_tgt": "identity_md",
+      "source": "identity_md",
+      "target": "honcho_plugin"
+    },
+    {
+      "relation": "reads",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "heartbeat",
+      "_tgt": "heartbeat_md",
+      "source": "heartbeat_md",
+      "target": "heartbeat"
+    },
+    {
+      "relation": "executed_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "boot_md",
+      "_tgt": "boot_md_hook",
+      "source": "boot_md",
+      "target": "boot_md_hook"
+    },
+    {
+      "relation": "saves_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "session_memory_hook",
+      "_tgt": "memory_dir",
+      "source": "memory_dir",
+      "target": "session_memory_hook"
+    },
+    {
+      "relation": "stores_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "session_system",
+      "_tgt": "memory_dir",
+      "source": "memory_dir",
+      "target": "session_system"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "memory_dir",
+      "_tgt": "daily_memory_files",
+      "source": "memory_dir",
+      "target": "daily_memory_files"
+    },
+    {
+      "relation": "writes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "dreaming",
+      "_tgt": "memory_md",
+      "source": "memory_md",
+      "target": "dreaming"
+    },
+    {
+      "relation": "promotes_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "deep_phase",
+      "_tgt": "memory_md",
+      "source": "memory_md",
+      "target": "deep_phase"
+    },
+    {
+      "relation": "migrates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "honcho_plugin",
+      "_tgt": "memory_md",
+      "source": "memory_md",
+      "target": "honcho_plugin"
+    },
+    {
+      "relation": "reads",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "dreaming",
+      "_tgt": "daily_memory_files",
+      "source": "daily_memory_files",
+      "target": "dreaming"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "model_system",
+      "_tgt": "model_selection",
+      "source": "model_system",
+      "target": "model_selection"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "model_system",
+      "_tgt": "model_failover",
+      "source": "model_system",
+      "target": "model_failover"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "model_system",
+      "_tgt": "auth_profile",
+      "source": "model_system",
+      "target": "auth_profile"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "model_system",
+      "_tgt": "model_allowlist",
+      "source": "model_system",
+      "target": "model_allowlist"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "model_system",
+      "_tgt": "tiered_fallbacks",
+      "source": "model_system",
+      "target": "tiered_fallbacks"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "compaction",
+      "_tgt": "model_system",
+      "source": "model_system",
+      "target": "compaction"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "heartbeat",
+      "_tgt": "model_system",
+      "source": "model_system",
+      "target": "heartbeat"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "models_command",
+      "_tgt": "model_system",
+      "source": "model_system",
+      "target": "models_command"
+    },
+    {
+      "relation": "enforces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "model_selection",
+      "_tgt": "model_allowlist",
+      "source": "model_selection",
+      "target": "model_allowlist"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_model",
+      "_tgt": "model_selection",
+      "source": "model_selection",
+      "target": "slash_model"
+    },
+    {
+      "relation": "rotates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "model_failover",
+      "_tgt": "auth_profile",
+      "source": "model_failover",
+      "target": "auth_profile"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "model_failover",
+      "_tgt": "tiered_fallbacks",
+      "source": "model_failover",
+      "target": "tiered_fallbacks"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "model_failover",
+      "_tgt": "cooldowns",
+      "source": "model_failover",
+      "target": "cooldowns"
+    },
+    {
+      "relation": "throws",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "model_failover",
+      "_tgt": "fallback_summary_error",
+      "source": "model_failover",
+      "target": "fallback_summary_error"
+    },
+    {
+      "relation": "reads",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "model_failover",
+      "_tgt": "auth_profiles_json",
+      "source": "model_failover",
+      "target": "auth_profiles_json"
+    },
+    {
+      "relation": "writes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "model_failover",
+      "_tgt": "auth_state_json",
+      "source": "model_failover",
+      "target": "auth_state_json"
+    },
+    {
+      "relation": "stored_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "auth_profile",
+      "_tgt": "auth_profiles_json",
+      "source": "auth_profile",
+      "target": "auth_profiles_json"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "auth_profile",
+      "_tgt": "tiered_security",
+      "source": "auth_profile",
+      "target": "tiered_security"
+    },
+    {
+      "relation": "overridden_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "auth_profile",
+      "_tgt": "slash_model",
+      "source": "auth_profile",
+      "target": "slash_model"
+    },
+    {
+      "relation": "fires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "compaction",
+      "_tgt": "session_compact_before_event",
+      "source": "compaction",
+      "target": "session_compact_before_event"
+    },
+    {
+      "relation": "fires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "compaction",
+      "_tgt": "session_compact_after_event",
+      "source": "compaction",
+      "target": "session_compact_after_event"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "compaction",
+      "_tgt": "compact_mode",
+      "source": "compaction",
+      "target": "compact_mode"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_compact",
+      "_tgt": "compaction",
+      "source": "compaction",
+      "target": "slash_compact"
+    },
+    {
+      "relation": "triggered_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "compaction",
+      "_tgt": "slash_reset",
+      "source": "compaction",
+      "target": "slash_reset"
+    },
+    {
+      "relation": "modified_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "session_system",
+      "_tgt": "compaction",
+      "source": "compaction",
+      "target": "session_system"
+    },
+    {
+      "relation": "part_of",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "dreaming",
+      "_tgt": "memory_core",
+      "source": "dreaming",
+      "target": "memory_core"
+    },
+    {
+      "relation": "executes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "dreaming",
+      "_tgt": "light_phase",
+      "source": "dreaming",
+      "target": "light_phase"
+    },
+    {
+      "relation": "executes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "dreaming",
+      "_tgt": "deep_phase",
+      "source": "dreaming",
+      "target": "deep_phase"
+    },
+    {
+      "relation": "executes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "dreaming",
+      "_tgt": "rem_phase",
+      "source": "dreaming",
+      "target": "rem_phase"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "dreaming",
+      "_tgt": "scoring_signals",
+      "source": "dreaming",
+      "target": "scoring_signals"
+    },
+    {
+      "relation": "writes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "dreaming",
+      "_tgt": "dreams_md",
+      "source": "dreaming",
+      "target": "dreams_md"
+    },
+    {
+      "relation": "schedules_via",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "dreaming",
+      "_tgt": "cron",
+      "source": "dreaming",
+      "target": "cron"
+    },
+    {
+      "relation": "controls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_dreaming",
+      "_tgt": "dreaming",
+      "source": "dreaming",
+      "target": "slash_dreaming"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "memory_command",
+      "_tgt": "dreaming",
+      "source": "dreaming",
+      "target": "memory_command"
+    },
+    {
+      "relation": "combines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "memory_search",
+      "_tgt": "vector_search",
+      "source": "memory_search",
+      "target": "vector_search"
+    },
+    {
+      "relation": "combines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "memory_search",
+      "_tgt": "bm25",
+      "source": "memory_search",
+      "target": "bm25"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "memory_search",
+      "_tgt": "hybrid_search",
+      "source": "memory_search",
+      "target": "hybrid_search"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "memory_search",
+      "_tgt": "temporal_decay",
+      "source": "memory_search",
+      "target": "temporal_decay"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "memory_search",
+      "_tgt": "mmr",
+      "source": "memory_search",
+      "target": "mmr"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "memory_search",
+      "_tgt": "openai_provider",
+      "source": "memory_search",
+      "target": "openai_provider"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "memory_search",
+      "_tgt": "gemini_provider",
+      "source": "memory_search",
+      "target": "gemini_provider"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "memory_search",
+      "_tgt": "voyage_provider",
+      "source": "memory_search",
+      "target": "voyage_provider"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "memory_search",
+      "_tgt": "mistral_provider",
+      "source": "memory_search",
+      "target": "mistral_provider"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "memory_search",
+      "_tgt": "ollama_provider",
+      "source": "memory_search",
+      "target": "ollama_provider"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "memory_search",
+      "_tgt": "bedrock_provider",
+      "source": "memory_search",
+      "target": "bedrock_provider"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "memory_search",
+      "_tgt": "local_embedding",
+      "source": "memory_search",
+      "target": "local_embedding"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "builtin_memory",
+      "_tgt": "memory_search",
+      "source": "memory_search",
+      "target": "builtin_memory"
+    },
+    {
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "qmd_backend",
+      "_tgt": "memory_search",
+      "source": "memory_search",
+      "target": "qmd_backend"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "builtin_memory",
+      "_tgt": "sqlite",
+      "source": "builtin_memory",
+      "target": "sqlite"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "builtin_memory",
+      "_tgt": "fts5",
+      "source": "builtin_memory",
+      "target": "fts5"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "builtin_memory",
+      "_tgt": "sqlite_vec",
+      "source": "builtin_memory",
+      "target": "sqlite_vec"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "builtin_memory",
+      "_tgt": "bm25",
+      "source": "builtin_memory",
+      "target": "bm25"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "builtin_memory",
+      "_tgt": "vector_search",
+      "source": "builtin_memory",
+      "target": "vector_search"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "builtin_memory",
+      "_tgt": "hybrid_search",
+      "source": "builtin_memory",
+      "target": "hybrid_search"
+    },
+    {
+      "relation": "stored_at",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "builtin_memory",
+      "_tgt": "memory_sqlite_file",
+      "source": "builtin_memory",
+      "target": "memory_sqlite_file"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "builtin_memory",
+      "_tgt": "memory_search_tool",
+      "source": "builtin_memory",
+      "target": "memory_search_tool"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "builtin_memory",
+      "_tgt": "memory_get_tool",
+      "source": "builtin_memory",
+      "target": "memory_get_tool"
+    },
+    {
+      "relation": "auto_detects",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "builtin_memory",
+      "_tgt": "openai_provider",
+      "source": "builtin_memory",
+      "target": "openai_provider"
+    },
+    {
+      "relation": "auto_detects",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "builtin_memory",
+      "_tgt": "gemini_provider",
+      "source": "builtin_memory",
+      "target": "gemini_provider"
+    },
+    {
+      "relation": "auto_detects",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "builtin_memory",
+      "_tgt": "voyage_provider",
+      "source": "builtin_memory",
+      "target": "voyage_provider"
+    },
+    {
+      "relation": "auto_detects",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "builtin_memory",
+      "_tgt": "mistral_provider",
+      "source": "builtin_memory",
+      "target": "mistral_provider"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "builtin_memory",
+      "_tgt": "node_llama_cpp",
+      "source": "builtin_memory",
+      "target": "node_llama_cpp"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "memory_command",
+      "_tgt": "builtin_memory",
+      "source": "builtin_memory",
+      "target": "memory_command"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "qmd_backend",
+      "_tgt": "reranking",
+      "source": "qmd_backend",
+      "target": "reranking"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "qmd_backend",
+      "_tgt": "query_expansion",
+      "source": "qmd_backend",
+      "target": "query_expansion"
+    },
+    {
+      "relation": "supports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "qmd_backend",
+      "_tgt": "citations",
+      "source": "qmd_backend",
+      "target": "citations"
+    },
+    {
+      "relation": "requires",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "qmd_backend",
+      "_tgt": "memory_qlu",
+      "source": "qmd_backend",
+      "target": "memory_qlu"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "honcho_plugin",
+      "_tgt": "cross_session_memory",
+      "source": "honcho_plugin",
+      "target": "cross_session_memory"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "honcho_plugin",
+      "_tgt": "user_modeling",
+      "source": "honcho_plugin",
+      "target": "user_modeling"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "honcho_plugin",
+      "_tgt": "multi_agent_awareness",
+      "source": "honcho_plugin",
+      "target": "multi_agent_awareness"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "honcho_plugin",
+      "_tgt": "honcho_context",
+      "source": "honcho_plugin",
+      "target": "honcho_context"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "honcho_plugin",
+      "_tgt": "honcho_search_conclusions",
+      "source": "honcho_plugin",
+      "target": "honcho_search_conclusions"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "honcho_plugin",
+      "_tgt": "honcho_search_messages",
+      "source": "honcho_plugin",
+      "target": "honcho_search_messages"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "honcho_plugin",
+      "_tgt": "honcho_ask",
+      "source": "honcho_plugin",
+      "target": "honcho_ask"
+    },
+    {
+      "relation": "package",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "honcho_plugin",
+      "_tgt": "openclaw_honcho_plugin",
+      "source": "honcho_plugin",
+      "target": "openclaw_honcho_plugin"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "honcho_command",
+      "_tgt": "honcho_plugin",
+      "source": "honcho_plugin",
+      "target": "honcho_command"
+    },
+    {
+      "relation": "installs",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "plugins_command",
+      "_tgt": "honcho_plugin",
+      "source": "honcho_plugin",
+      "target": "plugins_command"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "active_memory_plugin",
+      "_tgt": "memory_search_tool",
+      "source": "active_memory_plugin",
+      "target": "memory_search_tool"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "active_memory_plugin",
+      "_tgt": "memory_get_tool",
+      "source": "active_memory_plugin",
+      "target": "memory_get_tool"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "active_memory_plugin",
+      "_tgt": "query_mode",
+      "source": "active_memory_plugin",
+      "target": "query_mode"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "active_memory_plugin",
+      "_tgt": "prompt_style",
+      "source": "active_memory_plugin",
+      "target": "prompt_style"
+    },
+    {
+      "relation": "controls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_active_memory",
+      "_tgt": "active_memory_plugin",
+      "source": "active_memory_plugin",
+      "target": "slash_active_memory"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_runtime",
+      "_tgt": "pi_runtime",
+      "source": "agent_runtime",
+      "target": "pi_runtime"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_runtime",
+      "_tgt": "codex_runtime",
+      "source": "agent_runtime",
+      "target": "codex_runtime"
+    },
+    {
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_runtime",
+      "_tgt": "acp_runtime",
+      "source": "agent_runtime",
+      "target": "acp_runtime"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "agent_runtime",
+      "_tgt": "embedded_harness",
+      "source": "agent_runtime",
+      "target": "embedded_harness"
+    },
+    {
+      "relation": "enforced_by",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "_src": "session_isolation",
+      "_tgt": "agent_runtime",
+      "source": "agent_runtime",
+      "target": "session_isolation"
+    },
+    {
+      "relation": "stores_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "session_system",
+      "_tgt": "sessions_dir",
+      "source": "session_system",
+      "target": "sessions_dir"
+    },
+    {
+      "relation": "generates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "session_system",
+      "_tgt": "session_id",
+      "source": "session_system",
+      "target": "session_id"
+    },
+    {
+      "relation": "enforces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "session_system",
+      "_tgt": "session_isolation",
+      "source": "session_system",
+      "target": "session_isolation"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "heartbeat",
+      "_tgt": "session_system",
+      "source": "session_system",
+      "target": "heartbeat"
+    },
+    {
+      "relation": "resets_on",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "session_system",
+      "_tgt": "slash_new",
+      "source": "session_system",
+      "target": "slash_new"
+    },
+    {
+      "relation": "resets_on",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "session_system",
+      "_tgt": "slash_reset",
+      "source": "session_system",
+      "target": "slash_reset"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "sandbox",
+      "_tgt": "sandbox_mode",
+      "source": "sandbox",
+      "target": "sandbox_mode"
+    },
+    {
+      "relation": "enforces",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "sandbox",
+      "_tgt": "exec_approvals",
+      "source": "sandbox",
+      "target": "exec_approvals"
+    },
+    {
+      "relation": "enforced_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "session_isolation",
+      "_tgt": "sandbox",
+      "source": "sandbox",
+      "target": "session_isolation"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "background_tasks",
+      "_tgt": "task_ledger",
+      "source": "background_tasks",
+      "target": "task_ledger"
+    },
+    {
+      "relation": "orchestrates",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "background_tasks",
+      "_tgt": "task_flow",
+      "source": "background_tasks",
+      "target": "task_flow"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "tasks_command",
+      "_tgt": "background_tasks",
+      "source": "background_tasks",
+      "target": "tasks_command"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "hot_reload",
+      "_tgt": "hot_reload_mode",
+      "source": "hot_reload",
+      "target": "hot_reload_mode"
+    },
+    {
+      "relation": "listens_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "command_logger_hook",
+      "_tgt": "command_event",
+      "source": "command_event",
+      "target": "command_logger_hook"
+    },
+    {
+      "relation": "listens_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "session_memory_hook",
+      "_tgt": "command_new_event",
+      "source": "command_new_event",
+      "target": "session_memory_hook"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_new",
+      "_tgt": "command_new_event",
+      "source": "command_new_event",
+      "target": "slash_new"
+    },
+    {
+      "relation": "listens_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "session_memory_hook",
+      "_tgt": "command_reset_event",
+      "source": "command_reset_event",
+      "target": "session_memory_hook"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_reset",
+      "_tgt": "command_reset_event",
+      "source": "command_reset_event",
+      "target": "slash_reset"
+    },
+    {
+      "relation": "triggers",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_stop",
+      "_tgt": "command_stop_event",
+      "source": "command_stop_event",
+      "target": "slash_stop"
+    },
+    {
+      "relation": "listens_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "bootstrap_extra_files_hook",
+      "_tgt": "agent_bootstrap_event",
+      "source": "agent_bootstrap_event",
+      "target": "bootstrap_extra_files_hook"
+    },
+    {
+      "relation": "listens_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "boot_md_hook",
+      "_tgt": "gateway_startup_event",
+      "source": "gateway_startup_event",
+      "target": "boot_md_hook"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cron",
+      "_tgt": "max_concurrent_runs",
+      "source": "cron",
+      "target": "max_concurrent_runs"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cron",
+      "_tgt": "session_retention",
+      "source": "cron",
+      "target": "session_retention"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cron",
+      "_tgt": "run_log",
+      "source": "cron",
+      "target": "run_log"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "cron_command",
+      "_tgt": "cron",
+      "source": "cron",
+      "target": "cron_command"
+    },
+    {
+      "relation": "exposes_via",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "_src": "cron",
+      "_tgt": "slash_commands",
+      "source": "cron",
+      "target": "slash_commands"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "tasks_command",
+      "_tgt": "task_flow",
+      "source": "task_flow",
+      "target": "tasks_command"
+    },
+    {
+      "relation": "not_written_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "light_phase",
+      "_tgt": "dreams_md",
+      "source": "light_phase",
+      "target": "dreams_md"
+    },
+    {
+      "relation": "not_written_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "rem_phase",
+      "_tgt": "dreams_md",
+      "source": "rem_phase",
+      "target": "dreams_md"
+    },
+    {
+      "relation": "manages",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "models_command",
+      "_tgt": "tiered_fallbacks",
+      "source": "tiered_fallbacks",
+      "target": "models_command"
+    },
+    {
+      "relation": "configured_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "mention_gating",
+      "_tgt": "require_mention",
+      "source": "mention_gating",
+      "target": "require_mention"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_commands",
+      "_tgt": "slash_new",
+      "source": "slash_commands",
+      "target": "slash_new"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_commands",
+      "_tgt": "slash_reset",
+      "source": "slash_commands",
+      "target": "slash_reset"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_commands",
+      "_tgt": "slash_stop",
+      "source": "slash_commands",
+      "target": "slash_stop"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_commands",
+      "_tgt": "slash_model",
+      "source": "slash_commands",
+      "target": "slash_model"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_commands",
+      "_tgt": "slash_compact",
+      "source": "slash_commands",
+      "target": "slash_compact"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_commands",
+      "_tgt": "slash_activation",
+      "source": "slash_commands",
+      "target": "slash_activation"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_commands",
+      "_tgt": "slash_pair",
+      "source": "slash_commands",
+      "target": "slash_pair"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_commands",
+      "_tgt": "slash_dreaming",
+      "source": "slash_commands",
+      "target": "slash_dreaming"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_commands",
+      "_tgt": "slash_active_memory",
+      "source": "slash_commands",
+      "target": "slash_active_memory"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_commands",
+      "_tgt": "slash_verbose",
+      "source": "slash_commands",
+      "target": "slash_verbose"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_commands",
+      "_tgt": "slash_trace",
+      "source": "slash_commands",
+      "target": "slash_trace"
+    },
+    {
+      "relation": "includes",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "slash_commands",
+      "_tgt": "slash_codex",
+      "source": "slash_commands",
+      "target": "slash_codex"
+    },
+    {
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "forum_topics",
+      "_tgt": "session_id",
+      "source": "session_id",
+      "target": "forum_topics"
+    },
+    {
+      "relation": "used_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "_src": "thread_sessions",
+      "_tgt": "session_id",
+      "source": "session_id",
+      "target": "thread_sessions"
+    }
+  ],
+  "hyperedges": []
+}

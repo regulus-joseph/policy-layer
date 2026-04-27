@@ -1,6 +1,6 @@
-# Policy Sensorium — Test Report
+# Policy Layer — Test Report
 **Date:** 2026-04-27
-**Plugin:** policy-sensorium v0.2.0
+**Plugin:** policy-layer v0.2.0 (formerly policy-sensorium)
 **Tests:** 103 total (61 unit + 42 integration)
 
 ---
@@ -15,7 +15,12 @@ tests/
     └── hook-simulation.test.ts  # before_tool_call hook logic + gateway connectivity
 ```
 
-**Run:** `npm test` (vitest)
+**Run:** `npm test` (vitest, from project root)
+
+```bash
+cd /home/marlon-wei/projects/policy-layer
+npm test
+```
 
 ---
 

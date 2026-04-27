@@ -1,33 +1,54 @@
 # Policy Layer
 
-Springdrift-inspired CBS (Cognitive Behavior System) + D' Gating, implemented as an OpenClaw gateway plugin.
+OpenClaw gateway plugin with 4-layer security enforcement + D' Cognitive Behavior System.
+
+## Layers
+
+| Layer | Name | Behavior |
+|-------|------|----------|
+| L1 | Pattern Detection | Normalize → 23 dangerous patterns → **critical: block**, high/medium: smart-review |
+| L2 | D' CBS | `before_prompt_build` → inject `<openclaw_state>` → D' gating |
+| L3 | Smart Review | Ollama LLM review + fast-lane (5 approvals) + JSONL approval log |
+| L4 | Secret Redaction | 39 patterns → API keys/tokens/passwords/JWT/private keys + output leak detection |
 
 ## Architecture
 
 ```
-LLM Call
-    │
-    ├─ before_prompt_build hook (policy-sensorium plugin)
-    │       ├─ extractOutcomeFromMessages()     ← tool call results
-    │       ├─ computeDPrime()                 ← D' = Σ(w·mag)/(0.3×1.0×n)
-    │       ├─ classifySeverity()                ← error → CRITICAL(1000)–LOW(50)
-    │       └─ formatSensorium() → { prependContext }
-    │
-    └─ prependContext injected into prompt
-            └─ <openclaw_state> XML block
-                    ├─ d_prime / d_gate_threshold / d_gate_status
-                    ├─ session_success_rate / tool_failure_rate / cbr_hit_rate
-                    └─ recent_failures (severity-tagged)
-
-LLM receives: static rules (CLAUDE.md) + dynamic state (<openclaw_state>)
+Tool Call → normalizeCommand() → detectDangerousPatterns()
+    ├─ CRITICAL pattern → BLOCK immediately
+    ├─ HIGH/MEDIUM → smartReview (Ollama)
+    │       ├─ deny → BLOCK
+    │       ├─ escalate → requireApproval (human review)
+    │       └─ approve → fast-lane counter++
+    └─ after_tool_call → redactSecrets() → warn if leaked
 ```
 
 ## Key Files
 
 | File | Purpose |
 |------|---------|
-| `src/sensorium-index.ts` | policy-sensorium plugin source |
-| `src/workspace-POLICY.md` | Live copy of `~/.openclaw/workspace/POLICY.md` |
+| `src/index.ts` | Main plugin: all 3 hooks + 3 commands |
+| `src/security/normalize.ts` | ANSI strip, null bytes, NFKC normalize |
+| `src/security/patterns.ts` | 23 dangerous patterns with severity |
+| `src/security/smart-review.ts` | Ollama LLM smart review |
+| `src/security/approval-log.ts` | JSONL log → `~/.openclaw/logs/approval.jsonl` |
+| `src/security/fast-lane.ts` | 5-approval fast-lane bypass |
+| `src/security/secret-patterns.ts` | 39 secret patterns |
+| `src/security/redact.ts` | Secret redaction engine |
+| `src/security/path.ts` | Path traversal validation |
+| `tests/` | 103 tests (61 unit + 42 integration) |
+
+## Commands
+
+- `policy-security` — Layer status + fast-lane patterns
+- `policy-sensorium` — D' CBS metrics
+- `policy-reset-fastlane [pattern?]` — Reset fast-lane counters
+
+## Tests
+
+```bash
+npm test    # 103/103 passing
+```
 | `src/workspace-AGENTS.md` | Live copy of `~/.openclaw/workspace/AGENTS.md` |
 | `OPENCLAW_PLUGIN_HOOK_SYSTEM.md` | Plugin/hook SDK reference (from SDK types + docs) |
 | `LAYER1_4_IMPLEMENTATION_PLAN.md` | **Layer 1-4 实施计划**（本次 compact 的目标） |
