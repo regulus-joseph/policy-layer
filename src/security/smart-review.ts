@@ -78,6 +78,7 @@ export async function smartReview(
         model: OLLAMA_MODEL,
         prompt,
         stream: false,
+        think: false,
         options: {
           temperature: 0.1,
           num_predict: 20,

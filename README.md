@@ -1,215 +1,365 @@
-# Policy Layer
+# Policy Layer — v0.2.0
 
-OpenClaw gateway plugin with 4-layer security enforcement + D' Cognitive Behavior System.
+OpenClaw gateway plugin: 4-layer security enforcement + D' Cognitive Behavior System (CBS).
 
-## Layers
+**Loaded at:** `~/projects/policy-layer/` (gateway plugin)
+**Status:** Gateway running, plugin active ✅
+**Tests:** 103/103 passing ✅
 
-| Layer | Name | Behavior |
-|-------|------|----------|
-| L1 | Pattern Detection | Normalize → 23 dangerous patterns → **critical: block**, high/medium: smart-review |
-| L2 | D' CBS | `before_prompt_build` → inject `<openclaw_state>` → D' gating |
-| L3 | Smart Review | Ollama LLM review + fast-lane (5 approvals) + JSONL approval log |
-| L4 | Secret Redaction | 39 patterns → API keys/tokens/passwords/JWT/private keys + output leak detection |
+---
+
+## Quick Start
+
+```bash
+# Verify plugin is loaded
+openclaw gateway restart   # restart to reload
+openclaw acp              # test in ACP session
+
+# Run tests
+cd ~/projects/policy-layer
+npm test                  # 103 tests
+
+# Update analytics dashboard
+python3 docs/generate-analytics.py
+open docs/approval-analytics.html
+```
+
+---
+
+## Deployment
+
+### Files Loaded by Gateway
+
+| File | Purpose | Gateway Path |
+|------|---------|-------------|
+| `src/index.ts` | Plugin entry: 3 hooks + 3 commands | `~/projects/policy-layer/src/index.ts` |
+| `src/security/*.ts` | Layer 1/3/4 security modules (9 files) | `~/projects/policy-layer/src/security/` |
+| `openclaw.plugin.json` | Plugin manifest | `~/projects/policy-layer/openclaw.plugin.json` |
+| `config/openclaw.json` | Gateway config (deploy → `~/.openclaw/`) | — |
+| `scripts/deploy.sh` | 部署脚本 | — |
+
+### 一键部署
+
+```bash
+# 干跑（不写入）
+./scripts/deploy.sh --dry-run
+
+# 正式部署
+./scripts/deploy.sh
+
+# 验证
+cat ~/.openclaw/exec-approvals.json | grep ask
+openclaw logs --tail 20
+```
+
+### 部署内容说明
+
+| 文件 | 更新内容 |
+|------|---------|
+| `openclaw.json` | 去除了 acpx 重复配置；`plugins.allow` 加入 telegram；`plugins.entries` 和 `plugins.installs` 加入 policy-sensorium；`plugins.load.paths` 加入 policy-layer |
+| `devices/pending.json` | 清空，停止设备重连循环 log |
+| `devices/paired.json` | 保留，不改动 |
+
+**注意：`exec-approvals.json` 不再使用。** openclaw 默认值已经是 `ask: "off"` + `security: "full"`，完全放行给 plugin 处理。
+
+### Gateway Config
+
+Plugin is registered at path `/home/marlon-wei/projects/policy-layer` in `~/.openclaw/openclaw.json` under `plugins.load.paths`.
+
+```bash
+# To reload after editing plugin code:
+openclaw gateway restart
+
+# To verify loaded:
+openclaw acp  # any session
+```
+
+---
 
 ## Architecture
 
 ```
-Tool Call → normalizeCommand() → detectDangerousPatterns()
-    ├─ CRITICAL pattern → BLOCK immediately
-    ├─ HIGH/MEDIUM → smartReview (Ollama)
-    │       ├─ deny → BLOCK
-    │       ├─ escalate → requireApproval (human review)
-    │       └─ approve → fast-lane counter++
-    └─ after_tool_call → redactSecrets() → warn if leaked
+Tool Call
+  │
+  ├─ Layer 1: normalizeCommand(cmd)
+  │     → ANSI strip / null bytes / NFKC normalize
+  │
+  ├─ Layer 1: detectDangerousPatterns()
+  │     → 23 regex patterns
+  │         CRITICAL (16): rm -rf /, curl|sh, kill -9 -1, fork bomb,
+  │                        chmod 777 /, pkill gateway, killall gateway,
+  │                        openclaw gateway stop, /dev/tcp, chmod +x|bash...
+  │         HIGH (7):      git reset --hard, /dev/tcp, SQL DROP,
+  │                        kill -TERM -1...
+  │
+  ├─ Layer 2: D' CBS
+  │     → before_prompt_build: inject <openclaw_state> XML
+  │     → 4 signals: success_rate(w=0.30), tool_fail(w=0.25),
+  │                  cbr_hit(w=0.20), severity_inv(w=0.25)
+  │     → D' = Σ(w·m) / (0.30×1.0×n)
+  │
+  ├─ Layer 3: Smart Review
+  │     → CRITICAL → block immediately
+  │     → HIGH/MEDIUM → smartReview() via Ollama
+  │         APPROVE  → fast-lane counter++
+  │         DENY     → block
+  │         ESCALATE → requireApproval (human)
+  │
+  ├─ Layer 3: Fast Lane
+  │     → 5 consecutive APPROVE → bypass LLM review
+  │
+  ├─ Layer 3: Approval Log
+  │     → ~/.openclaw/logs/approval.jsonl (JSONL, append-only)
+  │
+  └─ Layer 4: Secret Leak Detection
+        → after_tool_call: redactSecrets(output)
+        → warn if any of 39 secret patterns found in tool output
 ```
 
-## Key Files
+### Hooks Used
 
-| File | Purpose |
-|------|---------|
-| `src/index.ts` | Main plugin: all 3 hooks + 3 commands |
-| `src/security/normalize.ts` | ANSI strip, null bytes, NFKC normalize |
-| `src/security/patterns.ts` | 23 dangerous patterns with severity |
-| `src/security/smart-review.ts` | Ollama LLM smart review |
-| `src/security/approval-log.ts` | JSONL log → `~/.openclaw/logs/approval.jsonl` |
-| `src/security/fast-lane.ts` | 5-approval fast-lane bypass |
-| `src/security/secret-patterns.ts` | 39 secret patterns |
-| `src/security/redact.ts` | Secret redaction engine |
-| `src/security/path.ts` | Path traversal validation |
-| `tests/` | 103 tests (61 unit + 42 integration) |
+| Hook | Layer | Purpose |
+|------|-------|---------|
+| `before_prompt_build` | L2 | Inject `<openclaw_state>` D' CBS XML |
+| `before_tool_call` | L1→L3 | Pattern match → smart review → block/approve/escalate |
+| `after_tool_call` | L4 | Detect secret leaks in tool output |
 
-## Commands
+### Commands
 
-- `policy-security` — Layer status + fast-lane patterns
-- `policy-sensorium` — D' CBS metrics
-- `policy-reset-fastlane [pattern?]` — Reset fast-lane counters
+```
+policy-security           Layer status + fast-lane patterns
+policy-sensorium          D' CBS metrics (d_prime, cycles, success rate)
+policy-reset-fastlane     Reset all fast-lane counters
+policy-reset-fastlane <p> Reset fast-lane for specific pattern
+```
 
-## Tests
+---
+
+## Security Behavior
+
+### Critical (immediate block, no review)
+```
+rm -rf /, rm -rf /*
+curl http://... | sh
+wget http://... | sh
+kill -9 -1
+fork bomb (:(){ :|:& };:)
+chmod 777 /
+pkill gateway, killall gateway, openclaw gateway stop
+chmod +x ... | bash|sh|python
+```
+
+### High/Medium (smart-review via Ollama)
+```
+git reset --hard          → approve/deny/escalate
+/dev/tcp/...             → approve/deny/escalate
+SQL DROP TABLE/DATABASE   → approve/deny/escalate
+kill -TERM -1            → approve/deny/escalate
+```
+
+### Benign (no match → pass)
+```
+rm -rf node_modules, rm -rf dist, rm -rf __pycache__
+npm install, npm cache clean
+git status, git commit
+kill -9 <specific_pid>
+chmod 755, chmod 644
+ls, cat, grep, glob
+```
+
+---
+
+## File Guide
+
+```
+policy-layer/
+├── src/
+│   ├── index.ts              ← Main plugin (hooks + commands)
+│   ├── sensorium-index.ts   ← D' CBS (standalone test version)
+│   ├── sensorium-index.test.ts  ← 42 D' unit tests
+│   └── security/
+│       ├── normalize.ts      ← ANSI strip, null strip, NFKC
+│       ├── patterns.ts       ← 23 dangerous patterns + detectDangerousPatterns()
+│       ├── path.ts           ← Path traversal validation
+│       ├── smart-review.ts   ← Ollama LLM review
+│       ├── approval-log.ts   ← JSONL append to ~/.openclaw/logs/
+│       ├── fast-lane.ts      ← 5-approval fast-lane bypass
+│       ├── secret-patterns.ts ← 39 secret patterns
+│       ├── redact.ts         ← Secret redaction engine
+│       └── url-redact.ts     ← URL + env var redaction
+├── tests/
+│   ├── unit/security.test.ts        ← 61 unit tests
+│   ├── integration/hook-simulation.test.ts  ← 42 integration tests
+│   └── TEST_REPORT.md               ← Full test report
+├── docs/
+│   ├── approval-analytics.html     ← Analytics dashboard (self-contained HTML)
+│   └── generate-analytics.py        ← Regenerate dashboard from approval.jsonl
+├── openclaw.plugin.json   ← Plugin manifest
+├── package.json           ← npm scripts
+├── vitest.config.ts       ← Test runner config
+├── tsconfig.json          ← TypeScript config
+└── README.md
+```
+
+---
+
+## Testing
 
 ```bash
-npm test    # 103/103 passing
-```
-| `src/workspace-AGENTS.md` | Live copy of `~/.openclaw/workspace/AGENTS.md` |
-| `OPENCLAW_PLUGIN_HOOK_SYSTEM.md` | Plugin/hook SDK reference (from SDK types + docs) |
-| `LAYER1_4_IMPLEMENTATION_PLAN.md` | **Layer 1-4 实施计划**（本次 compact 的目标） |
-| `SPRINGDRIFT_RESEARCH.md` | Paper research notes |
-| `graphify-out/graph.html` | Knowledge graph of OpenClaw docs (open in browser) |
-| `docs/openclaw-docs/` | 50 fetched OpenClaw documentation pages |
-
-## Deployed Locations
-
-| | Path |
-|--|------|
-| **Plugin source** | `~/projects/policy-sensorium/` |
-| **POLICY.md** | `~/.openclaw/workspace/POLICY.md` |
-| **AGENTS.md** | `~/.openclaw/workspace/AGENTS.md` |
-| **OpenClaw config** | `~/.openclaw/openclaw.json` |
-| **Backups** | `~/.openclaw/workspace.backup-*/` + `~/projects/policy-sensorium.backup-*/` |
-
-## D' Formula
-
-```
-D' = Σ(weight_i × magnitude_i) / (0.30 × 1.0 × n_signals)
-
-Signals:
-  success_rate        w=0.30, mag = success_cycles / total_cycles
-  tool_success        w=0.25, mag = 1 - failed_tools / total_tools
-  cbr_hit_rate        w=0.20, mag = cbr_hits / recent_cycles
-  severity_inversion  w=0.25, mag = 1 - avg_severity / 1000
-
-D' Bands:
-  LOW_ACCEPT    (< 0.35)  → direct accept, degraded mode
-  MEDIUM_CONFIRM [0.35, 0.55) → list risks, request operator confirmation
-  HIGH_REJECT    (≥ 0.55) → block immediately, notify operator
+cd ~/projects/policy-layer
+npm test                  # 103 tests (61 unit + 42 integration)
 ```
 
-## Severity Classification
+### Test Coverage
 
-| Score | Level | Examples |
-|-------|-------|----------|
-| 1000 | CRITICAL | data_exfiltration, theft |
-| 600-800 | HIGH | system_command, file_delete |
-| 300-500 | MEDIUM | exec_failure, llm_timeout |
-| 50-200 | LOW | generic_error, permission_denied |
+| Layer | Tests | Coverage |
+|-------|-------|---------|
+| L1 normalize | 6 | ANSI, null, NFKC, trim |
+| L1 patterns | 23 | 16 critical(block) + 7 high/medium(review) |
+| L1 path | 6 | traversal detection, valid paths |
+| L3 fast-lane | 5 | 5-approval threshold, reset |
+| L3 hook sim | 13 | critical=block, benign=pass, multi-pattern |
+| L4 secrets | 17 | 9 secret types, URL, env |
+| Gateway | 2 | HTTP health, WebSocket |
+| **Total** | **103** | **100%** ✅ |
 
-## OpenClaw Plugin Hook Constraints
+---
 
-Critical finding during implementation:
+## Analytics Dashboard
 
-- `allowConversationAccess` in `plugins.entries.{id}.hooks` causes **gateway abort** — it is defined in TypeScript types but rejected by the Zod strict schema at runtime.
-- Only `allowPromptInjection` is valid in the schema.
-- `agent_end` / `llm_input` / `llm_output` are **conversation hooks** requiring `allowConversationAccess` — not usable for non-bundled plugins.
-- `before_prompt_build` is a **prompt injection hook** requiring `allowPromptInjection` — use this instead.
+```bash
+# Regenerate dashboard from latest approval.jsonl
+python3 docs/generate-analytics.py
 
-## Project Status
-
-- [x] policy-sensorium plugin loads and fires on every LLM call
-- [x] D' computed from 4 signals (success_rate, tool_success, cbr_hit, severity_inversion)
-- [x] `<openclaw_state>` XML injected via `prependContext`
-- [x] Agent can read and act on its own D' score
-- [x] AGENTS.md references POLICY.md
-- [x] OpenClaw docs fetched (50 pages) + knowledge graph built
-- [x] Plugin/hook system documented in OPENCLAW_PLUGIN_HOOK_SYSTEM.md
-- [x] Backups created before deployment
-- [x] Production test via ACP session (memory-recall working, D' gating intercepts `rm -rf`)
-
-## FAQ: User Questions
-
-### 1. Does it work differently for different user types?
-
-Yes — deploy with a preset config. Four profiles are available:
-
-| Preset | Who it's for | Key differences |
-|--------|-------------|-----------------|
-| `personal-local` | Local session, no remote access | Smart approval (LLM review) reduces false positives, relaxed pattern mode |
-| `personal-acp` | ACP/opencode clients, no external channels | Strict pattern mode, gateway self-protection enabled |
-| `enterprise-channel` | Telegram/Discord/Feishu etc. | Manual approval prioritized, `inbound_claim` sender validation, secret redaction on outbound |
-| `paranoid` | Maximum security | All approvals manual, tight D' bands, all layers active |
-
-Switch by setting `policy-layer.preset: "personal-acp"` in `openclaw.json`.
-
-### 2. Does it require memory-recall to work?
-
-**No, fully independent.** It only requires the OpenClaw plugin API.
-
-| With memory-recall | Without memory-recall |
-|-------------------|---------------------|
-| CBR (Case-Based Reasoning) signal available → D' more accurate | D' uses 4 statistical signals only |
-| Recall injection via `before_prompt_build` | Works fine without it |
-| Both plugins coexist in same Gateway | Either runs standalone |
-
-### 3. Will it constantly ask me to approve things?
-
-**Yes at first, then it gets quieter.** The system has an adaptation period:
-
-```
-Day 1-3 (new session)
-  D' cold start → baseline放行
-  Pattern hits → LLM Review auto-approves safe commands
-  → ~20-30% of dangerous-looking commands auto-approved by LLM
-
-Day 4-7 (learning phase)
-  D' converges to stable value (~0.5-0.7)
-  Common commands (git commit, npm install) are already session-approved
-  → false positive rate drops ~60%
-
-Day 14+ (steady state)
-  Normal dev flow: Pattern no-hit → direct pass, no interruption
-  Dangerous ops: Pattern hit + D' high → direct REJECT (no approval needed)
-  Edge cases: Pattern hit + D' mid → LLM Review → most auto-approve
+# Open in browser
+open docs/approval-analytics.html
 ```
 
-**The `smartApproval` layer (LLM second-review) is key** — even in the adaptation period, commands like `python -c "print('hello')"` that match a "script execution" pattern get auto-approved by the LLM, not a human.
+Dashboard shows:
+- **Left sidebar**: result counts (deny/escalate/approve/fast_lane) — click to filter
+- **Donut chart**: distribution of results
+- **Bar chart**: top 8 patterns by frequency
+- **Timeline**: hourly activity stacked by result type
+- **Event table**: sortable, filterable event log (200 records max)
+- **Pattern drilldown**: each pattern's deny/escalate/approve/fast_lane breakdown
 
-### 4. Can it evolve on its own?
+Auto-refreshes every 30 seconds.
 
-Yes, in three ways:
+**Approval log location:** `~/.openclaw/logs/approval.jsonl`
 
-**Automatic (no human needed)**
-- D' is a statistical model. New session data → more accurate signals → thresholds naturally adapt
-- Approval history accumulates in JSONL audit log. New sessions read past decisions.
-- Commands approved 5 times in a row enter a "likely-safe" fast lane
+---
 
-**Semi-automatic (rule update via Git PR)**
-- Pattern rules (`rm -rf`, `chmod 777`, etc.) are code in `src/sensorium-index.ts`
-- New vulnerability patterns → submit a PR to this repo
-- Severity weights → tunable via plugin config
+## Configuration
 
-**Limitations**
-- Pattern rules do NOT automatically discover new threats — a human must identify and commit the new pattern (same as virus signature databases)
-- D' convergence requires actual usage data — a brand-new session starts from zero
+In `~/.openclaw/openclaw.json` or `config/openclaw.json`:
 
-### 5. Is it safe to rely on LLM Review for security decisions?
-
-**The LLM acts as a filter, not a final gate.** Design principle:
-
-```
-Pattern match hits → LLM Review
-  LLM says APPROVE  → allow (safe command, e.g. "python -c print('hello')")
-  LLM says DENY     → block immediately (genuine threat)
-  LLM says ESCALATE → trigger human approval prompt
-```
-
-The LLM only auto-approves commands that match a danger pattern but are clearly harmless. Genuine threats (`rm -rf /`, fork bombs, disk writes) always get blocked or escalated.
-
-## Git Commits
-
-```
-37b7bb9 feat: add POLICY.md + update sensorium D' formula
-7b4701e docs: rewrite OPENCLAW_PLUGIN_HOOK_SYSTEM.md with accurate SDK reference
-c1b9203 Initial commit: OpenClaw plugin system + policy-sensorium CBS plugin
-2026-04-27:
-  - memory-recall: fix EPIPE resilience, auto-restart, cwd fix, ping handshake (086502f)
-  - skill-auto-injection: fix import path to llm-connector (6cf85e4, v0.3.1 tagged)
-  - policy-layer: production test passed, D' gating intercepts rm-rf, FAQ added
+```json
+{
+  "plugins": {
+    "entries": {
+      "policy-sensorium": {
+        "enabled": true,
+        "hooks": {
+          "allowPromptInjection": true
+        },
+        "config": {
+          "reportToUser": true,
+          "sensoriumWindow": 20,
+          "dGateThreshold": 0.35,
+          "logLevel": "info"
+        }
+      }
+    }
+  }
+}
 ```
 
-## Next Steps
+| Config | Default | Description |
+|--------|---------|-----------|
+| `reportToUser` | `true` | Agent 主动在对话里汇报 D' 状态；`false` 静默 |
+| `sensoriumWindow` | 20 | Cycles to track for D' signals |
+| `dGateThreshold` | 0.35 | D' below this → LOW_ACCEPT |
+| `logLevel` | info | debug / info / warn |
 
-1. **D' gating enforcement** — currently logs warnings; next: actually block or defer LLM calls when D' < threshold
-2. **CBR integration** — connect to memory-recall CBR hit rate for the 4th signal
-3. **Normative Calculus (simplified)** — implement ordinal-level classification for tool call risk
-4. **Policy enforcement loop** — add `before_tool_call` hook with Pattern Detection (Layer 1), D' Gating (Layer 2), Smart Approval (Layer 3)
-5. **Secret Redaction** — add `after_tool_call` hook with credential pattern redaction (Layer 4)
-6. **Config presets** — implement `preset: personal-local | personal-acp | enterprise-channel | paranoid` in sensorium configSchema
-7. **Audit log** — JSONL append-only log for all security events (pattern hits, D' rejects, approvals)
+---
+
+## Gateway Self-Protection
+
+These commands are blocked at Layer 1 (critical severity):
+
+```bash
+pkill gateway         → BLOCKED
+pkill -9 gateway     → BLOCKED
+killall gateway      → BLOCKED
+openclaw gateway stop → BLOCKED
+```
+
+---
+
+## Maintenance (returning in 2 days)
+
+### 1. Check if plugin is still running
+```bash
+openclaw acp --session test-check
+# Type: policy-security
+# Should show: "Layers 1-4 Active"
+```
+
+### 2. Check approval log has real data
+```bash
+wc -l ~/.openclaw/logs/approval.jsonl
+# Should be > 0 if gateway has been used
+```
+
+### 3. Update analytics dashboard
+```bash
+python3 ~/projects/policy-layer/docs/generate-analytics.py
+open ~/projects/policy-layer/docs/approval-analytics.html
+```
+
+### 4. Review deny/escalate events
+Look at the dashboard — if deny rate > 10% of total events, review:
+- Are benign commands being false-positively blocked?
+- Is Ollama responding correctly in smart-review?
+
+### 5. If issues found, restart gateway
+```bash
+openclaw gateway restart
+```
+
+### 6. Run tests after any code change
+```bash
+cd ~/projects/policy-layer
+npm test
+```
+
+---
+
+## Known Issues
+
+1. **Smart review depends on Ollama**: When Ollama is unreachable, `smartReview()` defaults to `escalate` (safe default — requires human approval). This means HIGH/MEDIUM patterns always trigger approval when Ollama is down.
+
+2. **Fast-lane counter does not grow on 'escalate'**: If a pattern keeps returning 'escalate', the fast-lane counter doesn't increment. This is intentional security design — repeated escalations indicate the pattern needs review, not fast-lane bypass.
+
+3. **No path traversal blocking in bash tool**: `validatePath()` exists (Layer 1) but is not yet wired into `before_tool_call` for file-path arguments. Planned.
+
+---
+
+## Git Log
+
+```
+b25e05a feat: add approval analytics dashboard (self-contained HTML)
+35c5369 chore: rename to policy-layer v0.2.0, update README
+1cdea0a feat: merge policy-sensorium v0.2.0 — Layers 1-4 complete + 103 tests
+5104ffb feat: Layer 1-4 security files + integration
+```
+
+---
+
+## Next Steps (when you return)
+
+1. **Check real approval.jsonl** — does it have actual events from gateway usage?
+2. **Review dashboard** — are deny/escalate rates reasonable?
+3. **Fast-lane effectiveness** — any pattern that should be fast-lane but isn't?
+4. **Secret leak alerts** — did Layer 4 catch any tool output containing secrets?
+5. **Consider**: path traversal wiring into before_tool_call, Zone-based isolation (Layer 2), CBR integration with memory-recall

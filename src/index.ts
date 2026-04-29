@@ -65,6 +65,7 @@ function getOrCreateMetrics(sessionKey, cfg) {
       cycles: [],
       callCounter: 0,
       lastRecordedSuccess: null,
+      lastPolicyResult: null,
       config: resolved,
     });
   }
@@ -124,6 +125,84 @@ function computeDPrime(metrics) {
   return numerator / denominator;
 }
 
+function severityLevel(sev) {
+  if (sev >= 1000) return "CRITICAL";
+  if (sev >= 600) return "HIGH";
+  if (sev >= 300) return "MEDIUM";
+  return "LOW";
+}
+
+function computeToolDetails(metrics) {
+  const recent = metrics.cycles.slice(-metrics.config.window);
+  const total = recent.reduce((s, c) => s + (c.totalTools || 0), 0);
+  const failed = recent.reduce((s, c) => s + (c.failedTools || 0), 0);
+  const failedNames = [];
+  for (const c of recent) {
+    if (c.failedToolNames) for (const n of c.failedToolNames) failedNames.push(n);
+  }
+  return {
+    total,
+    failed,
+    failedRate: total > 0 ? failed / total : 0,
+    failedNames,
+  };
+}
+
+function computeSeverityStats(metrics) {
+  const recent = metrics.cycles.slice(-metrics.config.window);
+  if (recent.length === 0) return { maxSeverity: 50, avgSeverity: 50, reason: "", level: "LOW" };
+  const sevs = recent.map((c) => c.severity ?? 50);
+  const maxSeverity = Math.max(...sevs);
+  const avgSeverity = sevs.reduce((a, b) => a + b, 0) / sevs.length;
+  const topCycle = recent.find((c) => (c.severity ?? 50) === maxSeverity);
+  const reason = topCycle?.reason || "";
+  return { maxSeverity, avgSeverity, reason, level: severityLevel(maxSeverity) };
+}
+
+async function logDCycle(
+  sessionKey: string,
+  agentId: string,
+  sessionId: string,
+  metrics: ReturnType<typeof getOrCreateMetrics>,
+  trigger: DCycleTrigger,
+  decision: 'ACCEPT' | 'ESCALATE' | 'REJECT',
+): Promise<void> {
+  const successRate = computeSuccessRate(metrics);
+  const toolRate = computeToolFailureRate(metrics);
+  const cbrRate = computeCbrHitRate(metrics);
+  const dPrime = computeDPrime(metrics);
+  const status = dGateStatus(dPrime, metrics.config.dBands);
+  const toolDetails = computeToolDetails(metrics);
+  const sevStats = computeSeverityStats(metrics);
+  const recent = metrics.cycles.slice(-metrics.config.window);
+  const lastCycle = recent[recent.length - 1];
+
+  try {
+    await dCycleStore.log({
+      sessionId: sessionKey,
+      agentId: agentId || 'unknown',
+      signals: {
+        success: lastCycle?.success ?? true,
+        successRate,
+        toolDetails,
+        cbrDetails: {
+          hit: lastCycle?.cbrHit ?? false,
+          hitRate: cbrRate,
+          matchedCaseIds: lastCycle?.matchedCaseIds ?? [],
+        },
+        severityDetails: sevStats,
+      },
+      dPrime,
+      dPrimeStatus: status,
+      decision,
+      trigger,
+      windowSize: metrics.config.window,
+    });
+  } catch (err) {
+    doLog({ logger: { warn: console.warn.bind(console) }, pluginConfig: {} } as any, "warn", `logDCycle error: ${String(err)}`);
+  }
+}
+
 function dGateStatus(dPrime, bands) {
   if (dPrime === null) return "UNKNOWN";
   if (dPrime >= bands.high) return "HIGH_REJECT";
@@ -142,6 +221,7 @@ function formatSensorium(sessionKey, metrics) {
     .filter((c) => !c.success)
     .map((c) => (c.severity >= 600 ? `[CRIT]${c.reason || "unknown"}` : c.reason || "unknown"))
     .slice(-3);
+  const lastCycle = metrics.cycles[metrics.cycles.length - 1];
 
   return [
     "<openclaw_state>",
@@ -153,6 +233,9 @@ function formatSensorium(sessionKey, metrics) {
     successRate !== null ? `  <session_success_rate>${successRate.toFixed(3)}</session_success_rate>` : `  <session_success_rate>--</session_success_rate>`,
     toolFailureRate !== null ? `  <tool_failure_rate>${toolFailureRate.toFixed(3)}</tool_failure_rate>` : `  <tool_failure_rate>0.000</tool_failure_rate>`,
     cbrHitRate !== null ? `  <cbr_hit_rate>${cbrHitRate.toFixed(3)}</cbr_hit_rate>` : `  <cbr_hit_rate>--</cbr_hit_rate>`,
+    metrics.lastPolicyResult
+      ? `  <last_policy_result>${metrics.lastPolicyResult}</last_policy_result>`
+      : `  <last_policy_result>none</last_policy_result>`,
     recentFailures.length > 0 ? `  <recent_failures>${recentFailures.join(" | ")}</recent_failures>` : `  <recent_failures>none</recent_failures>`,
     "</openclaw_state>",
   ].join("\n");
@@ -177,9 +260,11 @@ function extractOutcomeFromMessages(messages, severityRules) {
   let failedTools = 0;
   let reason = "";
   let maxSeverity = 50;
+  let failedToolNames: string[] = [];
 
   for (const msg of messages) {
     if (msg.role === "tool") {
+      const toolName = msg.name || 'unknown';
       totalTools++;
       const content = msg.content;
       if (typeof content === "string") {
@@ -200,6 +285,7 @@ function extractOutcomeFromMessages(messages, severityRules) {
         }
         if (isError) {
           failedTools++;
+          failedToolNames.push(toolName);
           const sev = classifySeverity(errReason, severityRules);
           if (sev > maxSeverity) {
             maxSeverity = sev;
@@ -210,7 +296,7 @@ function extractOutcomeFromMessages(messages, severityRules) {
     }
   }
 
-  return { totalTools, failedTools, reason, severity: maxSeverity };
+  return { totalTools, failedTools, reason, severity: maxSeverity, failedToolNames };
 }
 
 export function resetSessionMetrics(sessionKey) {
@@ -274,6 +360,7 @@ import { logApproval, ApprovalRecord } from './security/approval-log';
 import { onApprove, isFastLane, resetFastLane, getFastLaneEntries } from './security/fast-lane';
 import { redactSecrets } from './security/redact';
 import { redactUrlSecrets, redactEnvironmentVariables } from './security/url-redact';
+import { dCycleStore, type DCycleRecord, type DCycleTrigger } from './security/sensorium-log';
 
 const plugin = {
   id: "policy-sensorium",
@@ -299,14 +386,16 @@ const plugin = {
         if (cfg.dBandHigh !== undefined) metrics.config.dBands.high = cfg.dBandHigh;
 
         const messages = event.messages || [];
+        let triggerGate: DCycleTrigger['gate'] = 'output';
 
         if (metrics.callCounter > 0) {
-          const { totalTools, failedTools, reason, severity } = extractOutcomeFromMessages(messages, resolvedCfg.severityRules);
+          const { totalTools, failedTools, reason, severity, failedToolNames } = extractOutcomeFromMessages(messages, resolvedCfg.severityRules);
           const success = failedTools === 0;
           addCycle(metrics, {
             success,
             totalTools,
             failedTools,
+            failedToolNames,
             cbrHit: false,
             reason,
             severity,
@@ -317,17 +406,30 @@ const plugin = {
         const status = dGateStatus(dPrime, metrics.config.dBands);
 
         if (status === "HIGH_REJECT") {
+          triggerGate = 'input';
           doLog(api, "warn", `D'=${dPrime?.toFixed(4)} → HIGH_REJECT: blocking high-risk call for session ${sessionKey}`);
         } else if (status === "MEDIUM_CONFIRM") {
           doLog(api, "warn", `D'=${dPrime?.toFixed(4)} → MEDIUM_CONFIRM: requesting operator confirmation`);
         }
+
+        const decision = status === "HIGH_REJECT" ? 'REJECT' : status === "MEDIUM_CONFIRM" ? 'ESCALATE' : 'ACCEPT';
+        const agentId = ctx?.agentId || sessionKey.split(':')[0] || 'unknown';
+        const sessId = ctx?.sessionId || sessionKey.split(':')[1] || sessionKey;
+        await logDCycle(sessionKey, agentId, sessId, metrics, { gate: triggerGate }, decision);
 
         const sensorium = formatSensorium(sessionKey, metrics);
         doLog(api, "debug", `Injecting sensorium for ${sessionKey}: D'=${dPrime?.toFixed(4) ?? "--"}, status=${status}`);
 
         metrics.callCounter++;
 
-        return { prependContext: sensorium };
+        const reportToUser = cfg.reportToUser !== false;
+        let systemContext = sensorium;
+        if (reportToUser) {
+          systemContext +=
+            "\n\n[System] After each tool execution, briefly report the CBS status: D' score, gate status, and last_policy_result in parentheses, e.g. \"(D'=0.42 MEDIUM_CONFIRM, last=PASS)\".";
+        }
+
+        return { prependSystemContext: systemContext };
       } catch (err) {
         doLog(api, "warn", `before_prompt_build error: ${String(err)}`);
       }
@@ -341,6 +443,7 @@ const plugin = {
         const patterns = detectDangerousPatterns(normalized);
 
         const sessionKey = ctx?.sessionKey || 'unknown';
+        const pluginCfg = api.pluginConfig || {};
         const recordBase: Partial<ApprovalRecord> = {
           command: normalized,
           tool: toolCall.name,
@@ -349,13 +452,27 @@ const plugin = {
         };
 
         if (patterns.length === 0) {
+          const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
+          metrics.lastPolicyResult = 'PASS';
           return { block: false };
         }
+
+        const toolTrigger: DCycleTrigger = {
+          gate: 'tool',
+          operation: toolCall.name,
+          patterns: patterns.map(p => p.label),
+          normalizedCommand: normalized,
+        };
+        const agentId = ctx?.agentId || sessionKey.split(':')[0] || 'unknown';
+        const sessionId = ctx?.sessionId || sessionKey;
 
         const severities = patterns.map(p => p.severity);
         if (severities.includes('critical')) {
           const critLabels = patterns.filter(p => p.severity === 'critical').map(p => p.label);
+          const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
+          metrics.lastPolicyResult = `DENY(${critLabels[0]})`;
           await logApproval({ ...recordBase, result: 'deny', timestamp: new Date().toISOString() } as ApprovalRecord);
+          await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'REJECT');
           doLog(api, "warn", `CRITICAL pattern blocked: ${critLabels.join(', ')}`);
           return { block: true, blockReason: `Critical dangerous pattern(s): ${critLabels.join(', ')}` };
         }
@@ -363,7 +480,10 @@ const plugin = {
         const patternKey = patterns.map(p => p.label).sort().join('|');
         if (isFastLane(patternKey)) {
           patterns.forEach(p => onApprove(p.label));
+          const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
+          metrics.lastPolicyResult = `FASTLANE(${patternKey})`;
           await logApproval({ ...recordBase, result: 'fast_lane', timestamp: new Date().toISOString() } as ApprovalRecord);
+          await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ACCEPT');
           doLog(api, "debug", `Fast-lane approve: ${patternKey}`);
           return { block: false };
         }
@@ -372,17 +492,26 @@ const plugin = {
         const reviewResult = await smartReview(redacted.redacted, patterns);
 
         if (reviewResult === 'deny') {
+          const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
+          metrics.lastPolicyResult = `DENY(review)`;
           await logApproval({ ...recordBase, result: 'deny', reason: 'smart-review deny', timestamp: new Date().toISOString() } as ApprovalRecord);
+          await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'REJECT');
           return { block: true, blockReason: `Smart review denied: ${patterns.map(p => p.label).join(', ')}` };
         }
 
         if (reviewResult === 'escalate') {
+          const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
+          metrics.lastPolicyResult = `ESCALATE`;
           await logApproval({ ...recordBase, result: 'escalate', reason: 'requires human review', timestamp: new Date().toISOString() } as ApprovalRecord);
+          await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ESCALATE');
           return { block: false, requireApproval: true };
         }
 
         patterns.forEach(p => onApprove(p.label));
+        const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
+        metrics.lastPolicyResult = `REVIEW_OK`;
         await logApproval({ ...recordBase, result: 'approve', reason: 'smart-review approve', timestamp: new Date().toISOString() } as ApprovalRecord);
+        await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ACCEPT');
         return { block: false };
       } catch (err) {
         doLog(api, "warn", `before_tool_call error: ${String(err)}`);
@@ -403,8 +532,8 @@ const plugin = {
     });
 
     api.registerCommand({
-      name: "policy-security",
-      description: "Show policy security status: fast-lane patterns, layer info.",
+      name: "security-status",
+      description: "Show security layer status, fast-lane patterns, and layer info.",
       acceptsArgs: false,
       handler: async () => {
         const fastLanePatterns = getFastLaneEntries()
@@ -438,8 +567,8 @@ const plugin = {
     });
 
     api.registerCommand({
-      name: "policy-sensorium",
-      description: "Show policy-sensorium CBS metrics for the current session.",
+      name: "show-my-d-score",
+      description: "Show my cognitive behavior score (D' prime) and session metrics.",
       acceptsArgs: true,
       handler: async (ctx) => {
         const sessionKey =
@@ -456,11 +585,38 @@ const plugin = {
         const successRate = computeSuccessRate(metrics);
         const toolFailureRate = computeToolFailureRate(metrics);
         const cbrHitRate = computeCbrHitRate(metrics);
+        const toolDetails = computeToolDetails(metrics);
+        const sevStats = computeSeverityStats(metrics);
 
         const recent = metrics.cycles.slice(-3);
         const failLines = recent
           .filter((c) => !c.success)
           .map((c) => `  - ${c.reason || "unknown"} (sev=${c.severity})`);
+
+        let breakdown = "";
+        try {
+          const stats = await dCycleStore.stats(sessionKey);
+          if (stats.total > 0) {
+            const decLines = Object.entries(stats.byDecision)
+              .map(([k, v]) => `    ${k}: ${v}`)
+              .join("\n");
+            const lastCycles = stats.last10.slice(-5).map((r) => {
+              const sev = r.signals.severityDetails;
+              const tool = r.signals.toolDetails;
+              return `    [${r.cycleId.split(":")[1]}] D'=${r.dPrime?.toFixed(3) ?? "--"} ${r.decision} | ` +
+                `sev=${sev.maxSeverity}(${sev.level}) | ` +
+                `tool_fail=${tool.failed}/${tool.total} | ` +
+                `${r.trigger.gate} gate` +
+                (r.trigger.patterns ? ` [${r.trigger.patterns.join(",")}]` : "");
+            });
+            breakdown = [
+              `  Decision breakdown (${stats.total} total):`,
+              decLines,
+              `  Avg D': ${stats.avgDPrime?.toFixed(4) ?? "--"}`,
+              lastCycles.length > 0 ? `  Last 5 cycles:\n${lastCycles.join("\n")}` : "",
+            ].filter(Boolean).join("\n");
+          }
+        } catch { /* non-fatal */ }
 
         const lines = [
           `[policy-sensorium] Session: ${sessionKey}`,
@@ -469,11 +625,16 @@ const plugin = {
           `  Threshold:    ${metrics.config.dGateThreshold}`,
           `  Cycles:       ${metrics.cycles.length} (window ${metrics.config.window})`,
           `  Calls:        ${metrics.callCounter}`,
+          `  --- Signals ---`,
           `  Success rate: ${successRate !== null ? successRate.toFixed(3) : "--"}`,
-          `  Tool fail:    ${toolFailureRate !== null ? toolFailureRate.toFixed(3) : "--"}`,
+          `  Tool fail:    ${toolFailureRate !== null ? toolFailureRate.toFixed(3) : "--"} (${toolDetails.failed}/${toolDetails.total})` +
+            (toolDetails.failedNames.length > 0 ? ` [${[...new Set(toolDetails.failedNames)].join(",")}]` : ""),
           `  CBR hit:      ${cbrHitRate !== null ? cbrHitRate.toFixed(3) : "--"}`,
+          `  Max severity: ${sevStats.maxSeverity} (${sevStats.level})` +
+            (sevStats.reason ? ` — ${sevStats.reason.slice(0, 60)}` : ""),
           failLines.length > 0 ? `  Recent failures:\n${failLines.join("\n")}` : `  Recent failures: none`,
-        ];
+          breakdown ? `\n${breakdown}` : "",
+        ].filter(Boolean);
 
         return { text: lines.join("\n") };
       },
