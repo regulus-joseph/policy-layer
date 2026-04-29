@@ -25,22 +25,22 @@ export const DANGEROUS_PATTERNS: PatternMatch[] = [
   {
     pattern: /curl\s+[^\|]+\s*\|\s*sh/,
     label: 'curl pipe to shell',
-    severity: 'critical',
+    severity: 'high',
   },
   {
     pattern: /wget\s+[^\|]+\s*\|\s*sh/,
     label: 'wget pipe to shell',
-    severity: 'critical',
+    severity: 'high',
   },
   {
     pattern: /curl\s+[^\|&&]+\s*&&\s*sh/,
     label: 'curl download and execute shell',
-    severity: 'critical',
+    severity: 'high',
   },
   {
     pattern: /wget\s+[^\|&&]+\s*&&\s*sh/,
     label: 'wget download and execute shell',
-    severity: 'critical',
+    severity: 'high',
   },
   {
     pattern: /kill\s+-9\s+-1/,
@@ -90,7 +90,7 @@ export const DANGEROUS_PATTERNS: PatternMatch[] = [
   {
     pattern: /chmod\s+[+]x.+\s*\|\s*(bash|sh|zsh|python|ruby|perl|node)/,
     label: 'chmod +x piped to interpreter',
-    severity: 'critical',
+    severity: 'high',
   },
   {
     pattern: /DROP\s+(TABLE|DATABASE|COLUMN|INDEX|VIEW|PROCEDURE|FUNCTION)\s+/i,
