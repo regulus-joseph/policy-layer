@@ -210,6 +210,36 @@ function dGateStatus(dPrime, bands) {
   return "LOW_ACCEPT";
 }
 
+function interpretSensorium(dPrime, status, toolFailureRate, recentFailures, successRate) {
+  const lines = [];
+
+  if (dPrime !== null && dPrime >= 0.55) {
+    lines.push("[HIGH_REJECT] Accumulated risk detected. Slow down. Pause non-essential actions. Diagnose root cause before continuing.");
+  } else if (dPrime !== null && dPrime >= 0.35) {
+    lines.push("[MEDIUM_CONFIRM] Moderate pressure. Be more careful with high-impact decisions. Verify before executing.");
+  } else if (dPrime !== null) {
+    lines.push("[LOW_ACCEPT] System healthy. Normal operation.");
+  }
+
+  if (toolFailureRate > 0.15) {
+    lines.push("[TOOL_FAILURE>15%] Multiple tool failures detected. Stop and diagnose — check paths, permissions, or system state. Do not retry the same failing command.");
+  } else if (toolFailureRate > 0.05) {
+    lines.push("[TOOL_FAILURE>5%] Some tool failures. Watch for patterns in which tools fail.");
+  }
+
+  if (recentFailures.length > 0) {
+    const critFails = recentFailures.filter(f => f.startsWith('[CRIT]'));
+    if (critFails.length > 0) {
+      lines.push(`[CRITICAL FAILURES] ${critFails.join(', ')}. Stop related operations immediately.`);
+    }
+    if (recentFailures.length >= 3 && critFails.length === 0) {
+      lines.push("[REPEATED FAILURES] Same goal failing repeatedly. Try a different approach instead of retrying.");
+    }
+  }
+
+  return lines;
+}
+
 function formatSensorium(sessionKey, metrics) {
   const successRate = computeSuccessRate(metrics);
   const toolFailureRate = computeToolFailureRate(metrics);
@@ -222,6 +252,7 @@ function formatSensorium(sessionKey, metrics) {
     .map((c) => (c.severity >= 600 ? `[CRIT]${c.reason || "unknown"}` : c.reason || "unknown"))
     .slice(-3);
   const lastCycle = metrics.cycles[metrics.cycles.length - 1];
+  const interpretations = interpretSensorium(dPrime, status, toolFailureRate, recentFailures, successRate);
 
   return [
     "<openclaw_state>",
@@ -237,6 +268,7 @@ function formatSensorium(sessionKey, metrics) {
       ? `  <last_policy_result>${metrics.lastPolicyResult}</last_policy_result>`
       : `  <last_policy_result>none</last_policy_result>`,
     recentFailures.length > 0 ? `  <recent_failures>${recentFailures.join(" | ")}</recent_failures>` : `  <recent_failures>none</recent_failures>`,
+    interpretations.length > 0 ? `  <action>\n    ${interpretations.join('\n    ')}\n  </action>` : '',
     "</openclaw_state>",
   ].join("\n");
 }
