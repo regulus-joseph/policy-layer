@@ -1,6 +1,6 @@
 {
   "name": "policy-layer",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "type": "module",
   "description": "Springdrift-inspired Cognitive Behavior System for OpenClaw: CBS sensorium injection, D'gating, cycle metrics",
   "main": "src/index.ts",
