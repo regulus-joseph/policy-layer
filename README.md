@@ -1,167 +1,173 @@
 # Policy Layer — v0.4.0
 
-**OpenClaw Gateway Plugin：** 4 层安全执行框架 + D' 认知行为评分系统（CBS）
+**OpenClaw Gateway Plugin:** 4-layer security enforcement framework + D' Cognitive Behavior Scoring (CBS).
 
 ---
 
-## 什么是 Policy Layer？
+## What Is Policy Layer?
 
-Policy Layer 是运行在 OpenClaw Gateway 层的安全与行为管控插件，在每一条 Agent 命令执行前、中、后三个阶段进行多维度检查：
+Policy Layer is a security and behavioral governance plugin running at the OpenClaw Gateway layer, performing multi-dimensional checks at three stages — before, during, and after every Agent command execution:
 
 ```
-用户输入 → LLM 决定执行工具 → before_tool_call（安全检查）
-                                         ↓
-工具执行 → after_tool_call（敏感信息泄漏检测）
-                                         ↓
-LLM 下一次决策前 → before_prompt_build（注入认知状态评分）
+User Input → LLM decides to execute a tool → before_tool_call (security check)
+                                                      ↓
+Tool Executes → after_tool_call (secret leak detection)
+                                                      ↓
+Next LLM Decision → before_prompt_build (inject cognitive state score)
 ```
 
-**它解决的核心问题：**
-- **安全**：防止误操作和恶意命令执行（如 `rm -rf /`、`curl|sh` 等）
-- **感知**：让 Agent "知道自己的状态"，在低分时主动降速谨慎
-- **学习**：记录所有安全决策，用户可反馈错误决策（report-bad-result）
-- **透明**：所有决策都记录到 JSONL，供审计和可视化
+**Core problems it solves:**
+
+| Goal | How |
+|------|-----|
+| **Security** | Block dangerous commands (e.g. `rm -rf /`, `curl\|sh`) before execution |
+| **Self-awareness** | Let the Agent "know its own state" — slow down when D' score is low |
+| **Learning** | Record all security decisions; user can flag wrong decisions (`report-bad-result`) |
+| **Transparency** | Every decision is written to JSONL for audit and visualization |
 
 ---
 
-## 核心功能一览
+## Feature Overview
 
-| 功能 | 描述 |
-|------|------|
-| 🛡️ 危险命令拦截 | Layer 1 模式匹配，16 类 CRITICAL 命令立即拦截，不经 LLM |
-| 🤖 LLM 智能复核 | HIGH/MEDIUM 命令通过 Ollama 本地模型二次复核（approve/deny/escalate） |
-| 🚀 快车道 | 同一无害命令连续 5 次审批通过 → 跳过 LLM 复核，直接放行 |
-| 📊 认知状态评分 | D' CBS 算法，4 维度（成功率/工具失败/上下文命中率/严重度）实时评分 |
-| 🔒 密钥泄漏检测 | after_tool_call 扫描工具输出，39 种密钥模式，泄露即告警 |
-| 📝 决策审计日志 | 全部决策写入 `~/.openclaw/logs/approval.jsonl`（追加式 JSONL） |
-| 🗳️ 用户反馈闭环 | `report-bad-result` 用户可标记错误决策 → 分数下降 + 加入黑名单 |
-| 📈 可视化仪表盘 | 从 approval.jsonl 生成 HTML 仪表盘，支持按模式筛选和时序分析 |
+| Feature | Description |
+|---------|-------------|
+| 🛡️ Dangerous Command Blocking | Layer 1 pattern matching — 16 CRITICAL patterns blocked immediately, no LLM review |
+| 🤖 LLM Smart Review | HIGH/MEDIUM commands go through Ollama local model for second review (approve/deny/escalate) |
+| 🚀 Fast Lane | Same harmless command approved 5 times consecutively → skip LLM review, fast-track |
+| 📊 Cognitive State Scoring | D' CBS algorithm — 4 dimensions (success rate / tool fail / context hit / severity) scored in real time |
+| 🔒 Secret Leak Detection | `after_tool_call` scans tool output for 39 secret patterns; leaks trigger warning |
+| 📝 Decision Audit Log | All decisions appended to `~/.openclaw/logs/approval.jsonl` (JSONL, append-only) |
+| 🗳️ User Feedback Loop | `report-bad-result` — user flags wrong decisions → score drops + added to blacklist |
+| 📈 Analytics Dashboard | Generate HTML dashboard from approval.jsonl, with pattern filtering and timeline analysis |
 
 ---
 
-## 快速开始
+## Quick Start
 
 ```bash
-# 验证插件已加载（重启后生效）
+# Verify plugin is loaded (restart to reload)
 openclaw gateway restart
 
-# 运行测试
+# Run tests
 cd ~/projects/policy-layer
 npm test                  # 103 tests
 
-# 更新可视化仪表盘
+# Regenerate analytics dashboard
 python3 docs/generate-analytics.py
 open docs/approval-analytics.html
 ```
 
 ---
 
-## 架构详解
+## Architecture in Depth
 
-### 整体流程
+### End-to-End Flow
 
 ```
-Tool Call 输入
+Tool Call Input
      │
      ├─ Layer 1: normalizeCommand()
-     │      ├─ 去除 ANSI 转义码
-     │      ├─ 去除 null 字节
-     │      └─ NFKC 标准化（Unicode 同形字符规范化）
+     │      ├─ stripAnsi()         // Remove ANSI escape codes
+     │      ├─ stripNullBytes()    // Remove \x00 (common evasion technique)
+     │      └─ nfkcNormalize()     // NFKC normalization (unify Unicode homoglyphs)
      │      ↓
      ├─ Layer 1: detectDangerousPatterns()
-     │      ├─ CRITICAL (16): 立即拦截，不经 LLM 复核
-     │      └─ HIGH/MEDIUM (7): 进入 Smart Review
+     │      ├─ CRITICAL (16): Block immediately, no LLM review
+     │      └─ HIGH/MEDIUM (7): Proceed to Smart Review
      │      ↓
-     ├─ Layer 2: D' CBS（before_prompt_build 注入）
-     │      └─ 在 prompt 中注入 <openclaw_state> XML 标签
-     │         Agent 读取后知道自己的 D' 分数并主动调整行为
+     ├─ Layer 2: D' CBS (injected via before_prompt_build)
+     │      └─ Injects <openclaw_state> XML into LLM context
+     │         Agent reads it and adjusts behavior according to D' score
      │      ↓
-     ├─ Layer 3: Smart Review（HIGH/MEDIUM 专用）
-     │      ├─ Ollama 本地推理（approve / deny / escalate）
-     │      ├─ Fast Lane：连续 5 次 approve → 跳过 LLM 复核
-     │      └─ Approval Log：所有决策追加写入 approval.jsonl
+     ├─ Layer 3: Smart Review (HIGH/MEDIUM only)
+     │      ├─ Ollama local inference (approve / deny / escalate)
+     │      ├─ Fast Lane: 5 consecutive approves → skip LLM review
+     │      └─ Approval Log: all decisions appended to approval.jsonl
      │      ↓
-     └─ Layer 4: Secret Leak Detection（after_tool_call）
-            └─ 扫描工具输出，39 种密钥模式，泄露即 warn
+     └─ Layer 4: Secret Leak Detection (after_tool_call)
+            └─ Scan tool output for 39 secret patterns; leak → warn + redact
 ```
 
 ---
 
-## 各层功能详解
+## Layer-by-Layer Details
 
-### Layer 1 — 命令规范化与危险模式检测
+### Layer 1 — Command Normalization & Danger Detection
 
-#### 1.1 命令规范化（`normalize.ts`）
+#### 1.1 Command Normalization (`normalize.ts`)
 
-在模式匹配之前，对命令进行三重预处理：
+Before pattern matching, commands go through three preprocessing steps:
 
 ```typescript
 normalizeCommand(cmd: string): string
-  ├─ stripAnsi(str)         // 去除 ANSI 转义码（如 \x1b[31m）
-  ├─ stripNullBytes(str)     // 去除 \x00 字节（绕过检测的常见手段）
-  └─ nfkcNormalize(str)      // NFKC 规范化（把同形字符统一为标准形式）
+  ├─ stripAnsi(str)         // Remove ANSI escapes (e.g. \x1b[31m)
+  ├─ stripNullBytes(str)     // Remove \x00 bytes
+  └─ nfkcNormalize(str)      // NFKC normalize (unify Unicode homoglyphs)
 ```
 
-**为什么需要 NFKC 规范化？**
-某些 Unicode 字符和 ASCII 字符视觉上完全相同（如希腊字母 `ο` vs 拉丁 `o`），攻击者可能用同形字符构造绕过检测的命令。NFKC 规范化将其统一，防止这类混淆攻击。
+**Why NFKC normalization?**  
+Some Unicode characters are visually identical to ASCII (e.g. Greek `ο` vs Latin `o`). Attackers can use homoglyphs to craft commands that bypass pattern detection. NFKC normalization converts them all to the standard form.
 
-#### 1.2 危险模式检测（`patterns.ts`）
+#### 1.2 Danger Pattern Detection (`patterns.ts`)
 
-检测 23 种危险模式，分两级处置：
+Detects 23 dangerous patterns, split into two response tiers:
 
-**CRITICAL — 立即拦截（不经过 LLM）**
-| 模式 | 匹配命令示例 | 说明 |
-|------|-------------|------|
-| `rm_recursive_root` | `rm -rf /`, `rm -rf /*` | 递归删除根目录 |
-| `pipe_to_shell` | `curl ... \| sh`, `wget ... \| bash` | 远程代码执行 |
-| `kill_all` | `kill -9 -1`, `killall gateway` | 杀死全部进程 |
-| `fork_bomb` | `:(){ :\|:& };:` | Fork 炸弹 |
-| `chmod_777_root` | `chmod 777 /` | 权限降级 |
-| `gateway_stop` | `pkill gateway`, `openclaw gateway stop` | 关闭网关自身 |
-| `script_execution` | `chmod +x *.sh \| bash\|sh\|python` | 执行未授权脚本 |
-| `/dev/tcp` | `cat /dev/tcp/...` | 绕过防火墙的网络访问 |
+**CRITICAL — Immediate Block (no LLM review)**
 
-**HIGH / MEDIUM — LLM 智能复核**
-| 模式 | 匹配命令示例 |
-|------|-------------|
+| Pattern | Example Match | Note |
+|---------|--------------|------|
+| `rm_recursive_root` | `rm -rf /`, `rm -rf /*` | Recursive delete from root |
+| `pipe_to_shell` | `curl ... \| sh`, `wget ... \| bash` | Remote code execution |
+| `kill_all` | `kill -9 -1`, `killall gateway` | Kill all processes |
+| `fork_bomb` | `:(){ :\|:& };:` | Fork bomb |
+| `chmod_777_root` | `chmod 777 /` | Permission downgrading |
+| `gateway_stop` | `pkill gateway`, `openclaw gateway stop` | Shutdown self |
+| `script_execution` | `chmod +x *.sh \| bash\|sh\|python` | Run unauthorized scripts |
+| `/dev/tcp` | `cat /dev/tcp/...` | Firewall bypass via /dev/tcp |
+
+**HIGH / MEDIUM — LLM Smart Review**
+
+| Pattern | Example Match |
+|---------|--------------|
 | `git_reset_hard` | `git reset --hard` |
 | `dev_tcp` | `/dev/tcp/host/port` |
 | `sql_drop` | `DROP TABLE`, `DROP DATABASE` |
 | `kill_term_negative` | `kill -TERM -1` |
 
-#### 1.3 路径遍历检测（`path.ts`）
+#### 1.3 Path Traversal Detection (`path.ts`)
 
-检测路径遍历攻击：`../` 逃逸家目录、`/proc`/`/sys` 敏感路径访问。
+Detects path traversal attacks: `../` escaping home directory, `/proc`/`/sys` sensitive path access.
 
 ---
 
-### Layer 2 — D' 认知行为评分系统（CBS）
+### Layer 2 — D' Cognitive Behavior Scoring System (CBS)
 
-#### 2.1 什么是 D'？
+#### 2.1 What Is D'?
 
-D'（d-prime，读作 "d-prime"）是信号检测论中的核心指标。Policy Layer 将其引入 AI Agent 行为评估——将 Agent 的历史行为视为"信号"，与基准行为对比，得出一个可量化的风险/异常评分。
+D' (d-prime) is the core metric from Signal Detection Theory. Policy Layer adapts it for AI Agent behavioral evaluation — treating the Agent's historical behavior as the "signal" and comparing it against a baseline, yielding a quantifiable risk/anomaly score.
 
-#### 2.2 四个信号维度
+#### 2.2 Four Signal Dimensions
 
-每次工具调用结束后，系统记录 4 个信号：
+After each tool call, the system records 4 signals:
 
-| 信号 | 权重 | 含义 | 满分归一化 |
-|------|------|------|-----------|
-| `success_rate` | 0.30 | 工具调用成功率 | 成功率 / 1.0 |
-| `tool_fail` | 0.25 | 工具失败率（越低越好） | 1 - 失败率 / 1.0 |
-| `cbr_hit` | 0.20 | 上下文缓冲命中率（Context Buffer Recall） | 命中率 / 1.0 |
-| `severity_inv` | 0.25 | 严重度（越低越好） | 1 - 严重度 / 1000 |
+| Signal | Weight | Meaning | Max-normalized |
+|--------|--------|---------|----------------|
+| `success_rate` | 0.30 | Tool call success rate | success_rate / 1.0 |
+| `tool_fail` | 0.25 | Tool failure rate (lower is better) | 1 - failure_rate / 1.0 |
+| `cbr_hit` | 0.20 | Context Buffer Recall hit rate | cbr_hit / 1.0 |
+| `severity_inv` | 0.25 | Severity (lower is better) | 1 - severity / 1000 |
 
-#### 2.3 D' 分数计算
+#### 2.3 D' Score Calculation
 
 ```
 D' = Σ(w_i × m_i) / (0.30 × 1.0 × n)
 ```
-其中 `m_i` 是各信号在满分归一化后的值，`n` 是 cycle 窗口数。
 
-#### 2.4 分数注入方式
+Where `m_i` is each signal max-normalized, `n` is the cycle window count.
 
-在 `before_prompt_build` 钩子中，向 LLM 的 context 注入 `<openclaw_state>` XML 块：
+#### 2.4 Score Injection
+
+In the `before_prompt_build` hook, inject `<openclaw_state>` XML into the LLM context:
 
 ```xml
 <openclaw_state>
@@ -174,94 +180,94 @@ D' = Σ(w_i × m_i) / (0.30 × 1.0 × n)
 </openclaw_state>
 ```
 
-#### 2.5 分数阈值与行为指导
+#### 2.5 Score Thresholds & Behavioral Guidance
 
-| D' 范围 | 状态 | Agent 行为 |
-|---------|------|-----------|
-| > 0.65 | `NORMAL` | 正常执行，无特殊指导 |
-| 0.35–0.65 | `LOW_ACCEPT` | 适度谨慎，降低激进操作 |
-| < 0.35 | `HIGH_REJECT` | 显著降速，只做最小必要操作 |
-| < 0.20 | `CRITICAL` | 暂停所有非必要操作，等待用户确认 |
+| D' Range | Status | Agent Behavior |
+|-----------|--------|----------------|
+| > 0.65 | `NORMAL` | Normal execution, no special guidance |
+| 0.35–0.65 | `LOW_ACCEPT` | Moderate caution, reduce aggressive operations |
+| < 0.35 | `HIGH_REJECT` | Significant slowdown, perform only essential operations |
+| < 0.20 | `CRITICAL` | Pause all non-essential operations, await user confirmation |
 
 ---
 
-### Layer 3 — 智能复核系统
+### Layer 3 — Smart Review System
 
-#### 3.1 Smart Review（`smart-review.ts`）
+#### 3.1 Smart Review (`smart-review.ts`)
 
-对于 HIGH/MEDIUM 级别的命令，通过 Ollama 本地 LLM 进行二次复核：
+For HIGH/MEDIUM commands, run a second review via Ollama local LLM:
 
 ```typescript
 smartReview(cmd: string, patterns: string[]): ReviewResult
 // ReviewResult: "approve" | "deny" | "escalate"
 ```
 
-**复核流程：**
-1. 将命令 + 匹配模式 + 上下文组织为 prompt
-2. 请求 Ollama（`llama3.3` 默认，本地推理，无需网络）
-3. LLM 返回 approve / deny / escalate
-4. 结果写入 Approval Log
+**Review flow:**
+1. Organize command + matched patterns + context into a prompt
+2. Request Ollama (`llama3.3` by default — local inference, no network required)
+3. LLM returns approve / deny / escalate
+4. Result written to Approval Log
 
-**安全问题：** 若 Ollama 不可达，默认返回 `escalate`（安全默认值——要求人工审批）。
+**Safety:** If Ollama is unreachable, defaults to `escalate` (safe default — requires human approval).
 
-#### 3.2 Fast Lane（`fast-lane.ts`）
+#### 3.2 Fast Lane (`fast-lane.ts`)
 
-**设计动机：** 对于确定无害的命令（如 `git status`、`ls`），每次都走 LLM 复核浪费资源且延迟高。
+**Motivation:** For definitely harmless commands (e.g. `git status`, `ls`), running LLM review every time is wasteful and adds latency.
 
-**机制：** 同一个"命令模式"连续 5 次被 LLM 判定为 approve → 进入快车道，后续同类命令直接放行（跳过 LLM）。
+**Mechanism:** The same command pattern approved by LLM 5 times in a row → enter Fast Lane, subsequent same-pattern commands bypass LLM review entirely.
 
 ```typescript
-// 快车道计数器（按模式分组）
+// Fast lane counter (grouped by pattern)
 fast_lane_counter: Map<pattern_label, consecutive_approvals>
-// 触发条件：consecutive_approvals >= 5
-// 重置条件：遇到任何 deny / escalate / 新命令模式
+// Trigger: consecutive_approvals >= 5
+// Reset: any deny / escalate / new command pattern
 ```
 
-#### 3.3 Approval Log（`approval-log.ts`）
+#### 3.3 Approval Log (`approval-log.ts`)
 
-所有决策（approve / deny / escalate / fast_lane / blocked）追加写入：
+All decisions (approve / deny / escalate / fast_lane / blocked) are appended to:
 
 ```
 ~/.openclaw/logs/approval.jsonl
 ```
 
-每行格式：
+Each line format:
 ```json
 {"ts":"2026-05-16T21:00:00.000Z","cmd":"rm -rf node_modules","patterns":["rm_recursive"],"result":"approve","review":"fast_lane"}
 ```
 
 ---
 
-### Layer 4 — 敏感信息泄漏检测
+### Layer 4 — Secret Leak Detection
 
-#### 4.1 检测范围（`secret-patterns.ts`）
+#### 4.1 Detection Scope (`secret-patterns.ts`)
 
-在 `after_tool_call` 钩子中，对工具输出进行 39 种密钥模式扫描：
+In the `after_tool_call` hook, scan tool output for 39 secret patterns:
 
-| 类型 | 示例模式 |
-|------|---------|
+| Category | Example Patterns |
+|---------|-----------------|
 | API Keys | `sk-`, `sk_live_`, `AIza...`, `SG.xxx`, `github_token` |
 | Private Keys | `BEGIN RSA PRIVATE KEY`, `BEGIN DSA PRIVATE KEY` |
 | Database | `mysqldump`, `postgres://`, `mongodb://` |
 | AWS | `AKIA...`, `aws_secret` |
-| 云服务 | `OCPassphrase`, `datocms`, `stripe` |
+| Cloud Services | `OCPassphrase`, `datocms`, `stripe` |
 
-#### 4.2 处理方式
+#### 4.2 Handling
 
-发现泄漏 → 输出中用 `[REDACTED]` 替换密钥内容 + 打印 warn 日志，不阻止命令执行（工具已经返回了，无法撤回）。
+Leak detected → replace key content with `[REDACTED]` in output + print warning log. Command is **not** blocked (tool already returned, cannot undo).
 
-#### 4.3 URL 和环境变量脱敏（`url-redact.ts`）
+#### 4.3 URL & Env Var Redaction (`url-redact.ts`)
 
-- URL 中的 `key=xxx` 参数自动脱敏
-- 环境变量中的密钥值自动脱敏
+- `key=xxx` parameters in URLs are auto-redacted
+- Secret values in environment variables are auto-redacted
 
 ---
 
-## 命令行工具
+## CLI Commands
 
 ### `security-status`
 
-查看当前 4 层状态和快车道计数器：
+View current 4-layer status and Fast Lane counters:
 
 ```
 policy-layer$ security-status
@@ -273,7 +279,7 @@ Fast Lane:
 
 ### `show-my-d-score [session]`
 
-查看当前会话（或指定会话）的 D' CBS 详情：
+View D' CBS details for current (or specified) session:
 
 ```
 policy-layer$ show-my-d-score
@@ -289,61 +295,61 @@ Signals:
 
 ### `policy-reset-fastlane [pattern]`
 
-重置快车道计数器：
-- 不带参数：重置所有
-- 带参数：只重置指定模式
+Reset Fast Lane counters:
+- No args: reset all
+- With pattern: reset only that pattern
 
 ### `report-bad-result [reason]`
 
-**用户反馈闭环。** 当命令通过了 Policy Layer 但产生了错误结果时：
+**User feedback loop.** When a command passed Policy Layer but produced a bad result:
 
 ```
-report-bad-result 把 node_modules 删错了
+report-bad-result accidentally deleted node_modules
 ```
 
-效果：
-1. 最后一次工具调用的 `success` → `false`，`severity` → `600`
-2. D' 分数下降，Agent 被"惩罚"
-3. 该命令模式自动加入 `USER_BLACKLIST_PATTERNS`
-4. 持久化到 `~/.openclaw/logs/blacklist.jsonl`，下次启动时自动加载
+Effects:
+1. Last tool call's `success` → `false`, `severity` → `600`
+2. D' score drops (Agent is "penalized")
+3. Command pattern auto-added to `USER_BLACKLIST_PATTERNS`
+4. Persisted to `~/.openclaw/logs/blacklist.jsonl`, auto-loaded on next startup
 
 ---
 
-## 部署
+## Deployment
 
-### 文件说明
+### File Reference
 
-| 文件 | 用途 |
-|------|------|
-| `src/index.ts` | 插件入口：3 个钩子 + 4 个命令 |
-| `src/security/*.ts` | 9 个安全模块（Layer 1/3/4） |
-| `openclaw.plugin.json` | 插件清单 |
-| `config/openclaw.json` | Gateway 配置（部署到 `~/.openclaw/`） |
-| `scripts/deploy.sh` | 一键部署脚本 |
+| File | Purpose |
+|------|---------|
+| `src/index.ts` | Plugin entry: 3 hooks + 4 commands |
+| `src/security/*.ts` | 9 security modules (Layer 1/3/4) |
+| `openclaw.plugin.json` | Plugin manifest |
+| `config/openclaw.json` | Gateway config (deploys to `~/.openclaw/`) |
+| `scripts/deploy.sh` | One-click deployment script |
 
-### 一键部署
+### One-Click Deploy
 
 ```bash
 cd ~/projects/policy-layer
 
-# 模拟运行（不写入任何文件）
+# Dry run (no writes)
 ./scripts/deploy.sh --dry-run
 
-# 正式部署
+# Actual deploy
 ./scripts/deploy.sh
 
-# 验证
+# Verify
 cat ~/.openclaw/exec-approvals.json | grep ask
 openclaw logs --tail 20
 ```
 
-> **注意：** `exec-approvals.json` 已不再使用。OpenClaw 默认配置为 `ask: "off"` + `security: "full"`，完全委托给 Policy Layer 插件处理。
+> **Note:** `exec-approvals.json` is no longer used. OpenClaw defaults to `ask: "off"` + `security: "full"`, fully delegating to the Policy Layer plugin.
 
 ---
 
-## 配置参数
+## Configuration
 
-在 `~/.openclaw/openclaw.json` 中：
+In `~/.openclaw/openclaw.json`:
 
 ```json
 {
@@ -352,9 +358,9 @@ openclaw logs --tail 20
       "policy-layer": {
         "enabled": true,
         "config": {
-          "reportToUser":    true,   // Agent 是否主动在对话中报告 D' 状态
-          "sensoriumWindow": 20,     // D' 跟踪的 cycle 窗口大小
-          "dGateThreshold":  0.35,   // D' 低于此值 → LOW_ACCEPT
+          "reportToUser":    true,   // Agent proactively reports D' state in conversation
+          "sensoriumWindow": 20,     // Cycle window size for D' tracking
+          "dGateThreshold":  0.35,   // D' below this → LOW_ACCEPT
           "logLevel":       "info"  // debug / info / warn
         }
       }
@@ -363,85 +369,85 @@ openclaw logs --tail 20
 }
 ```
 
-| 参数 | 默认值 | 说明 |
-|------|--------|------|
-| `reportToUser` | `true` | Agent 在对话中主动播报 D' 状态；`false` = 静默模式 |
-| `sensoriumWindow` | 20 | 滚动窗口大小，用于计算 D' 分数 |
-| `dGateThreshold` | 0.35 | D' 低于此值触发 LOW_ACCEPT 行为指导 |
-| `logLevel` | info | 日志级别，影响 `openclaw logs` 输出量 |
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `reportToUser` | `true` | Agent actively reports D' status in conversation; `false` = silent |
+| `sensoriumWindow` | 20 | Rolling window size for D' calculation |
+| `dGateThreshold` | 0.35 | D' below this triggers LOW_ACCEPT guidance |
+| `logLevel` | info | Log verbosity level |
 
 ---
 
-## 测试
+## Testing
 
 ```bash
 cd ~/projects/policy-layer
-npm test                  # 103 tests（61 单元 + 42 集成）
+npm test                  # 103 tests (61 unit + 42 integration)
 ```
 
-### 测试覆盖
+### Test Coverage
 
-| 模块 | 测试数 | 覆盖内容 |
-|------|--------|---------|
+| Module | Tests | Coverage |
+|--------|-------|----------|
 | L1 normalize | 6 | ANSI/null/NFKC/trim |
 | L1 patterns | 23 | 16 CRITICAL + 7 HIGH/MEDIUM |
-| L1 path | 6 | 路径遍历检测、有效路径 |
-| L3 fast-lane | 5 | 5 次审批阈值、重置 |
-| L3 hook 模拟 | 13 | critical=拦截、benign=通过、多模式 |
-| L4 secrets | 17 | 9 类密钥、URL、环境变量 |
-| Gateway | 2 | HTTP health、WebSocket |
-| **总计** | **103** | **100%** ✅ |
+| L1 path | 6 | Traversal detection, valid paths |
+| L3 fast-lane | 5 | 5-approval threshold, reset |
+| L3 hook simulation | 13 | critical=block, benign=pass, multi-pattern |
+| L4 secrets | 17 | 9 secret types, URL, env vars |
+| Gateway | 2 | HTTP health, WebSocket |
+| **Total** | **103** | **100%** ✅ |
 
 ---
 
-## 可视化仪表盘
+## Analytics Dashboard
 
 ```bash
 python3 docs/generate-analytics.py
 open docs/approval-analytics.html
 ```
 
-仪表盘功能：
-- **左侧栏**：结果计数（deny/escalate/approve/fast_lane）— 点击可筛选
-- **环形图**：结果分布
-- **柱状图**：频率 Top 8 模式
-- **时序图**：按小时的活动量（堆叠展示各结果类型）
-- **事件表**：可排序/筛选的事件日志（最多 200 条）
-- **模式钻取**：每个模式的 deny/escalate/approve/fast_lane 细分
+Dashboard features:
+- **Left sidebar**: Result counts (deny/escalate/approve/fast_lane) — click to filter
+- **Donut chart**: Result distribution
+- **Bar chart**: Top 8 patterns by frequency
+- **Timeline**: Hourly activity stacked by result type
+- **Event table**: Sortable, filterable event log (max 200 records)
+- **Pattern drilldown**: Each pattern's deny/escalate/approve/fast_lane breakdown
 
-**数据来源：** `~/.openclaw/logs/approval.jsonl`（追加式 JSONL）
-**自动刷新：** 每 30 秒
+**Data source:** `~/.openclaw/logs/approval.jsonl` (append-only JSONL)
+**Auto-refresh:** Every 30 seconds
 
 ---
 
-## 项目结构
+## Project Structure
 
 ```
 policy-layer/
 ├── src/
-│   ├── index.ts                    ← 插件主入口（3 钩子 + 4 命令）
-│   ├── sensorium-index.ts         ← D' CBS（独立测试版本）
-│   ├── sensorium-index.test.ts     ← 42 个 D' 单元测试
+│   ├── index.ts                    ← Plugin entry (3 hooks + 4 commands)
+│   ├── sensorium-index.ts         ← D' CBS (standalone test version)
+│   ├── sensorium-index.test.ts     ← 42 D' unit tests
 │   └── security/
-│       ├── normalize.ts             ← ANSI/null/NFKC 规范化
-│       ├── patterns.ts             ← 23 危险模式 + 用户黑名单
-│       ├── path.ts                 ← 路径遍历验证
-│       ├── smart-review.ts         ← Ollama LLM 复核
-│       ├── approval-log.ts         ← JSONL 追加日志
-│       ├── fast-lane.ts            ← 5 次审批快车道
-│       ├── secret-patterns.ts      ← 39 种密钥模式
-│       ├── redact.ts                ← 敏感信息脱敏引擎
-│       └── url-redact.ts           ← URL + 环境变量脱敏
+│       ├── normalize.ts             ← ANSI/null/NFKC normalization
+│       ├── patterns.ts             ← 23 danger patterns + user blacklist
+│       ├── path.ts                 ← Path traversal validation
+│       ├── smart-review.ts         ← Ollama LLM review
+│       ├── approval-log.ts         ← JSONL append log
+│       ├── fast-lane.ts            ← 5-approval fast lane
+│       ├── secret-patterns.ts      ← 39 secret patterns
+│       ├── redact.ts               ← Secret redaction engine
+│       └── url-redact.ts           ← URL + env var redaction
 ├── tests/
-│   ├── unit/security.test.ts       ← 61 个单元测试
-│   └── integration/hook-simulation.test.ts  ← 42 个集成测试
+│   ├── unit/security.test.ts       ← 61 unit tests
+│   └── integration/hook-simulation.test.ts  ← 42 integration tests
 ├── docs/
-│   └── generate-analytics.py       ← 从 approval.jsonl 生成 HTML 仪表盘
+│   └── generate-analytics.py       ← HTML dashboard generator
 ├── tools/
-│   └── query_approval.py           ← approval.jsonl 查询 CLI
+│   └── query_approval.py           ← approval.jsonl query CLI
 ├── scripts/
-│   └── deploy.sh                   ← 部署脚本
-├── openclaw.plugin.json            ← 插件清单
+│   └── deploy.sh                   ← Deployment script
+├── openclaw.plugin.json
 ├── package.json
 ├── vitest.config.ts
 └── README.md
@@ -449,66 +455,66 @@ policy-layer/
 
 ---
 
-## 已知限制
+## Known Limitations
 
-1. **Ollama 不可达时的行为**：Smart Review 在 Ollama 不可达时默认返回 `escalate`（安全默认值），这意味着 HIGH/MEDIUM 模式此时会触发人工审批。若不希望每次都审批，请确保 Ollama 正常运行。
+1. **Ollama unreachable behavior:** Smart Review defaults to `escalate` when Ollama is down. This means HIGH/MEDIUM patterns trigger human approval whenever Ollama is unavailable. Ensure Ollama is running if you don't want mandatory approval.
 
-2. **快车道计数器不累积 'escalate'**：同一模式连续出现 `escalate` 时，快车道计数器不会递增。这是设计决策——反复 escalate 说明该模式需要审查，而非值得快车道放行。
+2. **Fast Lane counter does not grow on 'escalate':** Repeated escalations for the same pattern do not increment the Fast Lane counter. This is intentional — repeated escalations signal the pattern needs review, not Fast Lane bypass.
 
-3. **路径遍历尚未完全接入**：`validatePath()` 函数已实现，但尚未在 `before_tool_call` 中对接文件路径参数（计划中）。
-
----
-
-## Phase 2: 通过 Memory-Recall 实现安全学习
-
-### 目标
-
-让 Agent 在执行工具前，主动查询历史同类命令的安全决策记录。
-
-### 流程
-
-```
-用户输入
-  → memory-recall: 提取 6w + category（LLM 调用）
-  → LLM 决定工具调用
-  → before_tool_call: Policy Layer 决策（程序化）
-      → matched_patterns + security_result 已可用
-      → 异步写入 LanceDB（无需 LLM 调用）
-  → 命令执行
-  → after_tool_call: 追加到 LanceDB
-```
-
-### Payload 扩展字段
-
-| 字段 | 来源 | 说明 |
-|------|------|------|
-| `security_result` | Policy Layer 决策 | approve / deny / escalate / fast_lane |
-| `matched_patterns` | `detectDangerousPatterns()` | 触发的模式标签列表 |
-| `risk_severity` | 派生 | critical / high / medium / low |
-
-### 实现步骤
-
-1. **LanceDB Writer** — `before_tool_call` 中异步写入 verdict 记录到专用 LanceDB 表（`~/.policy-layer/verdicts.lance`）
-2. **Query Hook** — 在 LLM 决策工具前，查询 LanceDB 获取同类意图的历史决策摘要，注入 prompt
-3. **复用 memory-recall 基础设施** — 复用 `bge-m3` embedding + L2 FTS + L3 图扩展，但使用独立的 LanceDB 命名空间
-4. **历史数据迁移** — `tools/query_approval.py --export` 将 approval.jsonl 历史记录导入 LanceDB
-
-### 为什么独立 LanceDB？
-
-- Policy Layer verdict 数据结构（命令 + 模式 + 决策）与 memory-recall（6w + category + 对话上下文）不同
-- 隔离后 memory-recall 不受影响，其他项目仍可正常使用
-- 未来支持基于 embedding 的相似命令检索，无需 LLM 调用
+3. **Path traversal not yet fully wired:** `validatePath()` exists but is not yet connected to `before_tool_call` for file-path arguments. Planned.
 
 ---
 
-## 技术栈
+## Phase 2: Security Learning via Memory-Recall
 
-| 组件 | 技术 |
-|------|------|
-| 插件框架 | OpenClaw Gateway Plugin Hooks |
-| 语言 | TypeScript |
-| 测试 | Vitest（103 tests） |
-| LLM 复核 | Ollama（`llama3.3`，本地推理） |
-| 存储 | JSONL（追加日志）、LanceDB（Phase 2） |
-| 嵌入 | bge-m3（Phase 2 计划） |
-| 可视化 | 原生 HTML + CSS + JavaScript（无需构建） |
+### Goal
+
+Enable the Agent to proactively query past security decisions for similar commands before executing tools.
+
+### Flow
+
+```
+User Input
+  → memory-recall: extract 6w + category (LLM call)
+  → LLM decides tool call
+  → before_tool_call: Policy Layer verdict (programmatic)
+      → matched_patterns + security_result already available
+      → async write to LanceDB (no LLM call needed)
+  → Command executes
+  → after_tool_call: append to LanceDB
+```
+
+### Payload Extension Fields
+
+| Field | Source | Description |
+|-------|--------|-------------|
+| `security_result` | Policy Layer verdict | approve / deny / escalate / fast_lane |
+| `matched_patterns` | `detectDangerousPatterns()` | List of triggered pattern labels |
+| `risk_severity` | Derived | critical / high / medium / low |
+
+### Implementation Steps
+
+1. **LanceDB Writer** — async writer in `before_tool_call` writing verdict records to dedicated LanceDB table (`~/.policy-layer/verdicts.lance`)
+2. **Query Hook in `before_prompt_build`** — before LLM decides on a tool, query LanceDB for similar intent's past verdicts, inject summary into prompt
+3. **Leverage memory-recall infrastructure** — reuse `bge-m3` embedding + L2 FTS + L3 graph expansion, with isolated LanceDB namespace
+4. **Historical data migration** — `tools/query_approval.py --export` migrates approval.jsonl records to LanceDB
+
+### Why a Separate LanceDB?
+
+- Policy Layer verdict data has a different schema (command + patterns + verdict) vs memory-recall (6w + category + conversation context)
+- Isolation keeps memory-recall unchanged for other projects
+- Enables future embedding-based retrieval of similar past commands without LLM calls
+
+---
+
+## Tech Stack
+
+| Component | Technology |
+|-----------|-----------|
+| Plugin Framework | OpenClaw Gateway Plugin Hooks |
+| Language | TypeScript |
+| Testing | Vitest (103 tests) |
+| LLM Review | Ollama (`llama3.3`, local inference) |
+| Storage | JSONL (append log), LanceDB (Phase 2) |
+| Embedding | bge-m3 (Phase 2 planned) |
+| Visualization | Native HTML + CSS + JS (no build step) |
