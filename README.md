@@ -64,7 +64,7 @@ openclaw logs --tail 20
 
 ### Gateway Config
 
-Plugin is registered at path `/home/marlon-wei/projects/policy-layer` in `~/.openclaw/openclaw.json` under `plugins.load.paths`.
+Plugin is registered at path `~/projects/policy-layer` in `~/.openclaw/openclaw.json` under `plugins.load.paths`.
 
 ```bash
 # To reload after editing plugin code:

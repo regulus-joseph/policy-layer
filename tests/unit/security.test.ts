@@ -195,15 +195,15 @@ describe('Layer 4: secret redaction', () => {
     expect(redacted).toContain('[AWS Access Key ID REDACTED]');
   });
   it('redacts Slack token', () => {
-    const { redacted } = redactSecrets('xoxb-1234-567890-abcdefghijklmnop');
+    const { redacted } = redactSecrets('xoxb-9999-000000000000-XXXXXXXXXXXXXXXXXX');
     expect(redacted).toContain('[Slack Token REDACTED]');
   });
   it('redacts Bearer token', () => {
-    const { redacted } = redactSecrets('Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
+    const { redacted } = redactSecrets('Authorization: Bearer eyTESTTESTTESTTESTTESTTESTTESTTESTTEST');
     expect(redacted).toContain('[Bearer Token REDACTED]');
   });
   it('redacts Stripe live key', () => {
-    const { redacted } = redactSecrets('sk_live_abcdefghijklmnopqrstuvwx');
+    const { redacted } = redactSecrets('sk_live_AAAA0000BBBB1111CCCC2222DDDD3333EXAMP');
     expect(redacted).toContain('[Stripe Live Secret Key REDACTED]');
   });
   it('redacts private key', () => {
