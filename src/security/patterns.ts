@@ -1,4 +1,7 @@
 import { normalizeCommand } from './normalize';
+import { promises as fs } from 'fs';
+import { join } from 'path';
+import { homedir } from 'os';
 
 export interface PatternMatch {
   pattern: RegExp;
@@ -134,5 +137,48 @@ export function detectDangerousPatterns(cmd: string): PatternMatch[] {
     }
   }
 
+  for (const { pattern, label, severity } of USER_BLACKLIST_PATTERNS) {
+    if (pattern.test(normalized)) {
+      matches.push({ pattern, label, severity });
+    }
+  }
+
   return matches;
+}
+
+export const USER_BLACKLIST_PATTERNS: PatternMatch[] = [];
+const BLACKLIST_FILE = join(homedir(), '.openclaw', 'logs', 'blacklist.jsonl');
+
+export async function addToBlacklist(patternStr: string): Promise<void> {
+  try {
+    USER_BLACKLIST_PATTERNS.push({
+      pattern: new RegExp(patternStr, 'i'),
+      label: `user-blacklist: ${patternStr}`,
+      severity: 'critical',
+    });
+    const entry = JSON.stringify({ pattern: patternStr, addedAt: new Date().toISOString() }) + '\n';
+    await fs.appendFile(BLACKLIST_FILE, entry, 'utf8');
+  } catch {
+  }
+}
+
+export async function loadBlacklist(): Promise<void> {
+  try {
+    const content = await fs.readFile(BLACKLIST_FILE, 'utf8');
+    for (const line of content.split('\n')) {
+      if (!line.trim()) continue;
+      try {
+        const { pattern } = JSON.parse(line);
+        if (pattern) {
+          USER_BLACKLIST_PATTERNS.push({
+            pattern: new RegExp(pattern, 'i'),
+            label: `user-blacklist: ${pattern}`,
+            severity: 'critical',
+          });
+        }
+      } catch {
+      }
+    }
+  } catch {
+  }
 }

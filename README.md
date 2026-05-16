@@ -1,4 +1,4 @@
-# Policy Layer — v0.2.0
+# Policy Layer — v0.4.0
 
 OpenClaw gateway plugin: 4-layer security enforcement + D' Cognitive Behavior System (CBS).
 
@@ -30,13 +30,13 @@ open docs/approval-analytics.html
 
 ### Files Loaded by Gateway
 
-| File | Purpose | Gateway Path |
-|------|---------|-------------|
-| `src/index.ts` | Plugin entry: 3 hooks + 3 commands | `~/projects/policy-layer/src/index.ts` |
-| `src/security/*.ts` | Layer 1/3/4 security modules (9 files) | `~/projects/policy-layer/src/security/` |
-| `openclaw.plugin.json` | Plugin manifest | `~/projects/policy-layer/openclaw.plugin.json` |
-| `config/openclaw.json` | Gateway config (deploy → `~/.openclaw/`) | — |
-| `scripts/deploy.sh` | 部署脚本 | — |
+| File                   | Purpose                                  | Gateway Path                                   |
+| ---------------------- | ---------------------------------------- | ---------------------------------------------- |
+| `src/index.ts`         | Plugin entry: 3 hooks + 3 commands       | `~/projects/policy-layer/src/index.ts`         |
+| `src/security/*.ts`    | Layer 1/3/4 security modules (9 files)   | `~/projects/policy-layer/src/security/`        |
+| `openclaw.plugin.json` | Plugin manifest                          | `~/projects/policy-layer/openclaw.plugin.json` |
+| `config/openclaw.json` | Gateway config (deploy → `~/.openclaw/`) | —                                              |
+| `scripts/deploy.sh`    | 部署脚本                                 | —                                              |
 
 ### 一键部署
 
@@ -54,11 +54,11 @@ openclaw logs --tail 20
 
 ### 部署内容说明
 
-| 文件 | 更新内容 |
-|------|---------|
-| `openclaw.json` | 去除了 acpx 重复配置；`plugins.allow` 加入 telegram；`plugins.entries` 和 `plugins.installs` 加入 policy-sensorium；`plugins.load.paths` 加入 policy-layer |
-| `devices/pending.json` | 清空，停止设备重连循环 log |
-| `devices/paired.json` | 保留，不改动 |
+| 文件                   | 更新内容                                                                                                                                                   |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `openclaw.json`        | 去除了 acpx 重复配置；`plugins.allow` 加入 telegram；`plugins.entries` 和 `plugins.installs` 加入 policy-layer；`plugins.load.paths` 加入 policy-layer |
+| `devices/pending.json` | 清空，停止设备重连循环 log                                                                                                                                 |
+| `devices/paired.json`  | 保留，不改动                                                                                                                                               |
 
 **注意：`exec-approvals.json` 不再使用。** openclaw 默认值已经是 `ask: "off"` + `security: "full"`，完全放行给 plugin 处理。
 
@@ -118,19 +118,19 @@ Tool Call
 
 ### Hooks Used
 
-| Hook | Layer | Purpose |
-|------|-------|---------|
-| `before_prompt_build` | L2 | Inject `<openclaw_state>` D' CBS XML |
-| `before_tool_call` | L1→L3 | Pattern match → smart review → block/approve/escalate |
-| `after_tool_call` | L4 | Detect secret leaks in tool output |
+| Hook                  | Layer | Purpose                                               |
+| --------------------- | ----- | ----------------------------------------------------- |
+| `before_prompt_build` | L2    | Inject `<openclaw_state>` D' CBS XML                  |
+| `before_tool_call`    | L1→L3 | Pattern match → smart review → block/approve/escalate |
+| `after_tool_call`     | L4    | Detect secret leaks in tool output                    |
 
 ### Commands
 
 ```
-policy-security           Layer status + fast-lane patterns
-policy-sensorium          D' CBS metrics (d_prime, cycles, success rate)
-policy-reset-fastlane     Reset all fast-lane counters
-policy-reset-fastlane <p> Reset fast-lane for specific pattern
+security-status           Layer status + fast-lane patterns
+show-my-d-score [session]  D' CBS metrics (d_prime, cycles, success rate)
+policy-reset-fastlane      Reset all fast-lane counters
+policy-reset-fastlane <p>  Reset fast-lane for specific pattern
 ```
 
 ---
@@ -212,16 +212,16 @@ npm test                  # 103 tests (61 unit + 42 integration)
 
 ### Test Coverage
 
-| Layer | Tests | Coverage |
-|-------|-------|---------|
-| L1 normalize | 6 | ANSI, null, NFKC, trim |
-| L1 patterns | 23 | 16 critical(block) + 7 high/medium(review) |
-| L1 path | 6 | traversal detection, valid paths |
-| L3 fast-lane | 5 | 5-approval threshold, reset |
-| L3 hook sim | 13 | critical=block, benign=pass, multi-pattern |
-| L4 secrets | 17 | 9 secret types, URL, env |
-| Gateway | 2 | HTTP health, WebSocket |
-| **Total** | **103** | **100%** ✅ |
+| Layer        | Tests   | Coverage                                   |
+| ------------ | ------- | ------------------------------------------ |
+| L1 normalize | 6       | ANSI, null, NFKC, trim                     |
+| L1 patterns  | 23      | 16 critical(block) + 7 high/medium(review) |
+| L1 path      | 6       | traversal detection, valid paths           |
+| L3 fast-lane | 5       | 5-approval threshold, reset                |
+| L3 hook sim  | 13      | critical=block, benign=pass, multi-pattern |
+| L4 secrets   | 17      | 9 secret types, URL, env                   |
+| Gateway      | 2       | HTTP health, WebSocket                     |
+| **Total**    | **103** | **100%** ✅                                 |
 
 ---
 
@@ -257,7 +257,7 @@ In `~/.openclaw/openclaw.json` or `config/openclaw.json`:
 {
   "plugins": {
     "entries": {
-      "policy-sensorium": {
+      "policy-layer": {
         "enabled": true,
         "hooks": {
           "allowPromptInjection": true
@@ -274,12 +274,12 @@ In `~/.openclaw/openclaw.json` or `config/openclaw.json`:
 }
 ```
 
-| Config | Default | Description |
-|--------|---------|-----------|
-| `reportToUser` | `true` | Agent 主动在对话里汇报 D' 状态；`false` 静默 |
-| `sensoriumWindow` | 20 | Cycles to track for D' signals |
-| `dGateThreshold` | 0.35 | D' below this → LOW_ACCEPT |
-| `logLevel` | info | debug / info / warn |
+| Config            | Default | Description                                  |
+| ----------------- | ------- | -------------------------------------------- |
+| `reportToUser`    | `true`  | Agent 主动在对话里汇报 D' 状态；`false` 静默 |
+| `sensoriumWindow` | 20      | Cycles to track for D' signals               |
+| `dGateThreshold`  | 0.35    | D' below this → LOW_ACCEPT                   |
+| `logLevel`        | info    | debug / info / warn                          |
 
 ---
 
@@ -298,36 +298,50 @@ openclaw gateway stop → BLOCKED
 
 ## Maintenance (returning in 2 days)
 
-### 1. Check if plugin is still running
+### Step types
+
+| Prefix          | Where                                            | How                                                                  |
+| --------------- | ------------------------------------------------ | -------------------------------------------------------------------- |
+| **Terminal**    | bash shell                                       | Run the command directly                                             |
+| **ACP session** | Inside TUI after `openclaw acp --session <name>` | Type the command directly (no JSON), or press `/` to browse commands |
+
+### 1. ACP session — Verify plugin is running
+
 ```bash
-openclaw acp --session test-check
-# Type: policy-security
-# Should show: "Layers 1-4 Active"
+# In bash: start an ACP session
+openclaw acp --session <your-session>
 ```
 
-### 2. Check approval log has real data
+Then inside the ACP TUI, type:
+```
+/security-status
+```
+Expected: `"Layers 1-4 Active"`
+
+### 2. Terminal — Check approval log has data
 ```bash
 wc -l ~/.openclaw/logs/approval.jsonl
-# Should be > 0 if gateway has been used
 ```
+Should be `> 0` if the gateway has processed tool calls.
 
-### 3. Update analytics dashboard
+### 3. Terminal — Update analytics dashboard
 ```bash
 python3 ~/projects/policy-layer/docs/generate-analytics.py
 open ~/projects/policy-layer/docs/approval-analytics.html
 ```
 
-### 4. Review deny/escalate events
-Look at the dashboard — if deny rate > 10% of total events, review:
+### 4. Review the dashboard
+
+If deny rate > 10% of total events, investigate:
 - Are benign commands being false-positively blocked?
 - Is Ollama responding correctly in smart-review?
 
-### 5. If issues found, restart gateway
+### 5. Terminal — Restart gateway if issues found
 ```bash
 openclaw gateway restart
 ```
 
-### 6. Run tests after any code change
+### 6. Terminal — Run tests after code changes
 ```bash
 cd ~/projects/policy-layer
 npm test
@@ -350,7 +364,7 @@ npm test
 ```
 b25e05a feat: add approval analytics dashboard (self-contained HTML)
 35c5369 chore: rename to policy-layer v0.2.0, update README
-1cdea0a feat: merge policy-sensorium v0.2.0 — Layers 1-4 complete + 103 tests
+1cdea0a feat: merge policy-layer v0.2.0 — Layers 1-4 complete + 103 tests
 5104ffb feat: Layer 1-4 security files + integration
 ```
 
@@ -362,4 +376,41 @@ b25e05a feat: add approval analytics dashboard (self-contained HTML)
 2. **Review dashboard** — are deny/escalate rates reasonable?
 3. **Fast-lane effectiveness** — any pattern that should be fast-lane but isn't?
 4. **Secret leak alerts** — did Layer 4 catch any tool output containing secrets?
-5. **Consider**: path traversal wiring into before_tool_call, Zone-based isolation (Layer 2), CBR integration with memory-recall
+5. **Path traversal wiring** — `validatePath()` not yet connected to `before_tool_call` for file-path arguments
+6. **CBR integration with memory-recall** — inject past command decisions into agent context
+
+---
+
+## Phase 2: Security Learning via Memory-Recall
+
+### Goal
+Enable agent to learn from past command decisions before executing tools.
+
+### Flow
+```
+User input
+  → memory-recall: extract 6w + category (LLM call)
+  → LLM decides tool call
+  → before_tool_call: policy-layer verdict (programmatic)
+      → matched_patterns + security_result are already available
+      → async write to LanceDB (no LLM call needed)
+  → Command executes
+```
+
+### Payload schema (additional fields on top of memory-recall's 21 fields)
+| Field | Source | Description |
+|-------|--------|-------------|
+| `security_result` | policy-layer verdict | approve / deny / escalate / fast_lane |
+| `matched_patterns` | `detectDangerousPatterns()` output | List of triggered pattern labels |
+| `risk_severity` | Derived | critical / high / medium / low |
+
+### Implementation steps
+1. **LanceDB writer** — async writer in `before_tool_call` that writes verdict records to a dedicated LanceDB table (`~/.policy-layer/verdicts.lance`)
+2. **Query hook in `before_prompt_build`** — before LLM decides tool, query LanceDB for similar intent's past verdicts, inject summary into prompt
+3. **Leverage memory-recall infrastructure** — reuse `bge-m3` embedding + L2 FTS + L3 graph expansion from memory-recall, but with isolated LanceDB namespace
+4. **Data volume** — approval.jsonl has ~200 records; once Phase 2 is live, new records go to both JSONL + LanceDB; migrate historical records via `tools/query_approval.py --export`
+
+### Why separate LanceDB?
+- policy-layer verdict data has different schema (command + patterns + verdict) vs memory-recall (6w + category + conversation context)
+- Keeps memory-recall unchanged for other projects that depend on it
+- Enables future embedding-based retrieval of similar past commands without LLM calls

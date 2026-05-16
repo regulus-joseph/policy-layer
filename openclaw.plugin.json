@@ -1,7 +1,6 @@
 {
-  "id": "policy-sensorium",
-  "name": "Policy Sensorium (CBS) + Security Layers",
-  "description": "OpenClaw policy enforcement plugin with 4 layers: (L1) normalize + 23 dangerous patterns — critical block / high-medium smart-review; (L2) Springdrift-inspired D' CBS sensorium — injects <openclaw_state> before each LLM call, D' bands <0.35 LOW_ACCEPT / 0.35–0.55 MEDIUM_CONFIRM / ≥0.55 HIGH_REJECT; (L3) Ollama LLM smart-review + fast-lane (5 consecutive approvals bypass review) + JSONL approval log at ~/.openclaw/logs/; (L4) 39 secret patterns — API keys, tokens, passwords, private keys — redaction for output leak detection. Commands: policy-sensorium, policy-security, policy-reset-fastlane.",
+  "id": "policy-layer",
+  "name": "Policy Layer (CBS) + Security Layers",
   "version": "0.3.0",
   "kind": "sensorium",
   "configSchema": {

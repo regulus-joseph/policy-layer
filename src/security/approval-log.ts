@@ -5,6 +5,7 @@ import { homedir } from 'os';
 export interface ApprovalRecord {
   timestamp: string;
   command: string;
+  rawCommand?: string;
   result: 'approve' | 'deny' | 'escalate' | 'fast_lane';
   patterns: string[];
   reason?: string;
@@ -12,6 +13,22 @@ export interface ApprovalRecord {
   userId?: string;
   sessionId?: string;
   latencyMs?: number;
+}
+
+export function extractRawCommand(toolName: string, args: unknown): string | undefined {
+  if (toolName === 'bash' && args && typeof args === 'object') {
+    const a = args as Record<string, unknown>;
+    if (typeof a.command === 'string') {
+      return a.command;
+    }
+  }
+  if (toolName === 'shell' && args && typeof args === 'object') {
+    const a = args as Record<string, unknown>;
+    if (typeof a.command === 'string') {
+      return a.command;
+    }
+  }
+  return undefined;
 }
 
 const LOG_DIR = join(homedir(), '.openclaw', 'logs');
@@ -47,7 +64,10 @@ export async function lookupHistory(
     for (let i = lines.length - 1; i >= 0 && matches.length < limit; i--) {
       try {
         const record = JSON.parse(lines[i]) as ApprovalRecord;
-        if (record.command.toLowerCase().includes(normalized)) {
+        const searchTarget = (
+          record.command + ' ' + (record.rawCommand || '')
+        ).toLowerCase();
+        if (searchTarget.includes(normalized)) {
           matches.push(record);
         }
       } catch {

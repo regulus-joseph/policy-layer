@@ -1,6 +1,6 @@
 {
-  "id": "policy-sensorium",
-  "name": "Policy Sensorium (CBS)",
+  "id": "policy-layer",
+  "name": "Policy Layer (CBS)",
   "description": "Springdrift-inspired CBS: injects <openclaw_state> before each LLM call. D' = Σ(w·mag)/(0.3×1.0×n). Signals: success_rate (w=0.30), tool_success (w=0.25), cbr_hit (w=0.20), severity_inversion (w=0.25). D' bands: <0.35 LOW_ACCEPT, 0.35–0.55 MEDIUM_CONFIRM, ≥0.55 HIGH_REJECT.",
   "version": "0.3.0",
   "kind": "sensorium",

@@ -1,1 +1,55 @@
 node_modules/
+dist/
+
+# Environment and secrets
+.env
+.env.*
+*.env
+credentials.json
+secrets.json
+secrets.yaml
+api_keys/
+tokens/
+*.pem
+*.key
+
+# OS files
+.DS_Store
+Thumbs.db
+*~
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+*.code-workspace
+
+# Logs and temporary files
+*.log
+logs/
+tmp/
+temp/
+
+# Generated files (regenerate with scripts)
+docs/approval-analytics.html
+
+# Graphify output (contains HTML/JSON from code analysis)
+graphify-out/
+*.html
+
+# OpenClaw runtime data (local to each machine)
+~/.openclaw/
+*.lance
+
+# Build artifacts
+*.tgz
+*.tar.gz
+
+# Research text
+LAYER1_4_IMPLEMENTATION_PLAN.md
+OPENCLAW_PLUGIN_HOOK_SYSTEM.md
+SPRINGDRIFT_RESEARCH.md

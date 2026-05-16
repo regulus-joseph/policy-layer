@@ -26,6 +26,7 @@ const DEFAULT_SEVERITY_RULES = [
 const DEFAULT_MAX_CYCLES_MULTIPLIER = 3;
 
 const sessionMetrics = new Map();
+let lastCommand = '';
 
 function resolveConfig(cfg) {
   return {
@@ -283,7 +284,7 @@ function doLog(api, level, msg) {
   const configured = resolveLogLevel(api.pluginConfig);
   if ((LOG_LEVELS[level] ?? 1) >= (LOG_LEVELS[configured] ?? 1)) {
     const fn = level === "debug" ? api.logger.debug : level === "warn" ? api.logger.warn : api.logger.info;
-    fn?.(`[policy-sensorium] ${msg}`);
+    fn?.(`[policy-layer] ${msg}`);
   }
 }
 
@@ -385,22 +386,23 @@ export {
 };
 
 import { normalizeCommand } from './security/normalize';
-import { detectDangerousPatterns, PatternMatch } from './security/patterns';
+import { detectDangerousPatterns, PatternMatch, addToBlacklist, loadBlacklist } from './security/patterns';
 import { validatePath } from './security/path';
 import { smartReview } from './security/smart-review';
-import { logApproval, ApprovalRecord } from './security/approval-log';
+import { logApproval, ApprovalRecord, extractRawCommand } from './security/approval-log';
 import { onApprove, isFastLane, resetFastLane, getFastLaneEntries } from './security/fast-lane';
 import { redactSecrets } from './security/redact';
 import { redactUrlSecrets, redactEnvironmentVariables } from './security/url-redact';
 import { dCycleStore, type DCycleRecord, type DCycleTrigger } from './security/sensorium-log';
 
 const plugin = {
-  id: "policy-sensorium",
+  id: "policy-layer",
   name: "Policy Sensorium (CBS)",
   description: "Springdrift-inspired Cognitive Behavior System: injects self-perception signals before each LLM call.",
   kind: "sensorium",
 
   register(api) {
+    loadBlacklist().catch(() => {});
     api.on("before_prompt_build", async (event, ctx) => {
       try {
         const sessionKey =
@@ -421,16 +423,17 @@ const plugin = {
         let triggerGate: DCycleTrigger['gate'] = 'output';
 
         if (metrics.callCounter > 0) {
-          const { totalTools, failedTools, reason, severity, failedToolNames } = extractOutcomeFromMessages(messages, resolvedCfg.severityRules);
-          const success = failedTools === 0;
+          const lastResult = metrics.lastPolicyResult || '';
+          const success = !lastResult.startsWith('DENY') && !lastResult.startsWith('ESCALATE');
+          const reason = lastResult || '';
           addCycle(metrics, {
             success,
-            totalTools,
-            failedTools,
-            failedToolNames,
+            totalTools: 1,
+            failedTools: success ? 0 : 1,
+            failedToolNames: success ? [] : ['policy_block'],
             cbrHit: false,
             reason,
-            severity,
+            severity: success ? 50 : 500,
           });
         }
 
@@ -472,16 +475,30 @@ const plugin = {
         const raw = toolCall.arguments ? JSON.stringify(toolCall.arguments) : '';
         const cmd = (toolCall.name + ' ' + raw).trim();
         const normalized = normalizeCommand(cmd);
-        const patterns = detectDangerousPatterns(normalized);
+        const rawCmd = extractRawCommand(toolCall.name, toolCall.arguments);
+        const rawCmdNormalized = rawCmd ? normalizeCommand(rawCmd) : '';
+
+        const patternsFromOuter = detectDangerousPatterns(normalized);
+        const patternsFromInner = rawCmdNormalized ? detectDangerousPatterns(rawCmdNormalized) : [];
+        const allPatterns = [...patternsFromOuter];
+        for (const p of patternsFromInner) {
+          if (!allPatterns.some(existing => existing.label === p.label)) {
+            allPatterns.push(p);
+          }
+        }
+        const patterns = allPatterns;
 
         const sessionKey = ctx?.sessionKey || 'unknown';
         const pluginCfg = api.pluginConfig || {};
         const recordBase: Partial<ApprovalRecord> = {
           command: normalized,
+          rawCommand: rawCmd,
           tool: toolCall.name,
           sessionId: sessionKey,
           patterns: patterns.map(p => p.label),
         };
+
+        lastCommand = normalized;
 
         if (patterns.length === 0) {
           const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
@@ -553,11 +570,12 @@ const plugin = {
 
     api.on("after_tool_call", async (toolCall, result) => {
       try {
-        if (!result?.content) return;
-        const content = typeof result.content === 'string' ? result.content : JSON.stringify(result.content);
-        const { found } = redactSecrets(content);
-        if (found.length > 0) {
-          doLog(api, "warn", `SECRET LEAK DETECTED in ${toolCall.name} output: ${found.join(', ')}`);
+        if (result?.content) {
+          const content = typeof result.content === 'string' ? result.content : JSON.stringify(result.content);
+          const { found } = redactSecrets(content);
+          if (found.length > 0) {
+            doLog(api, "warn", `SECRET LEAK DETECTED in ${toolCall.name} output: ${found.join(', ')}`);
+          }
         }
       } catch {
       }
@@ -571,7 +589,7 @@ const plugin = {
         const fastLanePatterns = getFastLaneEntries()
           .map(({ pattern, count }) => `  ${pattern}: ${count} approves`);
         const lines = [
-          "[policy-security] Layers 1-4 Active",
+          "[policy-layer] Layers 1-4 Active",
           "  Layer 1: normalize + 23 dangerous patterns (critical=block, high/medium=review)",
           "  Layer 2: D' CBS sensorium (openclaw_state injection)",
           "  Layer 3: Smart review (Ollama LLM), fast-lane (5 consecutive approvals)",
@@ -591,10 +609,38 @@ const plugin = {
         const pattern = ctx.args?.trim();
         if (pattern) {
           resetFastLane(pattern);
-          return { text: `[policy-security] Fast-lane reset for: ${pattern}` };
+          return { text: `[policy-layer] Fast-lane reset for: ${pattern}` };
         }
         resetFastLane();
-        return { text: "[policy-security] All fast-lane counters reset." };
+        return { text: "[policy-layer] All fast-lane counters reset." };
+      },
+    });
+
+    api.registerCommand({
+      name: "report-bad-result",
+      description: "Mark the last command as producing a bad result. Usage: report-bad-result [optional reason]",
+      acceptsArgs: true,
+      handler: async (ctx) => {
+        const sessionKey = ctx.sessionKey?.trim() || (ctx.agentId && ctx.sessionId ? `${ctx.agentId}:${ctx.sessionId}` : null);
+        if (!sessionKey) return { text: "[policy-layer] No session context." };
+
+        const metrics = getOrCreateMetrics(sessionKey, api.pluginConfig || {});
+        const reason = ctx.args?.trim() || 'user-reported bad result';
+        const cycle = metrics.cycles[metrics.cycles.length - 1];
+
+        if (cycle) {
+          cycle.success = false;
+          cycle.reason = `BAD_RESULT: ${reason}`;
+          cycle.severity = Math.max(cycle.severity, 600);
+          doLog(api, "warn", `User reported bad result: ${reason}, severity raised to ${cycle.severity}`);
+        }
+
+        if (lastCommand) {
+          await addToBlacklist(lastCommand);
+          doLog(api, "warn", `[policy-layer] Blacklisted: ${lastCommand}`);
+        }
+        doLog(api, "warn", `[policy-layer] Punishing agent for bad result: ${reason}`);
+        return { text: `[policy-layer] Recorded bad result: "${reason}". Blacklisted: "${lastCommand || 'unknown'}". Agent will be penalized.` };
       },
     });
 
@@ -608,7 +654,7 @@ const plugin = {
           (ctx.agentId && ctx.sessionId ? `${ctx.agentId}:${ctx.sessionId}` : null);
 
         if (!sessionKey) {
-          return { text: "[policy-sensorium] No session context." };
+          return { text: "[policy-layer] No session context." };
         }
 
         const metrics = getOrCreateMetrics(sessionKey, {});
@@ -651,7 +697,7 @@ const plugin = {
         } catch { /* non-fatal */ }
 
         const lines = [
-          `[policy-sensorium] Session: ${sessionKey}`,
+          `[policy-layer] Session: ${sessionKey}`,
           `  D' score:     ${dPrime !== null ? dPrime.toFixed(4) : "--"}`,
           `  D' status:   ${status}`,
           `  Threshold:    ${metrics.config.dGateThreshold}`,
