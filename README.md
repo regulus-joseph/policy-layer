@@ -32,35 +32,35 @@ open docs/approval-analytics.html
 
 | File                   | Purpose                                  | Gateway Path                                   |
 | ---------------------- | ---------------------------------------- | ---------------------------------------------- |
-| `src/index.ts`         | Plugin entry: 3 hooks + 3 commands       | `~/projects/policy-layer/src/index.ts`         |
-| `src/security/*.ts`    | Layer 1/3/4 security modules (9 files)   | `~/projects/policy-layer/src/security/`        |
+| `src/index.ts`         | Plugin entry: 3 hooks + 4 commands       | `~/projects/policy-layer/src/index.ts`         |
+| `src/security/*.ts`    | Layer 1/3/4 security modules (9 files)  | `~/projects/policy-layer/src/security/`        |
 | `openclaw.plugin.json` | Plugin manifest                          | `~/projects/policy-layer/openclaw.plugin.json` |
-| `config/openclaw.json` | Gateway config (deploy → `~/.openclaw/`) | —                                              |
-| `scripts/deploy.sh`    | 部署脚本                                 | —                                              |
+| `config/openclaw.json` | Gateway config (deploy to `~/.openclaw/`)| —                                              |
+| `scripts/deploy.sh`    | Deployment script                        | —                                              |
 
-### 一键部署
+### One-Click Deployment
 
 ```bash
-# 干跑（不写入）
+# Dry run (no writes)
 ./scripts/deploy.sh --dry-run
 
-# 正式部署
+# Actual deployment
 ./scripts/deploy.sh
 
-# 验证
+# Verify
 cat ~/.openclaw/exec-approvals.json | grep ask
 openclaw logs --tail 20
 ```
 
-### 部署内容说明
+### Deployment Details
 
-| 文件                   | 更新内容                                                                                                                                                   |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `openclaw.json`        | 去除了 acpx 重复配置；`plugins.allow` 加入 telegram；`plugins.entries` 和 `plugins.installs` 加入 policy-layer；`plugins.load.paths` 加入 policy-layer |
-| `devices/pending.json` | 清空，停止设备重连循环 log                                                                                                                                 |
-| `devices/paired.json`  | 保留，不改动                                                                                                                                               |
+| File                   | Changes                                                                                                                                                                 |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `openclaw.json`        | Removed duplicate acpx config; added telegram to `plugins.allow`; added policy-layer to `plugins.entries`, `plugins.installs`, and `plugins.load.paths`                |
+| `devices/pending.json` | Cleared to stop device reconnect loop logs                                                                                                                             |
+| `devices/paired.json`  | Preserved, no changes                                                                                                                                                   |
 
-**注意：`exec-approvals.json` 不再使用。** openclaw 默认值已经是 `ask: "off"` + `security: "full"`，完全放行给 plugin 处理。
+**Note:** `exec-approvals.json` is no longer used. OpenClaw defaults to `ask: "off"` + `security: "full"`, fully delegating to the plugin.
 
 ### Gateway Config
 
@@ -127,10 +127,11 @@ Tool Call
 ### Commands
 
 ```
-security-status           Layer status + fast-lane patterns
+security-status            Layer status + fast-lane patterns
 show-my-d-score [session]  D' CBS metrics (d_prime, cycles, success rate)
 policy-reset-fastlane      Reset all fast-lane counters
 policy-reset-fastlane <p>  Reset fast-lane for specific pattern
+report-bad-result [reason] Mark last command as producing bad result (user feedback)
 ```
 
 ---
@@ -169,6 +170,22 @@ ls, cat, grep, glob
 
 ---
 
+## User Feedback Loop
+
+When a command passes through policy-layer but produces a bad result, the user can report it:
+
+```
+report-bad-result 这条命令把文件删错了
+```
+
+This marks the last command as failed:
+- Last cycle's `success` → false, `severity` → 600
+- D' score drops → agent is penalized
+- Command is added to `USER_BLACKLIST_PATTERNS` and persisted to `~/.openclaw/logs/blacklist.jsonl`
+- On next startup, blacklist is auto-loaded
+
+---
+
 ## File Guide
 
 ```
@@ -179,7 +196,7 @@ policy-layer/
 │   ├── sensorium-index.test.ts  ← 42 D' unit tests
 │   └── security/
 │       ├── normalize.ts      ← ANSI strip, null strip, NFKC
-│       ├── patterns.ts       ← 23 dangerous patterns + detectDangerousPatterns()
+│       ├── patterns.ts       ← 23 dangerous patterns + user blacklist
 │       ├── path.ts           ← Path traversal validation
 │       ├── smart-review.ts   ← Ollama LLM review
 │       ├── approval-log.ts   ← JSONL append to ~/.openclaw/logs/
@@ -189,11 +206,13 @@ policy-layer/
 │       └── url-redact.ts     ← URL + env var redaction
 ├── tests/
 │   ├── unit/security.test.ts        ← 61 unit tests
-│   ├── integration/hook-simulation.test.ts  ← 42 integration tests
-│   └── TEST_REPORT.md               ← Full test report
+│   └── integration/hook-simulation.test.ts  ← 42 integration tests
 ├── docs/
-│   ├── approval-analytics.html     ← Analytics dashboard (self-contained HTML)
 │   └── generate-analytics.py        ← Regenerate dashboard from approval.jsonl
+├── tools/
+│   └── query_approval.py             ← CLI for querying approval.jsonl
+├── scripts/
+│   └── deploy.sh                     ← Deployment script
 ├── openclaw.plugin.json   ← Plugin manifest
 ├── package.json           ← npm scripts
 ├── vitest.config.ts       ← Test runner config
@@ -274,12 +293,12 @@ In `~/.openclaw/openclaw.json` or `config/openclaw.json`:
 }
 ```
 
-| Config            | Default | Description                                  |
-| ----------------- | ------- | -------------------------------------------- |
-| `reportToUser`    | `true`  | Agent 主动在对话里汇报 D' 状态；`false` 静默 |
-| `sensoriumWindow` | 20      | Cycles to track for D' signals               |
-| `dGateThreshold`  | 0.35    | D' below this → LOW_ACCEPT                   |
-| `logLevel`        | info    | debug / info / warn                          |
+| Config            | Default | Description                                              |
+| ----------------- | ------- | -------------------------------------------------------- |
+| `reportToUser`    | `true`  | Agent actively reports D' status in conversation; `false` = silent |
+| `sensoriumWindow` | 20      | Cycles to track for D' signals                            |
+| `dGateThreshold`  | 0.35    | D' below this → LOW_ACCEPT                                |
+| `logLevel`        | info    | debug / info / warn                                       |
 
 ---
 
@@ -296,13 +315,13 @@ openclaw gateway stop → BLOCKED
 
 ---
 
-## Maintenance (returning in 2 days)
+## Maintenance
 
 ### Step types
 
-| Prefix          | Where                                            | How                                                                  |
-| --------------- | ------------------------------------------------ | -------------------------------------------------------------------- |
-| **Terminal**    | bash shell                                       | Run the command directly                                             |
+| Prefix       | Where                                           | How                                              |
+| ------------ | ----------------------------------------------- | ------------------------------------------------ |
+| **Terminal** | bash shell                                      | Run the command directly                          |
 | **ACP session** | Inside TUI after `openclaw acp --session <name>` | Type the command directly (no JSON), or press `/` to browse commands |
 
 ### 1. ACP session — Verify plugin is running
@@ -356,28 +375,6 @@ npm test
 2. **Fast-lane counter does not grow on 'escalate'**: If a pattern keeps returning 'escalate', the fast-lane counter doesn't increment. This is intentional security design — repeated escalations indicate the pattern needs review, not fast-lane bypass.
 
 3. **No path traversal blocking in bash tool**: `validatePath()` exists (Layer 1) but is not yet wired into `before_tool_call` for file-path arguments. Planned.
-
----
-
-## Git Log
-
-```
-b25e05a feat: add approval analytics dashboard (self-contained HTML)
-35c5369 chore: rename to policy-layer v0.2.0, update README
-1cdea0a feat: merge policy-layer v0.2.0 — Layers 1-4 complete + 103 tests
-5104ffb feat: Layer 1-4 security files + integration
-```
-
----
-
-## Next Steps (when you return)
-
-1. **Check real approval.jsonl** — does it have actual events from gateway usage?
-2. **Review dashboard** — are deny/escalate rates reasonable?
-3. **Fast-lane effectiveness** — any pattern that should be fast-lane but isn't?
-4. **Secret leak alerts** — did Layer 4 catch any tool output containing secrets?
-5. **Path traversal wiring** — `validatePath()` not yet connected to `before_tool_call` for file-path arguments
-6. **CBR integration with memory-recall** — inject past command decisions into agent context
 
 ---
 
