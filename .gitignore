@@ -45,6 +45,9 @@ graphify-out/
 ~/.openclaw/
 *.lance
 
+# Plugin config (contains tokens/secrets — local only)
+config/openclaw.json
+
 # Build artifacts
 *.tgz
 *.tar.gz
