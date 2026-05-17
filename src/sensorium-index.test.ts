@@ -230,17 +230,17 @@ describe("dGateStatus", () => {
 
   it("LOW_ACCEPT when dPrime < low band", () => {
     expect(dGateStatus(0.1, bands)).toBe("LOW_ACCEPT");
-    expect(dGateStatus(0.34, bands)).toBe("LOW_ACCEPT");
+    expect(dGateStatus(0.54, bands)).toBe("LOW_ACCEPT");
   });
 
   it("MEDIUM_CONFIRM when low ≤ dPrime < high", () => {
-    expect(dGateStatus(0.35, bands)).toBe("MEDIUM_CONFIRM");
-    expect(dGateStatus(0.40, bands)).toBe("MEDIUM_CONFIRM");
-    expect(dGateStatus(0.54, bands)).toBe("MEDIUM_CONFIRM");
+    expect(dGateStatus(0.50, bands)).toBe("MEDIUM_CONFIRM");
+    expect(dGateStatus(0.60, bands)).toBe("MEDIUM_CONFIRM");
+    expect(dGateStatus(0.65, bands)).toBe("MEDIUM_CONFIRM");
   });
 
   it("HIGH_REJECT when dPrime ≥ high band", () => {
-    expect(dGateStatus(0.55, bands)).toBe("HIGH_REJECT");
+    expect(dGateStatus(0.66, bands)).toBe("HIGH_REJECT");
     expect(dGateStatus(0.8, bands)).toBe("HIGH_REJECT");
     expect(dGateStatus(1.0, bands)).toBe("HIGH_REJECT");
   });

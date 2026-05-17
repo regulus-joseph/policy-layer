@@ -43,7 +43,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
 .chart-card { background: #161b22; border: 1px solid #21262d; border-radius: 6px; padding: 12px; }
 .chart-card h3 { font-size: 12px; color: #e6edf3; margin-bottom: 10px; font-weight: 500; }
-.chart { display: flex; align-items: center; justify-content: center; min-height: 130px; }
+.chart { display: flex; align-items: flex-start; justify-content: center; min-height: 130px; overflow-y: auto; max-height: 300px; }
 .tl-card { background: #161b22; border: 1px solid #21262d; border-radius: 6px; padding: 12px; margin-bottom: 16px; }
 .tl-card h3 { font-size: 12px; color: #e6edf3; margin-bottom: 10px; font-weight: 500; }
 .table-card { background: #161b22; border: 1px solid #21262d; border-radius: 6px; padding: 12px; }
@@ -74,6 +74,9 @@ td.mono { font-family: 'Fira Code', monospace; font-size: 11px; color: #79c0ff; 
 .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; }
 .dot-deny { background: #f85149; } .dot-escalate { background: #d29922; } .dot-approve { background: #3fb950; } .dot-fast_lane { background: #a371f7; }
 .pattern-item { background: #161b22; border: 1px solid #21262d; border-radius: 6px; padding: 10px; margin-bottom: 6px; cursor: pointer; }
+#drilldown, #top-risks { overflow-y: auto; max-height: 400px; padding-right: 4px; }
+#drilldown::-webkit-scrollbar, #top-risks::-webkit-scrollbar { width: 4px; }
+#drilldown::-webkit-scrollbar-thumb, #top-risks::-webkit-scrollbar-thumb { background: #30363d; border-radius: 2px; }
 .pattern-item:hover { border-color: #58a6ff; }
 .pattern-item .pat-name { font-size: 11px; color: #58a6ff; }
 .pattern-item .pat-count { font-size: 11px; color: #e6edf3; margin-top: 3px; }
@@ -194,7 +197,8 @@ function buildPie(cnts) {
 function buildBars(data) {
   const el = document.getElementById('bars'); el.innerHTML='';
   if(!data.length) return;
-  const w=el.clientWidth||240, h=130, bh=14, gap=3;
+  const w=el.clientWidth||240, bh=14, gap=3;
+  const h=Math.max(130, data.length*(bh+gap)+8);
   const mx=data[0][1];
   const svg=d3.select(el).append('svg').attr('width',w).attr('height',h);
   const g=svg.append('g').attr('transform','translate(2,4)');

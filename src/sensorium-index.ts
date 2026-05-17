@@ -8,8 +8,8 @@ const DEFAULT_WEIGHTS = {
 };
 
 const DEFAULT_D_BANDS = {
-  low: 0.35,
-  high: 0.55,
+  low: 0.50,
+  high: 0.66,
 };
 
 const DEFAULT_SEVERITY_RULES = [
@@ -110,7 +110,7 @@ function computeDPrime(metrics) {
   if (successRate !== null) signals.push({ importance: weights.success, magnitude: successRate });
   if (toolFailureRate !== null) signals.push({ importance: weights.tool, magnitude: 1 - toolFailureRate });
   if (cbrHitRate !== null) signals.push({ importance: weights.cbr, magnitude: cbrHitRate });
-  if (avgSeverity !== null) signals.push({ importance: weights.severity, magnitude: 1 - avgSeverity });
+  if (avgSeverity !== null) signals.push({ importance: weights.severity, magnitude: avgSeverity / 1000 });
 
   if (signals.length === 0) return null;
 

@@ -1,4 +1,4 @@
-# Policy Layer — v0.4.0
+# Policy Layer — v0.5.0
 
 **OpenClaw Gateway Plugin:** 4-layer security enforcement framework + D' Cognitive Behavior Scoring (CBS).
 
@@ -110,7 +110,7 @@ Some Unicode characters are visually identical to ASCII (e.g. Greek `ο` vs Lati
 
 #### 1.2 Danger Pattern Detection (`patterns.ts`)
 
-Detects 23 dangerous patterns, split into two response tiers:
+Detects 25 dangerous patterns, split into two response tiers:
 
 **CRITICAL — Immediate Block (no LLM review)**
 
@@ -125,14 +125,21 @@ Detects 23 dangerous patterns, split into two response tiers:
 | `script_execution` | `chmod +x *.sh \| bash\|sh\|python` | Run unauthorized scripts |
 | `/dev/tcp` | `cat /dev/tcp/...` | Firewall bypass via /dev/tcp |
 
-**HIGH / MEDIUM — LLM Smart Review**
+**HIGH — LLM Smart Review**
 
 | Pattern | Example Match |
 |---------|--------------|
+| `curl_pipe_shell` | `curl ... \| sh` |
+| `wget_pipe_shell` | `wget ... \| sh` |
+| `curl_download_shell` | `curl ... && sh` |
+| `wget_download_shell` | `wget ... && sh` |
 | `git_reset_hard` | `git reset --hard` |
-| `dev_tcp` | `/dev/tcp/host/port` |
+| `git_reset_hard_head` | `git reset --hard HEAD` |
+| `chmod_777_system` | `chmod 777 /home` |
+| `chmod_exec_interpreter` | `chmod +x *.sh \| bash` |
 | `sql_drop` | `DROP TABLE`, `DROP DATABASE` |
 | `kill_term_negative` | `kill -TERM -1` |
+| `dev_tcp` | `/dev/tcp/host/port` |
 
 #### 1.3 Path Traversal Detection (`path.ts`)
 
@@ -150,44 +157,72 @@ D' (d-prime) is the core metric from Signal Detection Theory. Policy Layer adapt
 
 After each tool call, the system records 4 signals:
 
-| Signal | Weight | Meaning | Max-normalized |
-|--------|--------|---------|----------------|
-| `success_rate` | 0.30 | Tool call success rate | success_rate / 1.0 |
-| `tool_fail` | 0.25 | Tool failure rate (lower is better) | 1 - failure_rate / 1.0 |
-| `cbr_hit` | 0.20 | Context Buffer Recall hit rate | cbr_hit / 1.0 |
-| `severity_inv` | 0.25 | Severity (lower is better) | 1 - severity / 1000 |
+| Signal | Weight | Meaning | Magnitude |
+|--------|--------|---------|-----------|
+| `success_rate` | 0.30 | Tool call success rate | raw rate (0-1) |
+| `tool_fail` | 0.25 | Tool failure rate (lower is better) | 1 - failure_rate |
+| `cbr_hit` | 0.20 | Context Buffer Recall hit rate | raw rate |
+| `severity` | 0.25 | Severity score (higher = worse) | severity / 1000 |
 
 #### 2.3 D' Score Calculation
 
 ```
-D' = Σ(w_i × m_i) / (0.30 × 1.0 × n)
+D' = Σ(w_i × m_i) / (max_weight × 1.0 × n)
 ```
 
-Where `m_i` is each signal max-normalized, `n` is the cycle window count.
+Where `m_i` is each signal's normalized magnitude, `n` is the number of active signals.
 
-#### 2.4 Score Injection
+#### 2.4 Sigmoid Risk Scoring
+
+D' alone is a normalized score (0-1). To produce a human-interpretable risk assessment, D' is passed through a sigmoid function to produce a `risk_score`:
+
+```
+risk = sigmoid((D' - midpoint) / steepness)
+```
+
+The sigmoid maps D' to a probability-like risk value with a smooth transition zone:
+
+```
+         ┌──────── REJECT (risk >= 0.85) — direct block
+REJECT   │
+  ━━━━━━━╲              ┌──────── ACCEPT (risk <= 0.15) — direct pass
+          ╲─────────────/  ACCEPT
+           ╲ ESCALATE
+            ╲ (0.15 < risk < 0.85) — human confirmation
+```
+
+Default sigmoid parameters:
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `midpoint` | 0.58 | D' value where risk = 0.50 (50/50) |
+| `steepness` | 0.10 | Controls transition sharpness |
+| `acceptBelow` | 0.15 | Risk below this → ACCEPT |
+| `rejectAbove` | 0.85 | Risk above this → REJECT |
+
+Example mappings:
+
+| D' | Risk Score | Zone |
+|----|-----------|------|
+| 0.40 | 0.035 | ACCEPT |
+| 0.55 | 0.622 | ESCALATE |
+| 0.62 | 0.869 | REJECT |
+| 0.70 | 0.958 | REJECT |
+
+#### 2.5 Score Injection
 
 In the `before_prompt_build` hook, inject `<openclaw_state>` XML into the LLM context:
 
 ```xml
 <openclaw_state>
-  <d_prime>0.72</d_prime>
-  <d_gate_threshold>0.35</d_gate_threshold>
-  <d_gate_status>HIGH_REJECT</d_gate_status>
+  <d_prime>0.62</d_prime>
+  <risk_score>0.869</risk_score>
+  <risk_zone>REJECT</risk_zone>
   <cycles_tracked>12</cycles_tracked>
   <session_success_rate>0.95</session_success_rate>
   <last_policy_result>PASS</last_policy_result>
 </openclaw_state>
 ```
-
-#### 2.5 Score Thresholds & Behavioral Guidance
-
-| D' Range | Status | Agent Behavior |
-|-----------|--------|----------------|
-| > 0.65 | `NORMAL` | Normal execution, no special guidance |
-| 0.35–0.65 | `LOW_ACCEPT` | Moderate caution, reduce aggressive operations |
-| < 0.35 | `HIGH_REJECT` | Significant slowdown, perform only essential operations |
-| < 0.20 | `CRITICAL` | Pause all non-essential operations, await user confirmation |
 
 ---
 
@@ -271,7 +306,7 @@ View current 4-layer status and Fast Lane counters:
 
 ```
 policy-layer$ security-status
-🛡️  Policy Layer v0.4.0 — Layers 1–4 Active ✅
+🛡️  Policy Layer v0.5.0 — Layers 1–4 Active ✅
 Fast Lane:
   rm_recursive (counter=3/5)
   pipe_to_shell (counter=5/5 ✅ FAST LANE ACTIVE)
@@ -358,10 +393,13 @@ In `~/.openclaw/openclaw.json`:
       "policy-layer": {
         "enabled": true,
         "config": {
-          "reportToUser":    true,   // Agent proactively reports D' state in conversation
-          "sensoriumWindow": 20,     // Cycle window size for D' tracking
-          "dGateThreshold":  0.35,   // D' below this → LOW_ACCEPT
-          "logLevel":       "info"  // debug / info / warn
+          "reportToUser":       true,    // Agent proactively reports D' state in conversation
+          "sensoriumWindow":    20,      // Cycle window size for D' tracking
+          "sigmoidMidpoint":    0.58,    // D' at sigmoid center (risk=0.50)
+          "sigmoidSteepness":   0.10,    // Transition sharpness
+          "sigmoidAcceptBelow": 0.15,    // Risk ≤ this → ACCEPT (direct pass)
+          "sigmoidRejectAbove": 0.85,    // Risk ≥ this → REJECT (direct block)
+          "logLevel":          "info"   // debug / info / warn
         }
       }
     }
@@ -373,7 +411,10 @@ In `~/.openclaw/openclaw.json`:
 |-----------|---------|-------------|
 | `reportToUser` | `true` | Agent actively reports D' status in conversation; `false` = silent |
 | `sensoriumWindow` | 20 | Rolling window size for D' calculation |
-| `dGateThreshold` | 0.35 | D' below this triggers LOW_ACCEPT guidance |
+| `sigmoidMidpoint` | 0.58 | D' value where risk = 0.50 (sigmoid center) |
+| `sigmoidSteepness` | 0.10 | Controls how sharp the ACCEPT→ESCALATE→REJECT transition is |
+| `sigmoidAcceptBelow` | 0.15 | Risk ≤ this → ACCEPT zone |
+| `sigmoidRejectAbove` | 0.85 | Risk ≥ this → REJECT zone |
 | `logLevel` | info | Log verbosity level |
 
 ---
@@ -390,7 +431,7 @@ npm test                  # 103 tests (61 unit + 42 integration)
 | Module | Tests | Coverage |
 |--------|-------|----------|
 | L1 normalize | 6 | ANSI/null/NFKC/trim |
-| L1 patterns | 23 | 16 CRITICAL + 7 HIGH/MEDIUM |
+| L1 patterns | 25 | 14 CRITICAL + 11 HIGH |
 | L1 path | 6 | Traversal detection, valid paths |
 | L3 fast-lane | 5 | 5-approval threshold, reset |
 | L3 hook simulation | 13 | critical=block, benign=pass, multi-pattern |
@@ -430,7 +471,7 @@ policy-layer/
 │   ├── sensorium-index.test.ts     ← 42 D' unit tests
 │   └── security/
 │       ├── normalize.ts             ← ANSI/null/NFKC normalization
-│       ├── patterns.ts             ← 23 danger patterns + user blacklist
+│       ├── patterns.ts             ← 25 danger patterns + user blacklist
 │       ├── path.ts                 ← Path traversal validation
 │       ├── smart-review.ts         ← Ollama LLM review
 │       ├── approval-log.ts         ← JSONL append log
@@ -504,6 +545,65 @@ User Input
 - Policy Layer verdict data has a different schema (command + patterns + verdict) vs memory-recall (6w + category + conversation context)
 - Isolation keeps memory-recall unchanged for other projects
 - Enables future embedding-based retrieval of similar past commands without LLM calls
+
+---
+
+## Future Work
+
+### Adaptive Sigmoid Feedback (Self-Tuning Controller)
+
+The current sigmoid has fixed parameters (`midpoint=0.58`, `steepness=0.10`). These can be made to adapt to user feedback over time, forming a closed-loop controller.
+
+#### The Problem
+
+Fixed sigmoid parameters require manual tuning. When you frequently override the system's decisions, the parameters should drift to match your behavior:
+- You keep approving what system rejects → `midpoint` should shift up (make rejection harder)
+- You keep rejecting what system approves → `midpoint` should shift down (make rejection easier)
+- You rarely override → `steepness` should decrease (trust the system more)
+- You override frequently → `steepness` should increase (widen the ESCALATE zone)
+
+#### Online Update Rules
+
+```typescript
+// After each human feedback (approve/reject override)
+function adaptSigmoid(humanDecision: 'approve' | 'reject', systemRisk: number) {
+  const α = 0.05;  // learning rate for midpoint
+  const β = 0.10;  // learning rate for steepness
+
+  // midopint drift: adjust based on disagreement
+  if (humanDecision === 'approve' && systemRisk >= 0.5) {
+    // System rejected, human approved → midpoint up (harder to reject)
+    midpoint += α * systemRisk;
+  }
+  if (humanDecision === 'reject' && systemRisk < 0.5) {
+    // System approved, human rejected → midpoint down (easier to reject)
+    midpoint -= α * (1 - systemRisk);
+  }
+
+  // Steepness drift: based on disagreement rate
+  const disagreementRate = overrides.lastN(20).filter(
+    o => (o.human === 'approve') !== (o.systemRisk < 0.5)
+  ).length / 20;
+
+  if (disagreementRate > 0.3) {
+    // Many overrides → widen transition zone (be more cautious)
+    steepness *= (1 + β * (disagreementRate - 0.3));
+  } else if (disagreementRate < 0.1) {
+    // Few overrides → narrow transition zone (trust the model)
+    steepness *= (1 - β * (0.1 - disagreementRate));
+  }
+  steepness = Math.max(0.05, Math.min(0.30, steepness));
+}
+```
+
+#### Why This Is a Bandit Problem
+
+This is essentially a contextual bandit or reinforcement learning problem:
+- **State**: current D', risk score, user history
+- **Action**: adjust midpoint/steepness
+- **Reward**: user override frequency (low override = good reward)
+
+The adaptive version can be implemented as a slow-moving background process that tunes parameters between sessions, without disrupting the live session experience.
 
 ---
 

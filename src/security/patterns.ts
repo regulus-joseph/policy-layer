@@ -120,11 +120,6 @@ export const DANGEROUS_PATTERNS: PatternMatch[] = [
     label: '/dev/tcp network manipulation',
     severity: 'high',
   },
-  {
-    pattern: /\/dev\/null.+\>/,
-    label: '/dev/null redirect for output suppression',
-    severity: 'medium',
-  },
 ];
 
 export function detectDangerousPatterns(cmd: string): PatternMatch[] {

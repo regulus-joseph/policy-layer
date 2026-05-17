@@ -1,15 +1,15 @@
 {
   "name": "policy-layer",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "type": "module",
-  "description": "OpenClaw policy enforcement plugin: Layer 1 (normalize + 23 dangerous patterns), Layer 2 (D' CBS sensorium), Layer 3 (LLM smart-review + fast-lane + JSONL log), Layer 4 (39 secret patterns redaction)",
+  "description": "OpenClaw policy enforcement plugin: Layer 1 (normalize + 25 dangerous patterns), Layer 2 (D' CBS sensorium), Layer 3 (LLM smart-review + fast-lane + JSONL log), Layer 4 (39 secret patterns redaction)",
   "main": "src/index.ts",
   "openclaw": {
     "extensions": [
       "./src/index.ts"
     ],
     "compat": {
-      "pluginApi": "0.4.0"
+      "pluginApi": "0.5.0"
     },
     "build": {
       "openclawVersion": "2026.5.0"

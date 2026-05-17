@@ -8,8 +8,15 @@ const DEFAULT_WEIGHTS = {
 };
 
 const DEFAULT_D_BANDS = {
-  low: 0.35,
-  high: 0.55,
+  low: 0.50,
+  high: 0.66,
+};
+
+const DEFAULT_SIGMOID = {
+  midpoint: 0.58,
+  steepness: 0.10,
+  acceptBelow: 0.15,
+  rejectAbove: 0.85,
 };
 
 const DEFAULT_SEVERITY_RULES = [
@@ -34,6 +41,12 @@ function resolveConfig(cfg) {
     dBands: {
       low: cfg?.dBandLow ?? DEFAULT_D_BANDS.low,
       high: cfg?.dBandHigh ?? DEFAULT_D_BANDS.high,
+    },
+    sigmoid: {
+      midpoint: cfg?.sigmoidMidpoint ?? DEFAULT_SIGMOID.midpoint,
+      steepness: cfg?.sigmoidSteepness ?? DEFAULT_SIGMOID.steepness,
+      acceptBelow: cfg?.sigmoidAcceptBelow ?? DEFAULT_SIGMOID.acceptBelow,
+      rejectAbove: cfg?.sigmoidRejectAbove ?? DEFAULT_SIGMOID.rejectAbove,
     },
     weights: {
       success: cfg?.weightSuccess ?? DEFAULT_WEIGHTS.success,
@@ -112,7 +125,7 @@ function computeDPrime(metrics) {
   if (successRate !== null) signals.push({ importance: weights.success, magnitude: successRate });
   if (toolFailureRate !== null) signals.push({ importance: weights.tool, magnitude: 1 - toolFailureRate });
   if (cbrHitRate !== null) signals.push({ importance: weights.cbr, magnitude: cbrHitRate });
-  if (avgSeverity !== null) signals.push({ importance: weights.severity, magnitude: 1 - avgSeverity });
+  if (avgSeverity !== null) signals.push({ importance: weights.severity, magnitude: avgSeverity / 1000 });
 
   if (signals.length === 0) return null;
 
@@ -172,7 +185,8 @@ async function logDCycle(
   const toolRate = computeToolFailureRate(metrics);
   const cbrRate = computeCbrHitRate(metrics);
   const dPrime = computeDPrime(metrics);
-  const status = dGateStatus(dPrime, metrics.config.dBands);
+  const riskScore = sigmoidRisk(dPrime, metrics.config.sigmoid.midpoint, metrics.config.sigmoid.steepness);
+  const status = dGateStatus(dPrime, metrics.config.dBands, metrics.config.sigmoid);
   const toolDetails = computeToolDetails(metrics);
   const sevStats = computeSeverityStats(metrics);
   const recent = metrics.cycles.slice(-metrics.config.window);
@@ -204,22 +218,39 @@ async function logDCycle(
   }
 }
 
-function dGateStatus(dPrime, bands) {
-  if (dPrime === null) return "UNKNOWN";
-  if (dPrime >= bands.high) return "HIGH_REJECT";
-  if (dPrime >= bands.low) return "MEDIUM_CONFIRM";
-  return "LOW_ACCEPT";
+function sigmoid(x: number): number {
+  return 1 / (1 + Math.exp(-x));
 }
 
-function interpretSensorium(dPrime, status, toolFailureRate, recentFailures, successRate) {
+function sigmoidRisk(dPrime: number | null, midpoint: number, steepness: number): number | null {
+  if (dPrime === null) return null;
+  return sigmoid((dPrime - midpoint) / steepness);
+}
+
+function dGateStatus(dPrime, bands, sigmoidCfg?) {
+  if (dPrime === null) return "UNKNOWN";
+  if (sigmoidCfg) {
+    const risk = sigmoidRisk(dPrime, sigmoidCfg.midpoint, sigmoidCfg.steepness);
+    if (risk !== null) {
+      if (risk >= sigmoidCfg.rejectAbove) return "REJECT";
+      if (risk <= sigmoidCfg.acceptBelow) return "ACCEPT";
+      return "ESCALATE";
+    }
+  }
+  if (dPrime >= bands.high) return "REJECT";
+  if (dPrime >= bands.low) return "ESCALATE";
+  return "ACCEPT";
+}
+
+function interpretSensorium(dPrime, status, toolFailureRate, recentFailures, successRate, riskScore) {
   const lines = [];
 
-  if (dPrime !== null && dPrime >= 0.55) {
-    lines.push("[HIGH_REJECT] Accumulated risk detected. Slow down. Pause non-essential actions. Diagnose root cause before continuing.");
-  } else if (dPrime !== null && dPrime >= 0.35) {
-    lines.push("[MEDIUM_CONFIRM] Moderate pressure. Be more careful with high-impact decisions. Verify before executing.");
-  } else if (dPrime !== null) {
-    lines.push("[LOW_ACCEPT] System healthy. Normal operation.");
+  if (status === "REJECT") {
+    lines.push("[REJECT] Risk score indicates poor recent performance. Diagnose root cause before continuing.");
+  } else if (status === "ESCALATE") {
+    lines.push(`[ESCALATE] Risk score=${riskScore?.toFixed(2) ?? "--"}: exercise caution with high-impact decisions.`);
+  } else if (status === "ACCEPT") {
+    lines.push("[ACCEPT] Risk score indicates healthy session. Normal operation.");
   }
 
   if (toolFailureRate > 0.15) {
@@ -246,21 +277,22 @@ function formatSensorium(sessionKey, metrics) {
   const toolFailureRate = computeToolFailureRate(metrics);
   const cbrHitRate = computeCbrHitRate(metrics);
   const dPrime = computeDPrime(metrics);
-  const status = dGateStatus(dPrime, metrics.config.dBands);
+  const riskScore = sigmoidRisk(dPrime, metrics.config.sigmoid.midpoint, metrics.config.sigmoid.steepness);
+  const status = dGateStatus(dPrime, metrics.config.dBands, metrics.config.sigmoid);
   const recent = metrics.cycles.slice(-5);
   const recentFailures = recent
     .filter((c) => !c.success)
     .map((c) => (c.severity >= 600 ? `[CRIT]${c.reason || "unknown"}` : c.reason || "unknown"))
     .slice(-3);
   const lastCycle = metrics.cycles[metrics.cycles.length - 1];
-  const interpretations = interpretSensorium(dPrime, status, toolFailureRate, recentFailures, successRate);
+  const interpretations = interpretSensorium(dPrime, status, toolFailureRate, recentFailures, successRate, riskScore);
 
   return [
     "<openclaw_state>",
     `  <session_key>${sessionKey}</session_key>`,
     `  <d_prime>${dPrime !== null ? dPrime.toFixed(4) : "--"}</d_prime>`,
-    `  <d_gate_threshold>${metrics.config.dGateThreshold}</d_gate_threshold>`,
-    `  <d_gate_status>${status}</d_gate_status>`,
+    `  <risk_score>${riskScore !== null ? riskScore.toFixed(3) : "--"}</risk_score>`,
+    `  <risk_zone>${status}</risk_zone>`,
     `  <cycles_tracked>${metrics.cycles.length}</cycles_tracked>`,
     successRate !== null ? `  <session_success_rate>${successRate.toFixed(3)}</session_success_rate>` : `  <session_success_rate>--</session_success_rate>`,
     toolFailureRate !== null ? `  <tool_failure_rate>${toolFailureRate.toFixed(3)}</tool_failure_rate>` : `  <tool_failure_rate>0.000</tool_failure_rate>`,
@@ -276,6 +308,19 @@ function formatSensorium(sessionKey, metrics) {
 
 function resolveLogLevel(pluginConfig) {
   return pluginConfig?.logLevel || "info";
+}
+
+async function persistSigmoidConfig(key: string, value: number): Promise<void> {
+  const configPath = join(homedir(), '.openclaw', 'openclaw.json');
+  try {
+    const raw = await fs.readFile(configPath, 'utf8');
+    const cfg = JSON.parse(raw);
+    const pluginKey = 'policy-layer';
+    if (!cfg.plugins?.entries?.[pluginKey]) return;
+    cfg.plugins.entries[pluginKey].config = cfg.plugins.entries[pluginKey].config || {};
+    cfg.plugins.entries[pluginKey].config[key] = value;
+    await fs.writeFile(configPath, JSON.stringify(cfg, null, 2) + '\n', 'utf8');
+  } catch { /* non-fatal */ }
 }
 
 const LOG_LEVELS = { debug: 0, info: 1, warn: 2 };
@@ -376,12 +421,14 @@ export {
   computeCbrHitRate,
   computeAverageSeverity,
   computeDPrime,
+  sigmoidRisk,
   dGateStatus,
   formatSensorium,
   extractOutcomeFromMessages,
   resolveConfig,
   DEFAULT_WEIGHTS,
   DEFAULT_D_BANDS,
+  DEFAULT_SIGMOID,
   DEFAULT_SEVERITY_RULES,
 };
 
@@ -394,6 +441,9 @@ import { onApprove, isFastLane, resetFastLane, getFastLaneEntries } from './secu
 import { redactSecrets } from './security/redact';
 import { redactUrlSecrets, redactEnvironmentVariables } from './security/url-redact';
 import { dCycleStore, type DCycleRecord, type DCycleTrigger } from './security/sensorium-log';
+import { promises as fs } from 'fs';
+import { join } from 'path';
+import { homedir } from 'os';
 
 const plugin = {
   id: "policy-layer",
@@ -438,16 +488,16 @@ const plugin = {
         }
 
         const dPrime = computeDPrime(metrics);
-        const status = dGateStatus(dPrime, metrics.config.dBands);
+        const status = dGateStatus(dPrime, metrics.config.dBands, metrics.config.sigmoid);
 
-        if (status === "HIGH_REJECT") {
+        if (status === "REJECT") {
           triggerGate = 'input';
-          doLog(api, "warn", `D'=${dPrime?.toFixed(4)} → HIGH_REJECT: blocking high-risk call for session ${sessionKey}`);
-        } else if (status === "MEDIUM_CONFIRM") {
-          doLog(api, "warn", `D'=${dPrime?.toFixed(4)} → MEDIUM_CONFIRM: requesting operator confirmation`);
+          doLog(api, "warn", `D'=${dPrime?.toFixed(4)} → REJECT: risk too high for session ${sessionKey}`);
+        } else if (status === "ESCALATE") {
+          doLog(api, "warn", `D'=${dPrime?.toFixed(4)} → ESCALATE: requesting operator confirmation`);
         }
 
-        const decision = status === "HIGH_REJECT" ? 'REJECT' : status === "MEDIUM_CONFIRM" ? 'ESCALATE' : 'ACCEPT';
+        const decision = status;
         const agentId = ctx?.agentId || sessionKey.split(':')[0] || 'unknown';
         const sessId = ctx?.sessionId || sessionKey.split(':')[1] || sessionKey;
         await logDCycle(sessionKey, agentId, sessId, metrics, { gate: triggerGate }, decision);
@@ -472,10 +522,10 @@ const plugin = {
 
     api.on("before_tool_call", async (toolCall, ctx) => {
       try {
-        const raw = toolCall.arguments ? JSON.stringify(toolCall.arguments) : '';
-        const cmd = (toolCall.name + ' ' + raw).trim();
+        const raw = toolCall.params ? JSON.stringify(toolCall.params) : '';
+        const cmd = (toolCall.toolName + ' ' + raw).trim();
         const normalized = normalizeCommand(cmd);
-        const rawCmd = extractRawCommand(toolCall.name, toolCall.arguments);
+        const rawCmd = extractRawCommand(toolCall.toolName, toolCall.params);
         const rawCmdNormalized = rawCmd ? normalizeCommand(rawCmd) : '';
 
         const patternsFromOuter = detectDangerousPatterns(normalized);
@@ -493,7 +543,7 @@ const plugin = {
         const recordBase: Partial<ApprovalRecord> = {
           command: normalized,
           rawCommand: rawCmd,
-          tool: toolCall.name,
+          tool: toolCall.toolName,
           sessionId: sessionKey,
           patterns: patterns.map(p => p.label),
         };
@@ -553,7 +603,15 @@ const plugin = {
           metrics.lastPolicyResult = `ESCALATE`;
           await logApproval({ ...recordBase, result: 'escalate', reason: 'requires human review', timestamp: new Date().toISOString() } as ApprovalRecord);
           await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ESCALATE');
-          return { block: false, requireApproval: true };
+          return {
+            block: false,
+            requireApproval: {
+              title: `Policy Layer: Command Requires Approval`,
+              description: `Command "${normalized}" matched pattern(s): ${patterns.map(p => p.label).join(', ')}. Risky operations require human confirmation.`,
+              severity: "warning",
+              allowedDecisions: ["allow-once", "deny"],
+            },
+          };
         }
 
         patterns.forEach(p => onApprove(p.label));
@@ -570,8 +628,8 @@ const plugin = {
 
     api.on("after_tool_call", async (toolCall, result) => {
       try {
-        if (result?.content) {
-          const content = typeof result.content === 'string' ? result.content : JSON.stringify(result.content);
+        if (result?.result) {
+          const content = typeof result.result === "string" ? result.result : JSON.stringify(result.result);
           const { found } = redactSecrets(content);
           if (found.length > 0) {
             doLog(api, "warn", `SECRET LEAK DETECTED in ${toolCall.name} output: ${found.join(', ')}`);
@@ -659,7 +717,8 @@ const plugin = {
 
         const metrics = getOrCreateMetrics(sessionKey, {});
         const dPrime = computeDPrime(metrics);
-        const status = dGateStatus(dPrime, metrics.config.dBands);
+        const riskScore = sigmoidRisk(dPrime, metrics.config.sigmoid.midpoint, metrics.config.sigmoid.steepness);
+        const status = dGateStatus(dPrime, metrics.config.dBands, metrics.config.sigmoid);
         const successRate = computeSuccessRate(metrics);
         const toolFailureRate = computeToolFailureRate(metrics);
         const cbrHitRate = computeCbrHitRate(metrics);
@@ -698,9 +757,11 @@ const plugin = {
 
         const lines = [
           `[policy-layer] Session: ${sessionKey}`,
-          `  D' score:     ${dPrime !== null ? dPrime.toFixed(4) : "--"}`,
-          `  D' status:   ${status}`,
-          `  Threshold:    ${metrics.config.dGateThreshold}`,
+          `  D' score:      ${dPrime !== null ? dPrime.toFixed(4) : "--"}`,
+          `  Risk score:   ${riskScore !== null ? riskScore.toFixed(3) : "--"}`,
+          `  Risk zone:    ${status}`,
+          `  Sigmoid:      midpoint=${metrics.config.sigmoid.midpoint} steepness=${metrics.config.sigmoid.steepness}`,
+          `  Zones:        accept≤${metrics.config.sigmoid.acceptBelow} | escalate | reject≥${metrics.config.sigmoid.rejectAbove}`,
           `  Cycles:       ${metrics.cycles.length} (window ${metrics.config.window})`,
           `  Calls:        ${metrics.callCounter}`,
           `  --- Signals ---`,
@@ -711,10 +772,46 @@ const plugin = {
           `  Max severity: ${sevStats.maxSeverity} (${sevStats.level})` +
             (sevStats.reason ? ` — ${sevStats.reason.slice(0, 60)}` : ""),
           failLines.length > 0 ? `  Recent failures:\n${failLines.join("\n")}` : `  Recent failures: none`,
+          `  Adjust:      set-sigmoid <midpoint|steepness|acceptBelow|rejectAbove> <value>`,
           breakdown ? `\n${breakdown}` : "",
         ].filter(Boolean);
 
         return { text: lines.join("\n") };
+      },
+    });
+
+    api.registerCommand({
+      name: "set-sigmoid",
+      description: "Adjust sigmoid risk scoring parameters. Usage: set-sigmoid <midpoint|steepness|acceptBelow|rejectAbove> <value>",
+      acceptsArgs: true,
+      handler: async (ctx) => {
+        const args = (ctx.args || '').trim().split(/\s+/);
+        if (args.length !== 2) {
+          return { text: "[policy-layer] Usage: set-sigmoid <midpoint|steepness|acceptBelow|rejectAbove> <value>\n" +
+            `  Current: midpoint=${DEFAULT_SIGMOID.midpoint}, steepness=${DEFAULT_SIGMOID.steepness}, acceptBelow=${DEFAULT_SIGMOID.acceptBelow}, rejectAbove=${DEFAULT_SIGMOID.rejectAbove}` };
+        }
+        const [param, valStr] = args;
+        const value = parseFloat(valStr);
+        if (isNaN(value)) return { text: `[policy-layer] Invalid value: ${valStr}` };
+
+        const validParams = ['sigmoidMidpoint', 'sigmoidSteepness', 'sigmoidAcceptBelow', 'sigmoidRejectAbove'];
+        const internalKey = `sigmoid${param.charAt(0).toUpperCase() + param.slice(1)}`;
+        if (!validParams.includes(internalKey)) {
+          return { text: `[policy-layer] Unknown parameter: ${param}. Valid: ${validParams.join(', ')}` };
+        }
+
+        const sessionKey = ctx.sessionKey?.trim() || (ctx.agentId && ctx.sessionId ? `${ctx.agentId}:${ctx.sessionId}` : null);
+        if (sessionKey) {
+          const metrics = getOrCreateMetrics(sessionKey, api.pluginConfig || {});
+          metrics.config.sigmoid[param === 'midpoint' ? 'midpoint' : param === 'steepness' ? 'steepness' : param === 'acceptBelow' ? 'acceptBelow' : 'rejectAbove'] = value;
+        }
+        for (const m of sessionMetrics.values()) {
+          m.config.sigmoid[param === 'midpoint' ? 'midpoint' : param === 'steepness' ? 'steepness' : param === 'acceptBelow' ? 'acceptBelow' : 'rejectAbove'] = value;
+        }
+        await persistSigmoidConfig(internalKey, value);
+        const dPrime = sessionKey ? computeDPrime(getOrCreateMetrics(sessionKey, {})) : null;
+        const risk = dPrime !== null ? sigmoidRisk(dPrime, value, DEFAULT_SIGMOID.steepness) : null;
+        return { text: `[policy-layer] ${param}=${value} set (persisted). Current risk for D'=${dPrime?.toFixed(3)}: ${risk?.toFixed(3) ?? '--'}` };
       },
     });
   },

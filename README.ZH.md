@@ -1,4 +1,4 @@
-# Policy Layer — v0.4.0
+# Policy Layer — v0.5.0
 
 **OpenClaw Gateway Plugin：** 4 层安全执行框架 + D' 认知行为评分系统（CBS）
 
@@ -265,7 +265,7 @@ fast_lane_counter: Map<pattern_label, consecutive_approvals>
 
 ```
 policy-layer$ security-status
-🛡️  Policy Layer v0.4.0 — Layers 1–4 Active ✅
+🛡️  Policy Layer v0.5.0 — Layers 1–4 Active ✅
 Fast Lane:
   rm_recursive (counter=3/5)
   pipe_to_shell (counter=5/5 ✅ FAST LANE ACTIVE)
