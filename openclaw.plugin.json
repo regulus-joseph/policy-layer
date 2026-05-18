@@ -1,7 +1,7 @@
 {
   "id": "policy-layer",
   "name": "Policy Layer (CBS) + Security Layers",
-  "version": "0.5.0",
+  "version": "0.4.2",
   "kind": "sensorium",
   "configSchema": {
     "type": "object",

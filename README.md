@@ -1,4 +1,4 @@
-# Policy Layer — v0.5.0
+# Policy Layer — v0.4.2
 
 **OpenClaw Gateway Plugin:** 4-layer security enforcement framework + D' Cognitive Behavior Scoring (CBS).
 
@@ -306,7 +306,7 @@ View current 4-layer status and Fast Lane counters:
 
 ```
 policy-layer$ security-status
-🛡️  Policy Layer v0.5.0 — Layers 1–4 Active ✅
+🛡️  Policy Layer v0.4.2 — Layers 1–4 Active ✅
 Fast Lane:
   rm_recursive (counter=3/5)
   pipe_to_shell (counter=5/5 ✅ FAST LANE ACTIVE)
