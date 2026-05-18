@@ -618,3 +618,11 @@ The adaptive version can be implemented as a slow-moving background process that
 | Storage | JSONL (append log), LanceDB (Phase 2) |
 | Embedding | bge-m3 (Phase 2 planned) |
 | Visualization | Native HTML + CSS + JS (no build step) |
+
+
+## Acknowledgements
+
+Policy Layer's D' CBS algorithm and normative safety framework are deeply inspired by **Springdrift**:
+
+> *An Auditable Persistent Runtime for LLM Agents with Case-Based Memory, Normative Safety, and Ambient Self-Perception*  
+> [arXiv:2604.04660](https://arxiv.org/abs/2604.04660v1) — Case-Based Memory, Normative Calculus, and Ambient Self-Perception (Sensorium/CBS) concepts directly informed this plugin's design.
