@@ -749,11 +749,17 @@ const plugin = {
             ? ["allow-once", "allow-always", "deny"]
             : ["allow-once", "deny"];
 
+          // Determine safe dir hint for description
+          const safe = cfg.safeDirs ?? DEFAULT_SAFE_DIRS;
+          const safeDirHint = whitelistablePatterns.length > 0 && whitelistablePatterns.every(p => p.severity !== 'critical')
+            ? ` (Only safe directories like: ${safe.slice(0, 4).join(', ')}... are learned)`
+            : '';
+
           return {
             block: false,
             requireApproval: {
               title: `Policy Layer: Command Requires Approval`,
-              description: `Command "${normalized}" matched pattern(s): ${patterns.map(p => p.label).join(', ')}. Risky operations require human confirmation.`,
+              description: `Command "${normalized}" matched pattern(s): ${patterns.map(p => p.label).join(', ')}. Risky operations require human confirmation.${safeDirHint}`,
               severity: "warning",
               allowedDecisions: decisions,
               onResolution: async (decision: string) => {
@@ -762,19 +768,19 @@ const plugin = {
                   m.trustSignals.approvalPasses++;
                 } else if (decision === 'allow-always') {
                   m.trustSignals.approvalPasses++;
-                  // Add to persistent learned whitelist (only if canWhitelist)
                   if (cfg.evolveMode && whitelistablePatterns.length > 0) {
                     try {
-                      const safe = cfg.safeDirs ?? DEFAULT_SAFE_DIRS;
                       const generalized = generalizePattern(effectiveCmd, safe);
-                      if (await canWhitelist(effectiveCmd, safe)) {
-                        await addToWhitelist({
-                          pattern: generalized,
-                          originalCommand: effectiveCmd,
-                          addedAt: new Date().toISOString(),
-                          addedBy: 'allow-always',
-                        });
-                        doLog(api, "debug", `Added to whitelist: ${generalized}`);
+                      const entry = await addToWhitelist({
+                        pattern: generalized,
+                        originalCommand: effectiveCmd,
+                        addedAt: new Date().toISOString(),
+                        addedBy: 'allow-always',
+                      });
+                      if (entry.active) {
+                        doLog(api, "info", `Whitelist ACTIVATED: ${generalized} (${entry.count} approvals)`);
+                      } else {
+                        doLog(api, "debug", `Whitelist queued: ${generalized} (${entry.count}/${ACTIVATION_THRESHOLD} — needs ${ACTIVATION_THRESHOLD - entry.count} more)`);
                       }
                     } catch (err) {
                       doLog(api, "warn", `Failed to add whitelist: ${String(err)}`);
