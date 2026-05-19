@@ -34,7 +34,8 @@ Next LLM Decision → before_prompt_build (inject cognitive state score)
 | 🛡️ Dangerous Command Blocking | Layer 1 pattern matching — 16 CRITICAL patterns blocked immediately, no LLM review |
 | 🤖 LLM Smart Review | HIGH/MEDIUM commands go through Ollama local model for second review (approve/deny/escalate) |
 | 🚀 Fast Lane | Same harmless command approved 5 times consecutively → skip LLM review, fast-track |
-| 📊 Cognitive State Scoring | D' CBS algorithm — 4 dimensions (success rate / tool fail / context hit / severity) scored in real time |
+| 📚 Learned Whitelist | User clicks "Always Allow" → pattern auto-learned to `learned-whitelist.jsonl` (persistent, survive restart) |
+| 📊 Cognitive State Scoring | D' trust score — 8 signals (success, tool_fail, severity, critical_hit, approvals, denials, nudges, fast_lane) |
 | 🔒 Secret Leak Detection | `after_tool_call` scans tool output for 39 secret patterns; leaks trigger warning |
 | 📝 Decision Audit Log | All decisions appended to `~/.openclaw/logs/approval.jsonl` (JSONL, append-only) |
 | 🗳️ User Feedback Loop | `report-bad-result` — user flags wrong decisions → score drops + added to blacklist |
@@ -50,7 +51,7 @@ openclaw gateway restart
 
 # Run tests
 cd ~/projects/policy-layer
-npm test                  # 103 tests
+npm test                  # 166 tests
 
 # Regenerate analytics dashboard
 python3 docs/generate-analytics.py
@@ -79,9 +80,11 @@ Tool Call Input
      │      └─ Injects <openclaw_state> XML into LLM context
      │         Agent reads it and adjusts behavior according to D' score
      │      ↓
-     ├─ Layer 3: Smart Review (HIGH/MEDIUM only)
+     ├─ Layer 3: Smart Review + Whitelist
+     │      ├─ Learned whitelist (persistent, file-based, survive restart)
+     │      ├─ Fast Lane (memory, 5-approve, reset on restart)
      │      ├─ Ollama local inference (approve / deny / escalate)
-     │      ├─ Fast Lane: 5 consecutive approves → skip LLM review
+     │      ├─ allow-always → persist to learned-whitelist.jsonl
      │      └─ Approval Log: all decisions appended to approval.jsonl
      │      ↓
      └─ Layer 4: Secret Leak Detection (after_tool_call)
@@ -267,7 +270,42 @@ fast_lane_counter: Map<pattern_label, consecutive_approvals>
 // Reset: any deny / escalate / new command pattern
 ```
 
-#### 3.3 Approval Log (`approval-log.ts`)
+#### 3.3 Learned Whitelist (`learned-whitelist.ts`)
+
+**Motivation:** When a user clicks "Always Allow" repeatedly for the same command pattern, the system learns to auto-approve similar commands without prompting.
+
+**Decision chain (before_tool_call):**
+```
+1. No patterns detected → PASS
+2. Safe directory bypass → PASS (node_modules, dist, build, tmp, etc.)
+3. Whitelist match (persistent, file-based) → PASS  ← learned whitelist
+4. Critical pattern → BLOCK
+5. Fast-lane match (memory, 5-approve) → PASS      ← temporary auto-approve
+6. Smart review (Ollama LLM) → approve / deny / escalate
+7. Escalate → requireApproval → allow-once / allow-always / deny
+```
+
+**allow-always flow:**
+1. User clicks "Always Allow" in approval dialog
+2. `generalizePattern()` extracts command structure:
+   - `"rm -rf node_modules"` → `"rm -rf {node_modules}"`
+3. Checks `NEVER_WHITELIST_PATTERNS` — if matched, never whitelisted
+4. Checks `canWhitelist()` — not already in whitelist
+5. Persists to `~/.openclaw/logs/learned-whitelist.jsonl`
+
+**NEVER_WHITELIST_PATTERNS** (absolute blocklist — never learnable):
+- `rm -rf /`, `rm -rf /*` — system deletion
+- `curl | sh`, `wget | sh` — remote code execution
+- `kill -9 -1` — kill all processes
+- Fork bombs, gateway stop, pkill gateway
+
+**Persistent whitelist** (`evolveMode=true`, default `false`):
+```json
+// ~/.openclaw/logs/learned-whitelist.jsonl
+{"pattern":"rm -rf {node_modules}","originalCommand":"rm -rf node_modules","addedAt":"2026-05-19T12:00:00Z","addedBy":"allow-always","count":1}
+```
+
+#### 3.4 Approval Log (`approval-log.ts`)
 
 All decisions (approve / deny / escalate / fast_lane / blocked) are appended to:
 
