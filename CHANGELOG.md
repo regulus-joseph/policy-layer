@@ -8,23 +8,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
-- **Learned whitelist** — `allow-always` 3次触发激活 pattern，持久化到 `~/.openclaw/logs/learned-whitelist.jsonl`（重启不丢失）
-- **8 信号 D' trust score** — successRate(0.20), toolFailureRate(0.15), avgSeverity inverted(0.15), criticalHit(0.25), approvalPassed(0.10), approvalDenied(0.10), userNudge(0.20), fastLaneUse(0.05)
-- **onResolution 持久化** — allow-once/allow-always/deny 写入 approval.jsonl
-- **NEVER_WHITELIST_PATTERNS** — 9 个绝对 block pattern（rm -rf /, curl|sh, kill -9 -1, fork bombs 等）
-- **`query_approval.py` 更新** — 支持 allow-once(🔵)/allow-always(🟢) 过滤和统计
+- **Learned whitelist** — `allow-always` requires 3 triggers to activate a pattern, persisted to `~/.openclaw/logs/learned-whitelist.jsonl` (survives restart)
+- **8-signal D' trust score** — successRate(0.20), toolFailureRate(0.15), avgSeverity inverted(0.15), criticalHit(0.25), approvalPassed(0.10), approvalDenied(0.10), userNudge(0.20), fastLaneUse(0.05)
+- **onResolution persistence** — allow-once/allow-always/deny written to approval.jsonl
+- **NEVER_WHITELIST_PATTERNS** — 9 absolute block patterns (rm -rf /, curl|sh, kill -9 -1, fork bombs, etc.)
+- **`query_approval.py` update** — supports allow-once(🔵)/allow-always(🟢) filtering and stats
 
 ### Changed
 
-- **Severity 方向修正** — `1 - severity/1000`（severity 高 = trust 低）
-- **report-bad-result** — 只施加 trust penalty，移除 auto-blacklist（需显式确认才加入黑名单）
-- **LLM Smart Review model** — 切换为 `qwen2.5:3b`（本地 Ollama）
-- **Fast lane 整合** — whitelist → fast-lane → critical block → smartReview → escalate 决策链
+- **Severity direction fixed** — `1 - severity/1000` (high severity = low trust)
+- **report-bad-result** — only applies trust penalty, auto-blacklist removed (explicit confirmation required)
+- **LLM Smart Review model** — switched to `qwen2.5:3b` (local Ollama)
+- **Fast lane integration** — decision chain: whitelist → fast-lane → critical block → smartReview → escalate
 
 ### Fixed
 
-- **ACTIVATION_THRESHOLD** — whitelist 需要 3 次 allow-always 才激活（之前代码未实现）
-- **`computeCriticalHitRate` 未导出** — 已添加到 export block
+- **ACTIVATION_THRESHOLD** — whitelist requires 3 allow-always to activate (previously unimplemented in code)
+- **`computeCriticalHitRate` not exported** — added to export block
 
 ---
 
