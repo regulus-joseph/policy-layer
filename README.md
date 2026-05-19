@@ -587,13 +587,17 @@ policy-layer/
 
 ---
 
-## Phase 2: Security Learning via Memory-Recall
+## Future Work
 
-### Goal
+### Adaptive Sigmoid Feedback (Self-Tuning Controller)
 
-Enable the Agent to proactively query past security decisions for similar commands before executing tools.
+The current sigmoid has fixed parameters (`midpoint=0.58`, `steepness=0.10`). These can be made to adapt to user feedback over time, forming a closed-loop controller.
 
-### Flow
+### Security Learning via Memory-Recall (Phase 2 — Planned)
+
+**Current storage:** JSONL append log (`approval.jsonl`). No LanceDB used yet.
+
+**Planned flow:** Enable the Agent to proactively query past security decisions for similar commands before executing tools.
 
 ```
 User Input
@@ -606,7 +610,7 @@ User Input
   → after_tool_call: append to LanceDB
 ```
 
-### Payload Extension Fields
+**Payload Extension Fields (planned)**
 
 | Field              | Source                      | Description                           |
 | ------------------ | --------------------------- | ------------------------------------- |
@@ -614,26 +618,16 @@ User Input
 | `matched_patterns` | `detectDangerousPatterns()` | List of triggered pattern labels      |
 | `risk_severity`    | Derived                     | critical / high / medium / low        |
 
-### Implementation Steps
-
+**Implementation steps (planned):**
 1. **LanceDB Writer** — async writer in `before_tool_call` writing verdict records to dedicated LanceDB table (`~/.policy-layer/verdicts.lance`)
 2. **Query Hook in `before_prompt_build`** — before LLM decides on a tool, query LanceDB for similar intent's past verdicts, inject summary into prompt
 3. **Leverage memory-recall infrastructure** — reuse `bge-m3` embedding + L2 FTS + L3 graph expansion, with isolated LanceDB namespace
 4. **Historical data migration** — `tools/query_approval.py --export` migrates approval.jsonl records to LanceDB
 
-### Why a Separate LanceDB?
-
+**Why a Separate LanceDB?**
 - Policy Layer verdict data has a different schema (command + patterns + verdict) vs memory-recall (6w + category + conversation context)
 - Isolation keeps memory-recall unchanged for other projects
 - Enables future embedding-based retrieval of similar past commands without LLM calls
-
----
-
-## Future Work
-
-### Adaptive Sigmoid Feedback (Self-Tuning Controller)
-
-The current sigmoid has fixed parameters (`midpoint=0.58`, `steepness=0.10`). These can be made to adapt to user feedback over time, forming a closed-loop controller.
 
 #### The Problem
 
@@ -696,8 +690,8 @@ The adaptive version can be implemented as a slow-moving background process that
 | Language         | TypeScript                             |
 | Testing          | Vitest (103 tests)                     |
 | LLM Review       | Ollama (`llama3.3`, local inference)   |
-| Storage          | JSONL (append log), LanceDB (Phase 2)  |
-| Embedding        | bge-m3 (Phase 2 planned)               |
+| Storage          | JSONL (append log), LanceDB (future)     |
+| Embedding        | bge-m3 (future work)                      |
 | Visualization    | Native HTML + CSS + JS (no build step) |
 
 

@@ -526,13 +526,17 @@ policy-layer/
 
 ---
 
-## Phase 2: 通过 Memory-Recall 实现安全学习
+## 未来工作
 
-### 目标
+### 自适应 Sigmoid 反馈（自调优控制器）
 
-让 Agent 在执行工具前，主动查询历史同类命令的安全决策记录。
+当前 sigmoid 参数固定（`midpoint=0.58`, `steepness=0.10`）。可随用户反馈自动调整，形成闭环控制器。
 
-### 流程
+### 通过 Memory-Recall 实现安全学习（计划中）
+
+**当前存储：** JSONL 追加日志（`approval.jsonl`），未使用 LanceDB。
+
+**计划流程：** 让 Agent 在执行工具前，主动查询历史同类命令的安全决策记录。
 
 ```
 用户输入
@@ -545,7 +549,7 @@ policy-layer/
   → after_tool_call: 追加到 LanceDB
 ```
 
-### Payload 扩展字段
+**Payload 扩展字段（计划中）**
 
 | 字段 | 来源 | 说明 |
 |------|------|------|
@@ -553,15 +557,13 @@ policy-layer/
 | `matched_patterns` | `detectDangerousPatterns()` | 触发的模式标签列表 |
 | `risk_severity` | 派生 | critical / high / medium / low |
 
-### 实现步骤
-
+**实现步骤（计划中）：**
 1. **LanceDB Writer** — `before_tool_call` 中异步写入 verdict 记录到专用 LanceDB 表（`~/.policy-layer/verdicts.lance`）
 2. **Query Hook** — 在 LLM 决策工具前，查询 LanceDB 获取同类意图的历史决策摘要，注入 prompt
 3. **复用 memory-recall 基础设施** — 复用 `bge-m3` embedding + L2 FTS + L3 图扩展，但使用独立的 LanceDB 命名空间
 4. **历史数据迁移** — `tools/query_approval.py --export` 将 approval.jsonl 历史记录导入 LanceDB
 
-### 为什么独立 LanceDB？
-
+**为什么独立 LanceDB？**
 - Policy Layer verdict 数据结构（命令 + 模式 + 决策）与 memory-recall（6w + category + 对话上下文）不同
 - 隔离后 memory-recall 不受影响，其他项目仍可正常使用
 - 未来支持基于 embedding 的相似命令检索，无需 LLM 调用
@@ -576,6 +578,6 @@ policy-layer/
 | 语言 | TypeScript |
 | 测试 | Vitest（103 tests） |
 | LLM 复核 | Ollama（`qwen2.5:3b`，本地推理） |
-| 存储 | JSONL（追加日志）、LanceDB（Phase 2） |
-| 嵌入 | bge-m3（Phase 2 计划） |
+| 存储 | JSONL（追加日志）、LanceDB（未来计划） |
+| 嵌入 | bge-m3（未来工作计划） |
 | 可视化 | 原生 HTML + CSS + JavaScript（无需构建） |
