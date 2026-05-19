@@ -1,4 +1,4 @@
-# Policy Layer — v0.4.2
+# Policy Layer — v0.5.0
 
 **OpenClaw Gateway Plugin：** 4 层安全执行框架 + D' 认知行为评分系统（CBS）
 
@@ -31,10 +31,11 @@ LLM 下一次决策前 → before_prompt_build（注入认知状态评分）
 | 🛡️ 危险命令拦截 | Layer 1 模式匹配，16 类 CRITICAL 命令立即拦截，不经 LLM |
 | 🤖 LLM 智能复核 | HIGH/MEDIUM 命令通过 Ollama 本地模型二次复核（approve/deny/escalate） |
 | 🚀 快车道 | 同一无害命令连续 5 次审批通过 → 跳过 LLM 复核，直接放行 |
-| 📊 认知状态评分 | D' CBS 算法，4 维度（成功率/工具失败/上下文命中率/严重度）实时评分 |
+| 📚 已学习的白名单 | 用户点击"始终允许"3次 → 模式自动学习，持久化到 `learned-whitelist.jsonl`（重启不丢失） |
+| 📊 认知状态评分 | D' trust score，8 个信号（成功率/工具失败/严重度/critical命中/审批通过/审批拒绝/用户反馈/快车道使用） |
 | 🔒 密钥泄漏检测 | after_tool_call 扫描工具输出，39 种密钥模式，泄露即告警 |
 | 📝 决策审计日志 | 全部决策写入 `~/.openclaw/logs/approval.jsonl`（追加式 JSONL） |
-| 🗳️ 用户反馈闭环 | `report-bad-result` 用户可标记错误决策 → 分数下降 + 加入黑名单 |
+| 🗳️ 用户反馈闭环 | `report-bad-result` 用户可标记错误决策 → 信任度下降（不自动加黑名单） |
 | 📈 可视化仪表盘 | 从 approval.jsonl 生成 HTML 仪表盘，支持按模式筛选和时序分析 |
 
 ---
@@ -47,7 +48,7 @@ openclaw gateway restart
 
 # 运行测试
 cd ~/projects/policy-layer
-npm test                  # 103 tests
+npm test                  # 166 tests
 
 # 更新可视化仪表盘
 python3 docs/generate-analytics.py
@@ -76,9 +77,11 @@ Tool Call 输入
      │      └─ 在 prompt 中注入 <openclaw_state> XML 标签
      │         Agent 读取后知道自己的 D' 分数并主动调整行为
      │      ↓
-     ├─ Layer 3: Smart Review（HIGH/MEDIUM 专用）
+     ├─ Layer 3: Smart Review + 白名单
+     │      ├─ 已学习的白名单（持久化，文件存储，重启不丢失）
+     │      ├─ Fast Lane（内存，5 次 approve，重启重置）
      │      ├─ Ollama 本地推理（approve / deny / escalate）
-     │      ├─ Fast Lane：连续 5 次 approve → 跳过 LLM 复核
+     │      ├─ allow-always → 持久化到 learned-whitelist.jsonl
      │      └─ Approval Log：所有决策追加写入 approval.jsonl
      │      ↓
      └─ Layer 4: Secret Leak Detection（after_tool_call）
@@ -217,7 +220,52 @@ fast_lane_counter: Map<pattern_label, consecutive_approvals>
 // 重置条件：遇到任何 deny / escalate / 新命令模式
 ```
 
-#### 3.3 Approval Log（`approval-log.ts`）
+#### 3.3 学习白名单（`learned-whitelist.ts`）
+
+**设计动机：** 当用户对同一命令模式反复点击"始终允许"（≥3次）后，系统学会自动批准同类命令，无需再次提示。
+
+**激活门槛：** 每个通用化 pattern 需要 **3 次 allow-always** 才能激活。
+
+**决策链（before_tool_call）：**
+```
+1. 无危险 pattern → PASS
+2. 安全目录 bypass → PASS（node_modules, dist, build, tmp 等）
+3. 白名单匹配（持久化，active: count ≥ 3）→ PASS  ← 已学习的白名单
+4. critical pattern → BLOCK
+5. Fast-lane 匹配（内存，5 次 approve）→ PASS  ← 临时自动放行
+6. Smart Review（Ollama LLM）→ approve / deny / escalate
+7. escalate → requireApproval → allow-once / allow-always / deny
+```
+
+**allow-always 流程：**
+1. 用户在审批对话框点击"始终允许"
+2. `generalizePattern()` 提取命令结构：
+   - `"rm -rf node_modules"` → `"rm -rf {node_modules}"`
+   - `"rm -rf dist"` → `"rm -rf {dist}"`（与 node_modules 不同的 entry）
+3. 检查 `NEVER_WHITELIST_PATTERNS` — 命中则永不加入白名单
+4. 在已有 entry 上递增 `count`，或新建 entry（count=1, active=false）
+5. **只有当 count ≥ 3** → `active=true` → 下次同类命令直接 bypass
+6. 所有变更记录到 `whitelist-audit.jsonl`
+
+**NEVER_WHITELIST_PATTERNS**（绝对黑名单——永不学习）：
+- `rm -rf /`, `rm -rf /*` — 系统删除
+- `curl | sh`, `wget | sh` — 远程代码执行
+- `kill -9 -1` — 终止所有进程
+- Fork 炸弹，gateway 停止，pkill gateway
+
+**持久化白名单 entry**（`evolveMode=true`，默认 `false`）：
+```json
+// ~/.openclaw/logs/learned-whitelist.jsonl
+{"pattern":"rm -rf {node_modules}","originalCommand":"rm -rf node_modules","addedAt":"2026-05-19T12:00:00Z","addedBy":"allow-always","count":3,"active":true}
+```
+
+**审计日志**（`~/.openclaw/logs/whitelist-audit.jsonl`）：
+```json
+{"action":"add","pattern":"rm -rf {node_modules}","count":1,"active":false,"addedBy":"allow-always","timestamp":"2026-05-19T12:00:00Z"}
+{"action":"activate","pattern":"rm -rf {node_modules}","count":3,"active":true,"addedBy":"allow-always","timestamp":"2026-05-19T12:05:00Z"}
+```
+
+#### 3.4 审批日志（`approval-log.ts`）（`approval-log.ts`）
 
 所有决策（approve / deny / escalate / fast_lane / blocked）追加写入：
 
@@ -265,7 +313,7 @@ fast_lane_counter: Map<pattern_label, consecutive_approvals>
 
 ```
 policy-layer$ security-status
-🛡️  Policy Layer v0.4.2 — Layers 1–4 Active ✅
+🛡️  Policy Layer v0.5.0 — Layers 1–4 Active ✅
 Fast Lane:
   rm_recursive (counter=3/5)
   pipe_to_shell (counter=5/5 ✅ FAST LANE ACTIVE)
@@ -376,7 +424,7 @@ openclaw logs --tail 20
 
 ```bash
 cd ~/projects/policy-layer
-npm test                  # 103 tests（61 单元 + 42 集成）
+npm test                  # 166 tests（61 单元 + 42 集成）
 ```
 
 ### 测试覆盖
