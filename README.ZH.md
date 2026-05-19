@@ -370,9 +370,8 @@ report-bad-result 把 node_modules 删错了
 
 效果：
 1. 最后一次工具调用的 `success` → `false`，`severity` → `600`
-2. D' 分数下降，Agent 被"惩罚"
-3. 该命令模式自动加入 `USER_BLACKLIST_PATTERNS`
-4. 持久化到 `~/.openclaw/logs/blacklist.jsonl`，下次启动时自动加载
+2. D' 分数下降，Agent 信任度降低
+3. **如需永久屏蔽命令**，请使用 `security-add-blacklist <command>`（不会自动添加）
 
 ---
 

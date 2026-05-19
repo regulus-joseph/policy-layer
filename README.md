@@ -38,7 +38,7 @@ Next LLM Decision → before_prompt_build (inject cognitive state score)
 | 📊 Cognitive State Scoring    | D' trust score — 8 signals (success, tool_fail, severity, critical_hit, approvals, denials, nudges, fast_lane) |
 | 🔒 Secret Leak Detection      | `after_tool_call` scans tool output for 39 secret patterns; leaks trigger warning                              |
 | 📝 Decision Audit Log         | All decisions appended to `~/.openclaw/logs/approval.jsonl` (JSONL, append-only)                               |
-| 🗳️ User Feedback Loop         | `report-bad-result` — user flags wrong decisions → score drops + added to blacklist                            |
+| 🗳️ User Feedback Loop         | `report-bad-result` — user flags bad result → trust penalty; use `security-add-blacklist` to permanently block |
 | 📈 Analytics Dashboard        | Generate HTML dashboard from approval.jsonl, with pattern filtering and timeline analysis                      |
 
 ---
@@ -421,9 +421,8 @@ report-bad-result accidentally deleted node_modules
 
 Effects:
 1. Last tool call's `success` → `false`, `severity` → `600`
-2. D' score drops (Agent is "penalized")
-3. Command pattern auto-added to `USER_BLACKLIST_PATTERNS`
-4. Persisted to `~/.openclaw/logs/blacklist.jsonl`, auto-loaded on next startup
+2. D' score drops (Agent trust is penalized)
+3. **To permanently block a command**, use `security-add-blacklist <command>` (not auto-added)
 
 ---
 
