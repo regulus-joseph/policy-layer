@@ -272,13 +272,15 @@ fast_lane_counter: Map<pattern_label, consecutive_approvals>
 
 #### 3.3 Learned Whitelist (`learned-whitelist.ts`)
 
-**Motivation:** When a user clicks "Always Allow" repeatedly for the same command pattern, the system learns to auto-approve similar commands without prompting.
+**Motivation:** When a user clicks "Always Allow" repeatedly for the same command pattern (3 times), the system learns to auto-approve similar commands without prompting.
+
+**Activation threshold:** Each generalized pattern requires **3 allow-always** triggers before activating.
 
 **Decision chain (before_tool_call):**
 ```
 1. No patterns detected → PASS
 2. Safe directory bypass → PASS (node_modules, dist, build, tmp, etc.)
-3. Whitelist match (persistent, file-based) → PASS  ← learned whitelist
+3. Whitelist match (persistent, active: count ≥ 3) → PASS  ← learned whitelist
 4. Critical pattern → BLOCK
 5. Fast-lane match (memory, 5-approve) → PASS      ← temporary auto-approve
 6. Smart review (Ollama LLM) → approve / deny / escalate
@@ -289,9 +291,11 @@ fast_lane_counter: Map<pattern_label, consecutive_approvals>
 1. User clicks "Always Allow" in approval dialog
 2. `generalizePattern()` extracts command structure:
    - `"rm -rf node_modules"` → `"rm -rf {node_modules}"`
+   - `"rm -rf dist"` → `"rm -rf {dist}"` (different entry from node_modules)
 3. Checks `NEVER_WHITELIST_PATTERNS` — if matched, never whitelisted
-4. Checks `canWhitelist()` — not already in whitelist
-5. Persists to `~/.openclaw/logs/learned-whitelist.jsonl`
+4. Increments `count` on existing entry, or creates new entry (count=1, active=false)
+5. **Only when count ≥ 3** → `active=true` →下次同类命令直接 bypass
+6. All changes logged to `whitelist-audit.jsonl`
 
 **NEVER_WHITELIST_PATTERNS** (absolute blocklist — never learnable):
 - `rm -rf /`, `rm -rf /*` — system deletion
@@ -299,10 +303,16 @@ fast_lane_counter: Map<pattern_label, consecutive_approvals>
 - `kill -9 -1` — kill all processes
 - Fork bombs, gateway stop, pkill gateway
 
-**Persistent whitelist** (`evolveMode=true`, default `false`):
+**Persistent whitelist entries** (`evolveMode=true`, default `false`):
 ```json
 // ~/.openclaw/logs/learned-whitelist.jsonl
-{"pattern":"rm -rf {node_modules}","originalCommand":"rm -rf node_modules","addedAt":"2026-05-19T12:00:00Z","addedBy":"allow-always","count":1}
+{"pattern":"rm -rf {node_modules}","originalCommand":"rm -rf node_modules","addedAt":"2026-05-19T12:00:00Z","addedBy":"allow-always","count":3,"active":true}
+```
+
+**Audit log** (`~/.openclaw/logs/whitelist-audit.jsonl`):
+```json
+{"action":"add","pattern":"rm -rf {node_modules}","count":1,"active":false,"addedBy":"allow-always","timestamp":"2026-05-19T12:00:00Z"}
+{"action":"activate","pattern":"rm -rf {node_modules}","count":3,"active":true,"addedBy":"allow-always","timestamp":"2026-05-19T12:05:00Z"}
 ```
 
 #### 3.4 Approval Log (`approval-log.ts`)
