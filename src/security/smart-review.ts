@@ -3,7 +3,7 @@ import { PatternMatch } from './patterns';
 export type SmartReviewResult = 'approve' | 'deny' | 'escalate';
 
 const OLLAMA_URL = 'http://localhost:11434/api/generate';
-const OLLAMA_MODEL = 'llama3.2';
+const OLLAMA_MODEL = 'qwen2.5:3b';
 const TIMEOUT_MS = 10_000;
 
 const FALSE_POSITIVE_GUIDANCE = `

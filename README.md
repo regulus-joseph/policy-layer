@@ -32,7 +32,7 @@ Next LLM Decision → before_prompt_build (inject cognitive state score)
 | Feature | Description |
 |---------|-------------|
 | 🛡️ Dangerous Command Blocking | Layer 1 pattern matching — 16 CRITICAL patterns blocked immediately, no LLM review |
-| 🤖 LLM Smart Review | HIGH/MEDIUM commands go through local Ollama + `llama3.2` for second review (approve/deny/escalate) |
+| 🤖 LLM Smart Review | HIGH/MEDIUM commands go through local Ollama + `qwen2.5:3b` for second review (approve/deny/escalate) |
 | 🚀 Fast Lane | Same harmless command approved 5 times consecutively → skip LLM review, fast-track |
 | 📚 Learned Whitelist | User clicks "Always Allow" → pattern auto-learned to `learned-whitelist.jsonl` (persistent, survive restart) |
 | 📊 Cognitive State Scoring | D' trust score — 8 signals (success, tool_fail, severity, critical_hit, approvals, denials, nudges, fast_lane) |
