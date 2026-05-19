@@ -83,7 +83,7 @@ def print_result(r, score=None):
     session = r.get("sessionId", "?")
 
     score_str = f"[{score:.2f}]" if score else "       "
-    result_icon = {"deny": "🚫", "escalate": "⚠️", "approve": "✅", "fast_lane": "⚡"}.get(result, "❓")
+    result_icon = {"deny": "🚫", "escalate": "⚠️", "approve": "✅", "fast_lane": "⚡", "allow-once": "🔵", "allow-always": "🟢"}.get(result, "❓")
     pattern_str = ", ".join(patterns[:3]) if patterns else "-"
 
     print(f"{score_str} {ts} {result_icon} {result:10s} | {cmd}")
@@ -140,7 +140,7 @@ def main():
     parser = argparse.ArgumentParser(description="Query approval history")
     parser.add_argument("--query", help="Search by command text")
     parser.add_argument("--pattern", help="Search by pattern name")
-    parser.add_argument("--result", choices=["deny", "escalate", "approve", "fast_lane"], help="Filter by result")
+    parser.add_argument("--result", choices=["deny", "escalate", "approve", "fast_lane", "allow-once", "allow-always"], help="Filter by result")
     parser.add_argument("--recent", type=int, help="Show N most recent records")
     parser.add_argument("--limit", type=int, default=10, help="Max results")
     parser.add_argument("--all", action="store_true", help="Show all records (no filter)")

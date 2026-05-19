@@ -764,10 +764,19 @@ const plugin = {
               allowedDecisions: decisions,
               onResolution: async (decision: string) => {
                 const m = getOrCreateMetrics(sessionKey, pluginCfg);
+                const resolutionRecord: Partial<ApprovalRecord> = {
+                  command: normalized,
+                  rawCommand: rawCmd,
+                  tool: toolCall.toolName,
+                  sessionId: sessionKey,
+                  patterns: patterns.map(p => p.label),
+                };
                 if (decision === 'allow-once') {
                   m.trustSignals.approvalPasses++;
+                  await logApproval({ ...resolutionRecord, result: 'allow-once', timestamp: new Date().toISOString() } as ApprovalRecord);
                 } else if (decision === 'allow-always') {
                   m.trustSignals.approvalPasses++;
+                  await logApproval({ ...resolutionRecord, result: 'allow-always', timestamp: new Date().toISOString() } as ApprovalRecord);
                   if (cfg.evolveMode && whitelistablePatterns.length > 0) {
                     try {
                       const generalized = generalizePattern(effectiveCmd, safe);
@@ -788,6 +797,7 @@ const plugin = {
                   }
                 } else if (decision === 'deny') {
                   m.trustSignals.approvalDenials++;
+                  await logApproval({ ...resolutionRecord, result: 'deny', timestamp: new Date().toISOString() } as ApprovalRecord);
                 }
               },
             },
