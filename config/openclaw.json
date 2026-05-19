@@ -1,0 +1,36 @@
+{
+  "plugins": {
+    "allow": ["policy-layer"],
+    "entries": {
+      "policy-layer": {
+        "enabled": true,
+        "hooks": {
+          "allowPromptInjection": true
+        },
+        "config": {
+          "reportToUser": true,
+          "sensoriumWindow": 20,
+          "dGateThreshold": 0.35,
+          "sigmoidMidpoint": 0.58,
+          "sigmoidSteepness": 0.10,
+          "sigmoidAcceptBelow": 0.15,
+          "sigmoidRejectAbove": 0.85,
+          "logLevel": "info",
+          "evolveMode": false,
+          "safeDirs": ["node_modules", "dist", "build", ".git/objects", "__pycache__", ".pytest_cache", "tmp"]
+        }
+      }
+    },
+    "installs": {
+      "policy-sensorium": {
+        "source": "path",
+        "sourcePath": "$HOME/projects/policy-layer",
+        "installPath": "$HOME/projects/policy-layer",
+        "version": "0.5.0"
+      }
+    },
+    "load": {
+      "paths": ["$HOME/projects/policy-layer"]
+    }
+  }
+}
