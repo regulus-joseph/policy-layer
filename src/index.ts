@@ -851,7 +851,7 @@ const plugin = {
 
     api.registerCommand({
       name: "report-bad-result",
-      description: "Mark the last command as producing a bad result. Usage: report-bad-result [optional reason]",
+      description: "Mark the last command/tool result as bad. Usage: report-bad-result [optional reason]. Note: does NOT auto-blacklist — use security-add-blacklist for that.",
       acceptsArgs: true,
       handler: async (ctx) => {
         const sessionKey = ctx.sessionKey?.trim() || (ctx.agentId && ctx.sessionId ? `${ctx.agentId}:${ctx.sessionId}` : null);
@@ -865,15 +865,19 @@ const plugin = {
           cycle.success = false;
           cycle.reason = `BAD_RESULT: ${reason}`;
           cycle.severity = Math.max(cycle.severity, 600);
-          doLog(api, "warn", `User reported bad result: ${reason}, severity raised to ${cycle.severity}`);
         }
 
         if (lastCommand) {
-          await addToBlacklist(lastCommand);
-          doLog(api, "warn", `[policy-layer] Blacklisted: ${lastCommand}`);
+          metrics.trustSignals.userNudges++;
         }
-        doLog(api, "warn", `[policy-layer] Punishing agent for bad result: ${reason}`);
-        return { text: `[policy-layer] Recorded bad result: "${reason}". Blacklisted: "${lastCommand || 'unknown'}". Agent will be penalized.` };
+
+        doLog(api, "warn", `[policy-layer] User bad result feedback: "${reason}". Trust penalty applied. Last command was: "${lastCommand || 'unknown'}".`);
+        return {
+          text: `[policy-layer] Recorded bad result: "${reason}". ` +
+            `Agent trust score will be penalized. ` +
+            `Last command was: "${lastCommand || 'unknown'}". ` +
+            `To permanently block a command, use: security-add-blacklist <command>`,
+        };
       },
     });
 
