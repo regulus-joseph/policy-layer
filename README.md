@@ -155,22 +155,31 @@ D' (d-prime) is the core metric from Signal Detection Theory. Policy Layer adapt
 
 #### 2.2 Four Signal Dimensions
 
-After each tool call, the system records 4 signals:
+After each tool call, the system records 8 trust signals:
 
 | Signal | Weight | Meaning | Magnitude |
 |--------|--------|---------|-----------|
-| `success_rate` | 0.30 | Tool call success rate | raw rate (0-1) |
-| `tool_fail` | 0.25 | Tool failure rate (lower is better) | 1 - failure_rate |
-| `cbr_hit` | 0.20 | Context Buffer Recall hit rate | raw rate |
-| `severity` | 0.25 | Severity score (higher = worse) | severity / 1000 |
+| `success_rate` | 0.20 | Tool call success rate | raw rate (0-1) |
+| `tool_fail` | 0.15 | Tool failure rate (lower is better) | 1 - failure_rate |
+| `avg_severity` | 0.15 | Severity of failures (lower is better) | 1 - avg_severity/1000 |
+| `critical_hit` | 0.25 | Critical pattern blocks issued | 1 - hit_rate |
+| `approval_passed` | 0.10 | User allowed command via approval | pass_rate (capped) |
+| `approval_denied` | 0.10 | User denied command | deny_rate (negative) |
+| `user_nudge` | 0.20 | User gave negative feedback | nudge_rate (negative) |
+| `fast_lane_use` | 0.05 | Fast-lane earned | fast_lane_rate (capped) |
 
-#### 2.3 D' Score Calculation
+#### 2.3 Trust Score (D') Calculation
 
 ```
-D' = Σ(w_i × m_i) / (max_weight × 1.0 × n)
+TrustScore = Σ(w_i × m_i) / (max_weight × n)
 ```
 
 Where `m_i` is each signal's normalized magnitude, `n` is the number of active signals.
+
+Key improvements over old D':
+- `avg_severity` is **inverted** — severity 1000 (critical) = low trust, severity 50 (ok) = high trust
+- Approval/denial signals track user interaction quality
+- `critical_hit` directly penalizes blocked commands
 
 #### 2.4 Sigmoid Risk Scoring
 

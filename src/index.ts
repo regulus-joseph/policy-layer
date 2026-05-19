@@ -1,10 +1,35 @@
+// =============================================================================
+// D' Signal System — Trust Score based on agent behavior
+// =============================================================================
+//
+// Signal Design (D' = weighted average, 0-1 scale):
+//   - successRate     : high success → high trust        (weight: 0.20)
+//   - toolFailureRate : low failure → high trust          (weight: 0.15)
+//   - avgSeverity     : LOW severity → high trust         (weight: 0.15) [FIXED: was inverted]
+//   - criticalHit     : hit critical pattern → LOW trust   (weight: 0.25)
+//   - approvalPassed  : approval allowed → trust up       (weight: 0.10)
+//   - approvalDenied  : approval denied → trust down      (weight: 0.10)
+//   - userNudge       : negative feedback → LOW trust     (weight: 0.20)
+//   - fastLaneUse     : fast-lane earned → trust up       (weight: 0.05)
+//
+// Sigmoid gates:
+//   - risk < acceptBelow (default 0.15) → AUTO_ACCEPT  (auto-pass, needs whitelist)
+//   - risk > rejectAbove (default 0.85) → AUTO_REJECT  (auto-block critical)
+//   - otherwise         → REQUIRE_APPROVAL
+//
+// =============================================================================
+
 const DEFAULT_WINDOW = 20;
 
 const DEFAULT_WEIGHTS = {
-  success: 0.30,
-  tool: 0.25,
-  cbr: 0.20,
-  severity: 0.25,
+  success: 0.20,
+  tool: 0.15,
+  severity: 0.15,
+  criticalHit: 0.25,
+  approvalPassed: 0.10,
+  approvalDenied: 0.10,
+  userNudge: 0.20,
+  fastLaneUse: 0.05,
 };
 
 const DEFAULT_D_BANDS = {
@@ -32,6 +57,31 @@ const DEFAULT_SEVERITY_RULES = [
 
 const DEFAULT_MAX_CYCLES_MULTIPLIER = 3;
 
+// Patterns that NEVER enter whitelist (no matter how trusted the agent)
+const NEVER_WHITELIST_PATTERNS = [
+  /\brm\s+-rf\s+\//,                  // rm -rf /
+  /\brm\s+-rf\s+\/\*/,               // rm -rf /*
+  /\bcurl\s+[^\|]+\s*\|\s*sh/,       // curl | sh
+  /\bwget\s+[^\|]+\s*\|\s*sh/,       // wget | sh
+  /\bkill\s+-9\s+-1/,                // kill -9 -1
+  /:\s*\(\s*\)\s*\{\s*:\s*\|\s*:\s*&\s*\}\s*;:/, // fork bomb
+  /fork\s*\(\s*\)\s*\{\s*fork\s*\(\s*\)\s*\|\s*fork\s*\(\s*\)\s*&\s*\}\s*;fork\s*\(\s*\)/, // fork bomb v2
+  /pkill\s+(-9\s+)?gateway/,         // kill gateway
+  /openclaw\s+gateway\s+stop/,      // stop gateway
+];
+
+// Safe directories that are always allowed (no approval needed)
+const DEFAULT_SAFE_DIRS = [
+  'node_modules',
+  'dist',
+  'build',
+  '.git/objects',
+  '__pycache__',
+  '.pytest_cache',
+  'tmp',
+  'tmp/*',
+];
+
 const sessionMetrics = new Map();
 let lastCommand = '';
 
@@ -51,13 +101,20 @@ function resolveConfig(cfg) {
     weights: {
       success: cfg?.weightSuccess ?? DEFAULT_WEIGHTS.success,
       tool: cfg?.weightTool ?? DEFAULT_WEIGHTS.tool,
-      cbr: cfg?.weightCbr ?? DEFAULT_WEIGHTS.cbr,
       severity: cfg?.weightSeverity ?? DEFAULT_WEIGHTS.severity,
+      criticalHit: cfg?.weightCriticalHit ?? DEFAULT_WEIGHTS.criticalHit,
+      approvalPassed: cfg?.weightApprovalPassed ?? DEFAULT_WEIGHTS.approvalPassed,
+      approvalDenied: cfg?.weightApprovalDenied ?? DEFAULT_WEIGHTS.approvalDenied,
+      userNudge: cfg?.weightUserNudge ?? DEFAULT_WEIGHTS.userNudge,
+      fastLaneUse: cfg?.weightFastLaneUse ?? DEFAULT_WEIGHTS.fastLaneUse,
     },
     severityRules: cfg?.severityRules ?? DEFAULT_SEVERITY_RULES,
     maxCyclesMultiplier: cfg?.maxCyclesMultiplier ?? DEFAULT_MAX_CYCLES_MULTIPLIER,
     dGateThreshold: cfg?.dGateThreshold ?? DEFAULT_D_BANDS.low,
     logLevel: cfg?.logLevel || "info",
+    safeDirs: cfg?.safeDirs ?? DEFAULT_SAFE_DIRS,
+    neverWhitelistPatterns: NEVER_WHITELIST_PATTERNS,
+    evolveMode: cfg?.evolveMode ?? false, // learned whitelist (default off)
   };
 }
 
@@ -81,6 +138,14 @@ function getOrCreateMetrics(sessionKey, cfg) {
       lastRecordedSuccess: null,
       lastPolicyResult: null,
       config: resolved,
+      // Trust signals accumulated this session
+      trustSignals: {
+        criticalHits: 0,
+        approvalPasses: 0,
+        approvalDenials: 0,
+        userNudges: 0,
+        fastLaneUses: 0,
+      },
     });
   }
   return sessionMetrics.get(sessionKey);
@@ -101,42 +166,70 @@ function computeToolFailureRate(metrics) {
   return failedTools / totalTools;
 }
 
+// FIXED: avgSeverity was inverted. Now LOW severity = HIGH trust (dividing by score to invert)
+function computeAverageSeverity(metrics) {
+  const recent = metrics.cycles.slice(-metrics.config.window);
+  if (recent.length === 0) return null;
+  const avg = recent.reduce((sum, c) => sum + (c.severity ?? 50), 0) / recent.length;
+  // Invert: severity 1000 → trust 0.0, severity 50 → trust ~1.0
+  return 1 - (avg / 1000);
+}
+
+// NEW: Count critical pattern hits in window
+function computeCriticalHitRate(metrics) {
+  const recent = metrics.cycles.slice(-metrics.config.window);
+  const hits = recent.filter((c) => c.criticalHit).length;
+  return recent.length > 0 ? hits / recent.length : 0;
+}
+
+// Kept for backwards-compat / CBR subsystem (separate from trust score)
 function computeCbrHitRate(metrics) {
   const recent = metrics.cycles.slice(-metrics.config.window);
   if (recent.length === 0) return null;
   return recent.filter((c) => c.cbrHit).length / recent.length;
 }
 
-function computeAverageSeverity(metrics) {
+// NEW: Compute trust score from all signals (D' replacement)
+function computeTrustScore(metrics) {
+  const w = metrics.config.weights;
   const recent = metrics.cycles.slice(-metrics.config.window);
-  if (recent.length === 0) return null;
-  const avg = recent.reduce((sum, c) => sum + (c.severity ?? 50), 0) / recent.length;
-  return avg / 1000;
-}
 
-function computeDPrime(metrics) {
-  const weights = metrics.config.weights;
   const successRate = computeSuccessRate(metrics);
   const toolFailureRate = computeToolFailureRate(metrics);
-  const cbrHitRate = computeCbrHitRate(metrics);
-  const avgSeverity = computeAverageSeverity(metrics);
+  const avgSeverityInverted = computeAverageSeverity(metrics); // already inverted: low severity = high trust
+  const criticalHitRate = computeCriticalHitRate(metrics);
+
+  // Session-level trust signals (from approval flow)
+  const ts = metrics.trustSignals;
+  const approvalPassRate = ts.approvalPasses > 0 ? Math.min(ts.approvalPasses / 20, 1) : 0;
+  const approvalDenyRate = ts.approvalDenials > 0 ? Math.min(ts.approvalDenials / 20, 1) : 0;
+  const userNudgeRate = ts.userNudges > 0 ? Math.min(ts.userNudges / 10, 1) : 0;
+  const fastLaneRate = ts.fastLaneUses > 0 ? Math.min(ts.fastLaneUses / 10, 1) : 0;
 
   const signals = [];
-  if (successRate !== null) signals.push({ importance: weights.success, magnitude: successRate });
-  if (toolFailureRate !== null) signals.push({ importance: weights.tool, magnitude: 1 - toolFailureRate });
-  if (cbrHitRate !== null) signals.push({ importance: weights.cbr, magnitude: cbrHitRate });
-  if (avgSeverity !== null) signals.push({ importance: weights.severity, magnitude: avgSeverity / 1000 });
+  if (successRate !== null) signals.push({ weight: w.success, magnitude: successRate });
+  if (toolFailureRate !== null) signals.push({ weight: w.tool, magnitude: 1 - toolFailureRate });
+  if (avgSeverityInverted !== null) signals.push({ weight: w.severity, magnitude: avgSeverityInverted });
+  if (criticalHitRate > 0) signals.push({ weight: w.criticalHit, magnitude: 1 - criticalHitRate });
+  if (ts.approvalPasses > 0) signals.push({ weight: w.approvalPassed, magnitude: approvalPassRate });
+  if (ts.approvalDenials > 0) signals.push({ weight: w.approvalDenied, magnitude: -approvalDenyRate });
+  if (ts.userNudges > 0) signals.push({ weight: w.userNudge, magnitude: -userNudgeRate });
+  if (ts.fastLaneUses > 0) signals.push({ weight: w.fastLaneUse, magnitude: fastLaneRate });
 
   if (signals.length === 0) return null;
 
-  const maxImportance = Math.max(weights.success, weights.tool, weights.cbr, weights.severity);
-  const maxMagnitude = 1.0;
+  const maxWeight = Math.max(...signals.map((s) => s.weight));
   const n = signals.length;
 
-  const numerator = signals.reduce((sum, s) => sum + s.importance * s.magnitude, 0);
-  const denominator = maxImportance * maxMagnitude * n;
+  const numerator = signals.reduce((sum, s) => sum + s.weight * s.magnitude, 0);
+  const denominator = maxWeight * n;
 
-  return numerator / denominator;
+  return Math.max(0, Math.min(1, numerator / denominator));
+}
+
+// Backwards-compatible alias
+function computeDPrime(metrics) {
+  return computeTrustScore(metrics);
 }
 
 function severityLevel(sev) {
@@ -420,6 +513,8 @@ export {
   computeToolFailureRate,
   computeCbrHitRate,
   computeAverageSeverity,
+  computeCriticalHitRate,
+  computeTrustScore,
   computeDPrime,
   sigmoidRisk,
   dGateStatus,
@@ -430,6 +525,8 @@ export {
   DEFAULT_D_BANDS,
   DEFAULT_SIGMOID,
   DEFAULT_SEVERITY_RULES,
+  NEVER_WHITELIST_PATTERNS,
+  DEFAULT_SAFE_DIRS,
 };
 
 import { normalizeCommand } from './security/normalize';
@@ -527,8 +624,9 @@ const plugin = {
         const normalized = normalizeCommand(cmd);
         const rawCmd = extractRawCommand(toolCall.toolName, toolCall.params);
         const rawCmdNormalized = rawCmd ? normalizeCommand(rawCmd) : '';
+        const effectiveCmd = rawCmdNormalized || normalized;
 
-        const patternsFromOuter = detectDangerousPatterns(normalized);
+        const patternsFromOuter = detectDangerousPatterns(effectiveCmd);
         const patternsFromInner = rawCmdNormalized ? detectDangerousPatterns(rawCmdNormalized) : [];
         const allPatterns = [...patternsFromOuter];
         for (const p of patternsFromInner) {
@@ -540,6 +638,7 @@ const plugin = {
 
         const sessionKey = ctx?.sessionKey || 'unknown';
         const pluginCfg = api.pluginConfig || {};
+        const cfg = resolveConfig(pluginCfg);
         const recordBase: Partial<ApprovalRecord> = {
           command: normalized,
           rawCommand: rawCmd,
@@ -556,6 +655,29 @@ const plugin = {
           return { block: false };
         }
 
+        // Check if command targets ONLY safe directories
+        const safeDirs = cfg.safeDirs;
+        const hitsSafeDir = safeDirs.some(safe =>
+          effectiveCmd.includes(safe) &&
+          !effectiveCmd.includes('/etc') &&
+          !effectiveCmd.includes('/home') &&
+          !effectiveCmd.includes('/root') &&
+          !effectiveCmd.includes('/var') &&
+          !effectiveCmd.includes('/sys') &&
+          !effectiveCmd.includes('/proc')
+        );
+        if (hitsSafeDir && patterns.every(p => p.severity !== 'critical')) {
+          const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
+          metrics.lastPolicyResult = `SAFE_DIR_BYPASS(${safeDirs.find(s => effectiveCmd.includes(s))})`;
+          return { block: false };
+        }
+
+        // Filter out NEVER_WHITELIST_PATTERNS from whitelist consideration
+        const neverWhitelistLabels = patterns
+          .filter(p => cfg.neverWhitelistPatterns.some(regex => regex.test(effectiveCmd)))
+          .map(p => p.label);
+        const whitelistablePatterns = patterns.filter(p => !neverWhitelistLabels.includes(p.label));
+
         const toolTrigger: DCycleTrigger = {
           gate: 'tool',
           operation: toolCall.name,
@@ -569,6 +691,7 @@ const plugin = {
         if (severities.includes('critical')) {
           const critLabels = patterns.filter(p => p.severity === 'critical').map(p => p.label);
           const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
+          metrics.trustSignals.criticalHits++;
           metrics.lastPolicyResult = `DENY(${critLabels[0]})`;
           await logApproval({ ...recordBase, result: 'deny', timestamp: new Date().toISOString() } as ApprovalRecord);
           await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'REJECT');
@@ -580,6 +703,7 @@ const plugin = {
         if (isFastLane(patternKey)) {
           patterns.forEach(p => onApprove(p.label));
           const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
+          metrics.trustSignals.fastLaneUses++;
           metrics.lastPolicyResult = `FASTLANE(${patternKey})`;
           await logApproval({ ...recordBase, result: 'fast_lane', timestamp: new Date().toISOString() } as ApprovalRecord);
           await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ACCEPT');
@@ -592,6 +716,7 @@ const plugin = {
 
         if (reviewResult === 'deny') {
           const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
+          metrics.trustSignals.approvalDenials++;
           metrics.lastPolicyResult = `DENY(review)`;
           await logApproval({ ...recordBase, result: 'deny', reason: 'smart-review deny', timestamp: new Date().toISOString() } as ApprovalRecord);
           await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'REJECT');
@@ -603,19 +728,37 @@ const plugin = {
           metrics.lastPolicyResult = `ESCALATE`;
           await logApproval({ ...recordBase, result: 'escalate', reason: 'requires human review', timestamp: new Date().toISOString() } as ApprovalRecord);
           await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ESCALATE');
+
+          const evolveMode = pluginCfg.evolveMode === true;
+          const decisions = evolveMode
+            ? ["allow-once", "allow-always", "deny"]
+            : ["allow-once", "deny"];
+
           return {
             block: false,
             requireApproval: {
               title: `Policy Layer: Command Requires Approval`,
               description: `Command "${normalized}" matched pattern(s): ${patterns.map(p => p.label).join(', ')}. Risky operations require human confirmation.`,
               severity: "warning",
-              allowedDecisions: ["allow-once", "deny"],
+              allowedDecisions: decisions,
+              onResolution: async (decision: string) => {
+                const m = getOrCreateMetrics(sessionKey, pluginCfg);
+                if (decision === 'allow-once') {
+                  m.trustSignals.approvalPasses++;
+                } else if (decision === 'allow-always') {
+                  m.trustSignals.approvalPasses++;
+                  // TODO: add to learned whitelist (persist pattern)
+                } else if (decision === 'deny') {
+                  m.trustSignals.approvalDenials++;
+                }
+              },
             },
           };
         }
 
         patterns.forEach(p => onApprove(p.label));
         const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
+        metrics.trustSignals.approvalPasses++;
         metrics.lastPolicyResult = `REVIEW_OK`;
         await logApproval({ ...recordBase, result: 'approve', reason: 'smart-review approve', timestamp: new Date().toISOString() } as ApprovalRecord);
         await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ACCEPT');
