@@ -29,7 +29,7 @@ LLM 下一次决策前 → before_prompt_build（注入认知状态评分）
 | 功能 | 描述 |
 |------|------|
 | 🛡️ 危险命令拦截 | Layer 1 模式匹配，16 类 CRITICAL 命令立即拦截，不经 LLM |
-| 🤖 LLM 智能复核 | HIGH/MEDIUM 命令通过 Ollama 本地模型二次复核（approve/deny/escalate） |
+| 🤖 LLM 智能复核 | HIGH/MEDIUM 命令通过本地 Ollama + `llama3.2` 二次复核（approve/deny/escalate） |
 | 🚀 快车道 | 同一无害命令连续 5 次审批通过 → 跳过 LLM 复核，直接放行 |
 | 📚 已学习的白名单 | 用户点击"始终允许"3次 → 模式自动学习，持久化到 `learned-whitelist.jsonl`（重启不丢失） |
 | 📊 认知状态评分 | D' trust score，8 个信号（成功率/工具失败/严重度/critical命中/审批通过/审批拒绝/用户反馈/快车道使用） |
