@@ -205,21 +205,20 @@ Key improvements over old D':
 
 #### 2.4 Sigmoid Risk Scoring
 
-D' alone is a normalized score (0-1). To produce a human-interpretable risk assessment, D' is passed through a sigmoid function to produce a `risk_score`:
+D' alone is a normalized score (0-1). To produce a human-interpretable risk assessment, D' is passed through an **inverted** sigmoid function — high D' (high trust) yields low risk:
 
 ```
-risk = sigmoid((D' - midpoint) / steepness)
+risk = 1 - sigmoid((D' - midpoint) / steepness)
 ```
 
-The sigmoid maps D' to a probability-like risk value with a smooth transition zone:
+The inverted sigmoid maps D' to a risk value with a smooth transition zone:
 
 ```
-         ┌──────── REJECT (risk >= 0.85) — direct block
-REJECT   │
-  ━━━━━━━╲              ┌──────── ACCEPT (risk <= 0.15) — direct pass
-          ╲─────────────/  ACCEPT
-           ╲ ESCALATE
-            ╲ (0.15 < risk < 0.85) — human confirmation
+ACCEPT   │              ┌──────── ACCEPT (risk <= 0.15) — direct pass
+  ━━━━━━━╲              /
+         ╲──────────────╱   REJECT (risk >= 0.85) — direct block
+          ╲ ESCALATE
+           ╲ (0.15 < risk < 0.85) — human confirmation
 ```
 
 Default sigmoid parameters:
@@ -231,14 +230,16 @@ Default sigmoid parameters:
 | `acceptBelow` | 0.15    | Risk below this → ACCEPT           |
 | `rejectAbove` | 0.85    | Risk above this → REJECT           |
 
-Example mappings:
+Example mappings (with inverted formula):
 
 | D'   | Risk Score | Zone     |
 | ---- | ---------- | -------- |
-| 0.40 | 0.035      | ACCEPT   |
-| 0.55 | 0.622      | ESCALATE |
-| 0.62 | 0.869      | REJECT   |
-| 0.70 | 0.958      | REJECT   |
+| 0.20 | 0.913      | REJECT   |
+| 0.40 | 0.835      | REJECT   |
+| 0.55 | 0.574      | ESCALATE |
+| 0.62 | 0.401      | ESCALATE |
+| 0.80 | 0.131      | ACCEPT   |
+| 0.90 | 0.047      | ACCEPT   |
 
 #### 2.5 Score Injection
 
@@ -246,9 +247,9 @@ In the `before_prompt_build` hook, inject `<openclaw_state>` XML into the LLM co
 
 ```xml
 <openclaw_state>
-  <d_prime>0.62</d_prime>
-  <risk_score>0.869</risk_score>
-  <risk_zone>REJECT</risk_zone>
+  <d_prime>0.80</d_prime>
+  <risk_score>0.131</risk_score>
+  <risk_zone>ACCEPT</risk_zone>
   <cycles_tracked>12</cycles_tracked>
   <session_success_rate>0.95</session_success_rate>
   <last_policy_result>PASS</last_policy_result>
@@ -270,7 +271,7 @@ smartReview(cmd: string, patterns: string[]): ReviewResult
 
 **Review flow:**
 1. Organize command + matched patterns + context into a prompt
-2. Request Ollama (`llama3.3` by default — local inference, no network required)
+2. Request Ollama (`qwen2.5:3b` by default — local inference, no network required)
 3. LLM returns approve / deny / escalate
 4. Result written to Approval Log
 

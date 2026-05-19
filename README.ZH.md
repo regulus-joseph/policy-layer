@@ -220,7 +220,7 @@ smartReview(cmd: string, patterns: string[]): ReviewResult
 
 **复核流程：**
 1. 将命令 + 匹配模式 + 上下文组织为 prompt
-2. 请求 Ollama（`llama3.3` 默认，本地推理，无需网络）
+2. 请求 Ollama（`qwen2.5:3b` 默认，本地推理，无需网络）
 3. LLM 返回 approve / deny / escalate
 4. 结果写入 Approval Log
 
@@ -575,7 +575,7 @@ policy-layer/
 | 插件框架 | OpenClaw Gateway Plugin Hooks |
 | 语言 | TypeScript |
 | 测试 | Vitest（103 tests） |
-| LLM 复核 | Ollama（`llama3.3`，本地推理） |
+| LLM 复核 | Ollama（`qwen2.5:3b`，本地推理） |
 | 存储 | JSONL（追加日志）、LanceDB（Phase 2） |
 | 嵌入 | bge-m3（Phase 2 计划） |
 | 可视化 | 原生 HTML + CSS + JavaScript（无需构建） |
