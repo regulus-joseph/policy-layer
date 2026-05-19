@@ -43,11 +43,30 @@ LLM 下一次决策前 → before_prompt_build（注入认知状态评分）
 ## 快速开始
 
 ```bash
-# 验证插件已加载（重启后生效）
+# 编译安装
+cd ~/projects/policy-layer
+npm run build
+
+# ⚠️ 必须配置：openclaw.json 必须启用 allowPromptInjection hook
+# 否则 before_tool_call 和 before_prompt_build 不会触发：
+{
+  "plugins": {
+    "entries": {
+      "policy-layer": {
+        "enabled": true,
+        "hooks": {
+          "allowPromptInjection": true,
+          "allowConversationAccess": true
+        }
+      }
+    }
+  }
+}
+
+# 重启 gateway 加载插件
 openclaw gateway restart
 
 # 运行测试
-cd ~/projects/policy-layer
 npm test                  # 166 tests
 
 # 更新可视化仪表盘

@@ -18,39 +18,58 @@ Next LLM Decision → before_prompt_build (inject cognitive state score)
 
 **Core problems it solves:**
 
-| Goal | How |
-|------|-----|
-| **Security** | Block dangerous commands (e.g. `rm -rf /`, `curl\|sh`) before execution |
-| **Self-awareness** | Let the Agent "know its own state" — slow down when D' score is low |
-| **Learning** | Record all security decisions; user can flag wrong decisions (`report-bad-result`) |
-| **Transparency** | Every decision is written to JSONL for audit and visualization |
+| Goal               | How                                                                                |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| **Security**       | Block dangerous commands (e.g. `rm -rf /`, `curl\|sh`) before execution            |
+| **Self-awareness** | Let the Agent "know its own state" — slow down when D' score is low                |
+| **Learning**       | Record all security decisions; user can flag wrong decisions (`report-bad-result`) |
+| **Transparency**   | Every decision is written to JSONL for audit and visualization                     |
 
 ---
 
 ## Feature Overview
 
-| Feature | Description |
-|---------|-------------|
-| 🛡️ Dangerous Command Blocking | Layer 1 pattern matching — 16 CRITICAL patterns blocked immediately, no LLM review |
-| 🤖 LLM Smart Review | HIGH/MEDIUM commands go through local Ollama + `qwen2.5:3b` for second review (approve/deny/escalate) |
-| 🚀 Fast Lane | Same harmless command approved 5 times consecutively → skip LLM review, fast-track |
-| 📚 Learned Whitelist | User clicks "Always Allow" → pattern auto-learned to `learned-whitelist.jsonl` (persistent, survive restart) |
-| 📊 Cognitive State Scoring | D' trust score — 8 signals (success, tool_fail, severity, critical_hit, approvals, denials, nudges, fast_lane) |
-| 🔒 Secret Leak Detection | `after_tool_call` scans tool output for 39 secret patterns; leaks trigger warning |
-| 📝 Decision Audit Log | All decisions appended to `~/.openclaw/logs/approval.jsonl` (JSONL, append-only) |
-| 🗳️ User Feedback Loop | `report-bad-result` — user flags wrong decisions → score drops + added to blacklist |
-| 📈 Analytics Dashboard | Generate HTML dashboard from approval.jsonl, with pattern filtering and timeline analysis |
+| Feature                      | Description                                                                                                    |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| 🛡️ Dangerous Command Blocking | Layer 1 pattern matching — 16 CRITICAL patterns blocked immediately, no LLM review                             |
+| 🤖 LLM Smart Review           | HIGH/MEDIUM commands go through local Ollama + `qwen2.5:3b` for second review (approve/deny/escalate)          |
+| 🚀 Fast Lane                  | Same harmless command approved 5 times consecutively → skip LLM review, fast-track                             |
+| 📚 Learned Whitelist          | User clicks "Always Allow" → pattern auto-learned to `learned-whitelist.jsonl` (persistent, survive restart)   |
+| 📊 Cognitive State Scoring    | D' trust score — 8 signals (success, tool_fail, severity, critical_hit, approvals, denials, nudges, fast_lane) |
+| 🔒 Secret Leak Detection      | `after_tool_call` scans tool output for 39 secret patterns; leaks trigger warning                              |
+| 📝 Decision Audit Log         | All decisions appended to `~/.openclaw/logs/approval.jsonl` (JSONL, append-only)                               |
+| 🗳️ User Feedback Loop         | `report-bad-result` — user flags wrong decisions → score drops + added to blacklist                            |
+| 📈 Analytics Dashboard        | Generate HTML dashboard from approval.jsonl, with pattern filtering and timeline analysis                      |
 
 ---
 
 ## Quick Start
 
 ```bash
-# Verify plugin is loaded (restart to reload)
+# Build and install
+cd ~/projects/policy-layer
+npm run build
+
+# ⚠️ Required: ensure openclaw.json has allowPromptInjection hook enabled
+# Without this, before_tool_call and before_prompt_build hooks will NOT fire:
+{
+  "plugins": {
+    "entries": {
+      "policy-layer": {
+        "enabled": true,
+        "hooks": {
+          "allowPromptInjection": true,
+          "allowConversationAccess": true
+        }
+      }
+    }
+  }
+}
+
+# Restart gateway to load plugin
 openclaw gateway restart
 
 # Run tests
-cd ~/projects/policy-layer
 npm test                  # 166 tests
 
 # Regenerate analytics dashboard
@@ -108,7 +127,7 @@ normalizeCommand(cmd: string): string
   └─ nfkcNormalize(str)      // NFKC normalize (unify Unicode homoglyphs)
 ```
 
-**Why NFKC normalization?**  
+**Why NFKC normalization?**
 Some Unicode characters are visually identical to ASCII (e.g. Greek `ο` vs Latin `o`). Attackers can use homoglyphs to craft commands that bypass pattern detection. NFKC normalization converts them all to the standard form.
 
 #### 1.2 Danger Pattern Detection (`patterns.ts`)
@@ -117,32 +136,32 @@ Detects 25 dangerous patterns, split into two response tiers:
 
 **CRITICAL — Immediate Block (no LLM review)**
 
-| Pattern | Example Match | Note |
-|---------|--------------|------|
-| `rm_recursive_root` | `rm -rf /`, `rm -rf /*` | Recursive delete from root |
-| `pipe_to_shell` | `curl ... \| sh`, `wget ... \| bash` | Remote code execution |
-| `kill_all` | `kill -9 -1`, `killall gateway` | Kill all processes |
-| `fork_bomb` | `:(){ :\|:& };:` | Fork bomb |
-| `chmod_777_root` | `chmod 777 /` | Permission downgrading |
-| `gateway_stop` | `pkill gateway`, `openclaw gateway stop` | Shutdown self |
-| `script_execution` | `chmod +x *.sh \| bash\|sh\|python` | Run unauthorized scripts |
-| `/dev/tcp` | `cat /dev/tcp/...` | Firewall bypass via /dev/tcp |
+| Pattern             | Example Match                            | Note                         |
+| ------------------- | ---------------------------------------- | ---------------------------- |
+| `rm_recursive_root` | `rm -rf /`, `rm -rf /*`                  | Recursive delete from root   |
+| `pipe_to_shell`     | `curl ... \| sh`, `wget ... \| bash`     | Remote code execution        |
+| `kill_all`          | `kill -9 -1`, `killall gateway`          | Kill all processes           |
+| `fork_bomb`         | `:(){ :\|:& };:`                         | Fork bomb                    |
+| `chmod_777_root`    | `chmod 777 /`                            | Permission downgrading       |
+| `gateway_stop`      | `pkill gateway`, `openclaw gateway stop` | Shutdown self                |
+| `script_execution`  | `chmod +x *.sh \| bash\|sh\|python`      | Run unauthorized scripts     |
+| `/dev/tcp`          | `cat /dev/tcp/...`                       | Firewall bypass via /dev/tcp |
 
 **HIGH — LLM Smart Review**
 
-| Pattern | Example Match |
-|---------|--------------|
-| `curl_pipe_shell` | `curl ... \| sh` |
-| `wget_pipe_shell` | `wget ... \| sh` |
-| `curl_download_shell` | `curl ... && sh` |
-| `wget_download_shell` | `wget ... && sh` |
-| `git_reset_hard` | `git reset --hard` |
-| `git_reset_hard_head` | `git reset --hard HEAD` |
-| `chmod_777_system` | `chmod 777 /home` |
-| `chmod_exec_interpreter` | `chmod +x *.sh \| bash` |
-| `sql_drop` | `DROP TABLE`, `DROP DATABASE` |
-| `kill_term_negative` | `kill -TERM -1` |
-| `dev_tcp` | `/dev/tcp/host/port` |
+| Pattern                  | Example Match                 |
+| ------------------------ | ----------------------------- |
+| `curl_pipe_shell`        | `curl ... \| sh`              |
+| `wget_pipe_shell`        | `wget ... \| sh`              |
+| `curl_download_shell`    | `curl ... && sh`              |
+| `wget_download_shell`    | `wget ... && sh`              |
+| `git_reset_hard`         | `git reset --hard`            |
+| `git_reset_hard_head`    | `git reset --hard HEAD`       |
+| `chmod_777_system`       | `chmod 777 /home`             |
+| `chmod_exec_interpreter` | `chmod +x *.sh \| bash`       |
+| `sql_drop`               | `DROP TABLE`, `DROP DATABASE` |
+| `kill_term_negative`     | `kill -TERM -1`               |
+| `dev_tcp`                | `/dev/tcp/host/port`          |
 
 #### 1.3 Path Traversal Detection (`path.ts`)
 
@@ -160,16 +179,16 @@ D' (d-prime) is the core metric from Signal Detection Theory. Policy Layer adapt
 
 After each tool call, the system records 8 trust signals:
 
-| Signal | Weight | Meaning | Magnitude |
-|--------|--------|---------|-----------|
-| `success_rate` | 0.20 | Tool call success rate | raw rate (0-1) |
-| `tool_fail` | 0.15 | Tool failure rate (lower is better) | 1 - failure_rate |
-| `avg_severity` | 0.15 | Severity of failures (lower is better) | 1 - avg_severity/1000 |
-| `critical_hit` | 0.25 | Critical pattern blocks issued | 1 - hit_rate |
-| `approval_passed` | 0.10 | User allowed command via approval | pass_rate (capped) |
-| `approval_denied` | 0.10 | User denied command | deny_rate (negative) |
-| `user_nudge` | 0.20 | User gave negative feedback | nudge_rate (negative) |
-| `fast_lane_use` | 0.05 | Fast-lane earned | fast_lane_rate (capped) |
+| Signal            | Weight | Meaning                                | Magnitude               |
+| ----------------- | ------ | -------------------------------------- | ----------------------- |
+| `success_rate`    | 0.20   | Tool call success rate                 | raw rate (0-1)          |
+| `tool_fail`       | 0.15   | Tool failure rate (lower is better)    | 1 - failure_rate        |
+| `avg_severity`    | 0.15   | Severity of failures (lower is better) | 1 - avg_severity/1000   |
+| `critical_hit`    | 0.25   | Critical pattern blocks issued         | 1 - hit_rate            |
+| `approval_passed` | 0.10   | User allowed command via approval      | pass_rate (capped)      |
+| `approval_denied` | 0.10   | User denied command                    | deny_rate (negative)    |
+| `user_nudge`      | 0.20   | User gave negative feedback            | nudge_rate (negative)   |
+| `fast_lane_use`   | 0.05   | Fast-lane earned                       | fast_lane_rate (capped) |
 
 #### 2.3 Trust Score (D') Calculation
 
@@ -205,21 +224,21 @@ REJECT   │
 
 Default sigmoid parameters:
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `midpoint` | 0.58 | D' value where risk = 0.50 (50/50) |
-| `steepness` | 0.10 | Controls transition sharpness |
-| `acceptBelow` | 0.15 | Risk below this → ACCEPT |
-| `rejectAbove` | 0.85 | Risk above this → REJECT |
+| Parameter     | Default | Description                        |
+| ------------- | ------- | ---------------------------------- |
+| `midpoint`    | 0.58    | D' value where risk = 0.50 (50/50) |
+| `steepness`   | 0.10    | Controls transition sharpness      |
+| `acceptBelow` | 0.15    | Risk below this → ACCEPT           |
+| `rejectAbove` | 0.85    | Risk above this → REJECT           |
 
 Example mappings:
 
-| D' | Risk Score | Zone |
-|----|-----------|------|
-| 0.40 | 0.035 | ACCEPT |
-| 0.55 | 0.622 | ESCALATE |
-| 0.62 | 0.869 | REJECT |
-| 0.70 | 0.958 | REJECT |
+| D'   | Risk Score | Zone     |
+| ---- | ---------- | -------- |
+| 0.40 | 0.035      | ACCEPT   |
+| 0.55 | 0.622      | ESCALATE |
+| 0.62 | 0.869      | REJECT   |
+| 0.70 | 0.958      | REJECT   |
 
 #### 2.5 Score Injection
 
@@ -336,13 +355,13 @@ Each line format:
 
 In the `after_tool_call` hook, scan tool output for 39 secret patterns:
 
-| Category | Example Patterns |
-|---------|-----------------|
-| API Keys | `sk-`, `sk_live_`, `AIza...`, `SG.xxx`, `github_token` |
-| Private Keys | `BEGIN RSA PRIVATE KEY`, `BEGIN DSA PRIVATE KEY` |
-| Database | `mysqldump`, `postgres://`, `mongodb://` |
-| AWS | `AKIA...`, `aws_secret` |
-| Cloud Services | `OCPassphrase`, `datocms`, `stripe` |
+| Category       | Example Patterns                                       |
+| -------------- | ------------------------------------------------------ |
+| API Keys       | `sk-`, `sk_live_`, `AIza...`, `SG.xxx`, `github_token` |
+| Private Keys   | `BEGIN RSA PRIVATE KEY`, `BEGIN DSA PRIVATE KEY`       |
+| Database       | `mysqldump`, `postgres://`, `mongodb://`               |
+| AWS            | `AKIA...`, `aws_secret`                                |
+| Cloud Services | `OCPassphrase`, `datocms`, `stripe`                    |
 
 #### 4.2 Handling
 
@@ -411,13 +430,13 @@ Effects:
 
 ### File Reference
 
-| File | Purpose |
-|------|---------|
-| `src/index.ts` | Plugin entry: 3 hooks + 4 commands |
-| `src/security/*.ts` | 9 security modules (Layer 1/3/4) |
-| `openclaw.plugin.json` | Plugin manifest |
+| File                   | Purpose                                    |
+| ---------------------- | ------------------------------------------ |
+| `src/index.ts`         | Plugin entry: 3 hooks + 4 commands         |
+| `src/security/*.ts`    | 9 security modules (Layer 1/3/4)           |
+| `openclaw.plugin.json` | Plugin manifest                            |
 | `config/openclaw.json` | Gateway config (deploys to `~/.openclaw/`) |
-| `scripts/deploy.sh` | One-click deployment script |
+| `scripts/deploy.sh`    | One-click deployment script                |
 
 ### One-Click Deploy
 
@@ -449,6 +468,10 @@ In `~/.openclaw/openclaw.json`:
     "entries": {
       "policy-layer": {
         "enabled": true,
+        "hooks": {
+          "allowPromptInjection": true,
+          "allowConversationAccess": true
+        },
         "config": {
           "reportToUser":       true,    // Agent proactively reports D' state in conversation
           "sensoriumWindow":    20,      // Cycle window size for D' tracking
@@ -464,15 +487,15 @@ In `~/.openclaw/openclaw.json`:
 }
 ```
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `reportToUser` | `true` | Agent actively reports D' status in conversation; `false` = silent |
-| `sensoriumWindow` | 20 | Rolling window size for D' calculation |
-| `sigmoidMidpoint` | 0.58 | D' value where risk = 0.50 (sigmoid center) |
-| `sigmoidSteepness` | 0.10 | Controls how sharp the ACCEPT→ESCALATE→REJECT transition is |
-| `sigmoidAcceptBelow` | 0.15 | Risk ≤ this → ACCEPT zone |
-| `sigmoidRejectAbove` | 0.85 | Risk ≥ this → REJECT zone |
-| `logLevel` | info | Log verbosity level |
+| Parameter            | Default | Description                                                        |
+| -------------------- | ------- | ------------------------------------------------------------------ |
+| `reportToUser`       | `true`  | Agent actively reports D' status in conversation; `false` = silent |
+| `sensoriumWindow`    | 20      | Rolling window size for D' calculation                             |
+| `sigmoidMidpoint`    | 0.58    | D' value where risk = 0.50 (sigmoid center)                        |
+| `sigmoidSteepness`   | 0.10    | Controls how sharp the ACCEPT→ESCALATE→REJECT transition is        |
+| `sigmoidAcceptBelow` | 0.15    | Risk ≤ this → ACCEPT zone                                          |
+| `sigmoidRejectAbove` | 0.85    | Risk ≥ this → REJECT zone                                          |
+| `logLevel`           | info    | Log verbosity level                                                |
 
 ---
 
@@ -485,16 +508,16 @@ npm test                  # 103 tests (61 unit + 42 integration)
 
 ### Test Coverage
 
-| Module | Tests | Coverage |
-|--------|-------|----------|
-| L1 normalize | 6 | ANSI/null/NFKC/trim |
-| L1 patterns | 25 | 14 CRITICAL + 11 HIGH |
-| L1 path | 6 | Traversal detection, valid paths |
-| L3 fast-lane | 5 | 5-approval threshold, reset |
-| L3 hook simulation | 13 | critical=block, benign=pass, multi-pattern |
-| L4 secrets | 17 | 9 secret types, URL, env vars |
-| Gateway | 2 | HTTP health, WebSocket |
-| **Total** | **103** | **100%** ✅ |
+| Module             | Tests   | Coverage                                   |
+| ------------------ | ------- | ------------------------------------------ |
+| L1 normalize       | 6       | ANSI/null/NFKC/trim                        |
+| L1 patterns        | 25      | 14 CRITICAL + 11 HIGH                      |
+| L1 path            | 6       | Traversal detection, valid paths           |
+| L3 fast-lane       | 5       | 5-approval threshold, reset                |
+| L3 hook simulation | 13      | critical=block, benign=pass, multi-pattern |
+| L4 secrets         | 17      | 9 secret types, URL, env vars              |
+| Gateway            | 2       | HTTP health, WebSocket                     |
+| **Total**          | **103** | **100%** ✅                                 |
 
 ---
 
@@ -584,11 +607,11 @@ User Input
 
 ### Payload Extension Fields
 
-| Field | Source | Description |
-|-------|--------|-------------|
-| `security_result` | Policy Layer verdict | approve / deny / escalate / fast_lane |
-| `matched_patterns` | `detectDangerousPatterns()` | List of triggered pattern labels |
-| `risk_severity` | Derived | critical / high / medium / low |
+| Field              | Source                      | Description                           |
+| ------------------ | --------------------------- | ------------------------------------- |
+| `security_result`  | Policy Layer verdict        | approve / deny / escalate / fast_lane |
+| `matched_patterns` | `detectDangerousPatterns()` | List of triggered pattern labels      |
+| `risk_severity`    | Derived                     | critical / high / medium / low        |
 
 ### Implementation Steps
 
@@ -666,20 +689,20 @@ The adaptive version can be implemented as a slow-moving background process that
 
 ## Tech Stack
 
-| Component | Technology |
-|-----------|-----------|
-| Plugin Framework | OpenClaw Gateway Plugin Hooks |
-| Language | TypeScript |
-| Testing | Vitest (103 tests) |
-| LLM Review | Ollama (`llama3.3`, local inference) |
-| Storage | JSONL (append log), LanceDB (Phase 2) |
-| Embedding | bge-m3 (Phase 2 planned) |
-| Visualization | Native HTML + CSS + JS (no build step) |
+| Component        | Technology                             |
+| ---------------- | -------------------------------------- |
+| Plugin Framework | OpenClaw Gateway Plugin Hooks          |
+| Language         | TypeScript                             |
+| Testing          | Vitest (103 tests)                     |
+| LLM Review       | Ollama (`llama3.3`, local inference)   |
+| Storage          | JSONL (append log), LanceDB (Phase 2)  |
+| Embedding        | bge-m3 (Phase 2 planned)               |
+| Visualization    | Native HTML + CSS + JS (no build step) |
 
 
 ## Acknowledgements
 
 Policy Layer's D' CBS algorithm and normative safety framework are deeply inspired by **Springdrift**:
 
-> *An Auditable Persistent Runtime for LLM Agents with Case-Based Memory, Normative Safety, and Ambient Self-Perception*  
+> *An Auditable Persistent Runtime for LLM Agents with Case-Based Memory, Normative Safety, and Ambient Self-Perception*
 > [arXiv:2604.04660](https://arxiv.org/abs/2604.04660v1) — Case-Based Memory, Normative Calculus, and Ambient Self-Perception (Sensorium/CBS) concepts directly informed this plugin's design.
