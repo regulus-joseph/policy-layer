@@ -113,7 +113,7 @@ function resolveConfig(cfg) {
     dGateThreshold: cfg?.dGateThreshold ?? DEFAULT_D_BANDS.low,
     logLevel: cfg?.logLevel || "info",
     safeDirs: cfg?.safeDirs ?? DEFAULT_SAFE_DIRS,
-    neverWhitelistPatterns: NEVER_WHITELIST_PATTERNS,
+    neverWhitelistPatterns: cfg?.neverWhitelistPatterns ?? NEVER_WHITELIST_PATTERNS,
     evolveMode: cfg?.evolveMode ?? false, // learned whitelist (default off)
   };
 }
@@ -538,6 +538,7 @@ import { onApprove, isFastLane, resetFastLane, getFastLaneEntries } from './secu
 import { redactSecrets } from './security/redact';
 import { redactUrlSecrets, redactEnvironmentVariables } from './security/url-redact';
 import { dCycleStore, type DCycleRecord, type DCycleTrigger } from './security/sensorium-log';
+import { matchesWhitelist, matchesNeverWhitelist, canWhitelist, generalizePattern, addToWhitelist, type WhitelistEntry } from './security/learned-whitelist';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
@@ -687,6 +688,20 @@ const plugin = {
         const agentId = ctx?.agentId || sessionKey.split(':')[0] || 'unknown';
         const sessionId = ctx?.sessionId || sessionKey;
 
+        // Check persistent learned whitelist (before fast-lane — whitelist is permanent, fast-lane is temporary memory)
+        if (cfg.evolveMode) {
+          const wlMatch = await matchesWhitelist(effectiveCmd);
+          if (wlMatch) {
+            const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
+            metrics.trustSignals.fastLaneUses++;
+            metrics.lastPolicyResult = `WHITELIST_BYPASS(${wlMatch.pattern})`;
+            await logApproval({ ...recordBase, result: 'whitelist', timestamp: new Date().toISOString() } as ApprovalRecord);
+            await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ACCEPT');
+            doLog(api, "debug", `Whitelist approve: ${wlMatch.pattern}`);
+            return { block: false };
+          }
+        }
+
         const severities = patterns.map(p => p.severity);
         if (severities.includes('critical')) {
           const critLabels = patterns.filter(p => p.severity === 'critical').map(p => p.label);
@@ -747,7 +762,24 @@ const plugin = {
                   m.trustSignals.approvalPasses++;
                 } else if (decision === 'allow-always') {
                   m.trustSignals.approvalPasses++;
-                  // TODO: add to learned whitelist (persist pattern)
+                  // Add to persistent learned whitelist (only if canWhitelist)
+                  if (cfg.evolveMode && whitelistablePatterns.length > 0) {
+                    try {
+                      const safe = cfg.safeDirs ?? DEFAULT_SAFE_DIRS;
+                      const generalized = generalizePattern(effectiveCmd, safe);
+                      if (await canWhitelist(effectiveCmd, safe)) {
+                        await addToWhitelist({
+                          pattern: generalized,
+                          originalCommand: effectiveCmd,
+                          addedAt: new Date().toISOString(),
+                          addedBy: 'allow-always',
+                        });
+                        doLog(api, "debug", `Added to whitelist: ${generalized}`);
+                      }
+                    } catch (err) {
+                      doLog(api, "warn", `Failed to add whitelist: ${String(err)}`);
+                    }
+                  }
                 } else if (decision === 'deny') {
                   m.trustSignals.approvalDenials++;
                 }
