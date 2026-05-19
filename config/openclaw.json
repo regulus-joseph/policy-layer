@@ -5,7 +5,8 @@
       "policy-layer": {
         "enabled": true,
         "hooks": {
-          "allowPromptInjection": true
+          "allowPromptInjection": true,
+          "allowConversationAccess": true
         },
         "config": {
           "reportToUser": true,
