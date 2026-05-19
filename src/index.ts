@@ -317,7 +317,8 @@ function sigmoid(x: number): number {
 
 function sigmoidRisk(dPrime: number | null, midpoint: number, steepness: number): number | null {
   if (dPrime === null) return null;
-  return sigmoid((dPrime - midpoint) / steepness);
+  // Invert: high D' (high trust) → low risk score
+  return 1 - sigmoid((dPrime - midpoint) / steepness);
 }
 
 function dGateStatus(dPrime, bands, sigmoidCfg?) {
