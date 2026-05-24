@@ -71,6 +71,8 @@ const NEVER_WHITELIST_PATTERNS = [
 ];
 
 // Safe directories that are always allowed (no approval needed)
+// Safe directories that bypass pattern check.
+// NOTE: empty array [] = no bypass (strictest); null/undefined = use DEFAULT_SAFE_DIRS
 const DEFAULT_SAFE_DIRS = [
   'node_modules',
   'dist',
@@ -767,9 +769,7 @@ const plugin = {
             block: false,
             requireApproval: {
               title: `Policy Layer: Approval Required`,
-              description: `Command "${normalized}" matched pattern(s): ${patterns.map(p => p.label).join(', ')}.
-${bayesianNLP} (posterior: ${(bayesianProfile.posteriorMean * 100).toFixed(0)}%, confidence: ${bayesianProfile.confidence})
-Human confirmation required.${safeDirHint}`,
+              description: `Pattern: ${patterns.map(p => p.label).join(', ')}. History: ${(bayesianProfile.posteriorMean * 100).toFixed(0)}% success (${bayesianProfile.confidence}).${safeDirHint}`,
               severity: "warning",
               allowedDecisions: decisions,
               onResolution: async (decision: string) => {
@@ -852,9 +852,7 @@ Human confirmation required.${safeDirHint}`,
             block: false,
             requireApproval: {
               title: `Policy Layer: Smart Review Requests Confirmation`,
-              description: `Command "${normalized}" matched pattern(s): ${patterns.map(p => p.label).join(', ')}.
-${bayesianNLP} (posterior: ${(bayesianProfile?.posteriorMean ?? 0) * 100}%, confidence: ${bayesianProfile?.confidence ?? 'LOW'})
-LLM review flag raised. Human confirmation required.${safeDirHint}`,
+              description: `Pattern: ${patterns.map(p => p.label).join(', ')}. LLM flags risk. History: ${((bayesianProfile?.posteriorMean ?? 0) * 100).toFixed(0)}% success.${safeDirHint}`,
               severity: "warning",
               allowedDecisions: decisions,
               onResolution: async (decision: string) => {
