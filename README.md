@@ -117,30 +117,33 @@ Tool Call Input
      │      └─ nfkcNormalize()     // NFKC normalization (unify Unicode homoglyphs)
      │      ↓
      ├─ Layer 1: detectDangerousPatterns()
-     │      ├─ Patterns detected → proceed
+     │      ├─ Patterns detected → proceed to dual-gate evaluation
      │      └─ No patterns → PASS
      │      ↓
-     ├─ Layer 2: Bayesian Decision (NEW — primary gate)
-     │      ├─ Load profiles from approval.jsonl (Beta-Binomial posterior)
-     │      ├─ getCommandProfile(cmd) → recommendation + natural language
-     │      ├─ BLOCK (posterior < 0.25) → hard reject
-     │      ├─ ASK_USER (posterior 0.25–0.40) → escalate to user
-     │      ├─ CONFIRM (posterior 0.40–0.75) → LLM Smart Review
-     │      └─ PROCEED (posterior ≥ 0.75) → LLM Smart Review (safety net)
+     ├─ Layer 2: Dual-Gate Evaluation (AND logic — both gates must agree)
+     │      ├─ Bayesian gate: posterior for (command_type + directory)
+     │      │   ├─ BLOCK → DENY (no LLM call needed)
+     │      │   └─ ASK_USER/CONFIRM/PROCEED → continue
+     │      ├─ Smart Review gate: Ollama LLM (qwen2.5:3b)
+     │      │   ├─ DENY → DENY
+     │      │   ├─ ESCALATE → ESCALATE (user confirm)
+     │      │   └─ APPROVE → check Bayesian
+     │      └─ Final decision:
+     │          ├─ Any DENY → reject
+     │          ├─ Any ESCALATE → user confirm
+     │          └─ Bayesian PROCEED + Smart Review APPROVE → allow
      │      ↓
-     ├─ Layer 2: D' CBS (injected via before_prompt_build)
+     ├─ Layer 3: D' CBS (injected via before_prompt_build)
      │      └─ Injects <openclaw_state> XML into LLM context
      │         Includes Bayesian natural language recommendation
      │         Agent reads it and adjusts behavior according to D' score
      │      ↓
-     ├─ Layer 3: Smart Review + Whitelist
-     │      ├─ Learned whitelist (persistent, file-based, survive restart)
-     │      ├─ Fast Lane (memory, 5-approve, reset on restart)
-     │      ├─ Ollama local inference (approve / deny / escalate)
+     ├─ Layer 4: Approval Resolution (if ESCALATE)
+     │      ├─ User confirms → allow-once / allow-always / deny
      │      ├─ allow-always → persist to learned-whitelist.jsonl
      │      └─ Approval Log: all decisions appended to approval.jsonl
      │      ↓
-     └─ Layer 4: Secret Leak Detection (after_tool_call)
+     └─ Layer 5: Secret Leak Detection (after_tool_call)
             └─ Scan tool output for 39 secret patterns; leak → warn + redact
 ```
 
