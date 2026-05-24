@@ -366,7 +366,7 @@ function interpretSensorium(dPrime, status, toolFailureRate, recentFailures, suc
   return lines;
 }
 
-function formatSensorium(sessionKey, metrics) {
+function formatSensorium(sessionKey, metrics, lastCmd?: string) {
   const successRate = computeSuccessRate(metrics);
   const toolFailureRate = computeToolFailureRate(metrics);
   const cbrHitRate = computeCbrHitRate(metrics);
@@ -380,6 +380,27 @@ function formatSensorium(sessionKey, metrics) {
     .slice(-3);
   const lastCycle = metrics.cycles[metrics.cycles.length - 1];
   const interpretations = interpretSensorium(dPrime, status, toolFailureRate, recentFailures, successRate, riskScore);
+
+  // Bayesian command profile
+  let commandProfileSection = '';
+  if (lastCmd && isProfileLoaded()) {
+    try {
+      const profile: CommandProfile = getCommandProfile(lastCmd);
+      const rec = profile.recommendation;
+      const conf = profile.confidence;
+      commandProfileSection = `
+  <command_profile>
+    <type>${profile.commandType}</type>
+    <directory>${profile.directory}</directory>
+    <posterior_success_pct>${(profile.posteriorMean * 100).toFixed(0)}</posterior_success_pct>
+    <observations>${profile.totalObservations}</observations>
+    <result_ratio>${profile.successCount} ok / ${profile.failCount} fail</result_ratio>
+    <confidence>${conf}</confidence>
+    <recommendation>${rec}</recommendation>
+    <natural_language>${profile.naturalLanguage}</natural_language>
+  </command_profile>`;
+    } catch {}
+  }
 
   return [
     "<openclaw_state>",
@@ -396,6 +417,7 @@ function formatSensorium(sessionKey, metrics) {
       : `  <last_policy_result>none</last_policy_result>`,
     recentFailures.length > 0 ? `  <recent_failures>${recentFailures.join(" | ")}</recent_failures>` : `  <recent_failures>none</recent_failures>`,
     interpretations.length > 0 ? `  <action>\n    ${interpretations.join('\n    ')}\n  </action>` : '',
+    commandProfileSection,
     "</openclaw_state>",
   ].join("\n");
 }
@@ -540,6 +562,7 @@ import { redactSecrets } from './security/redact';
 import { redactUrlSecrets, redactEnvironmentVariables } from './security/url-redact';
 import { dCycleStore, type DCycleRecord, type DCycleTrigger } from './security/sensorium-log';
 import { matchesWhitelist, matchesNeverWhitelist, canWhitelist, generalizePattern, addToWhitelist, type WhitelistEntry } from './security/learned-whitelist';
+import { getCommandProfile, isProfileLoaded, loadHistoryAndBuildProfiles, type CommandProfile } from './security/command-bayes';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
@@ -552,6 +575,7 @@ const plugin = {
 
   register(api) {
     loadBlacklist().catch(() => {});
+    loadHistoryAndBuildProfiles().catch(() => {});
     api.on("before_prompt_build", async (event, ctx) => {
       try {
         const sessionKey =
@@ -601,7 +625,7 @@ const plugin = {
         const sessId = ctx?.sessionId || sessionKey.split(':')[1] || sessionKey;
         await logDCycle(sessionKey, agentId, sessId, metrics, { gate: triggerGate }, decision);
 
-        const sensorium = formatSensorium(sessionKey, metrics);
+        const sensorium = formatSensorium(sessionKey, metrics, lastCommand);
         doLog(api, "debug", `Injecting sensorium for ${sessionKey}: D'=${dPrime?.toFixed(4) ?? "--"}, status=${status}`);
 
         metrics.callCounter++;

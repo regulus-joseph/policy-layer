@@ -1,0 +1,20 @@
+{
+  "hash": "policy-layer-v050-fixed",
+  "computedAt": "2026-05-20T00:00:00.000Z",
+  "keywords": [
+    "policy-layer",
+    "security-status",
+    "show-my-d-score",
+    "report-bad-result",
+    "set-sigmoid",
+    "policy-reset-fastlane",
+    "security",
+    "D' score",
+    "trust score",
+    "approval",
+    "whitelist",
+    "fast-lane",
+    "ollama",
+    "qwen2.5:3b"
+  ]
+}
