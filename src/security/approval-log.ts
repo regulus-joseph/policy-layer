@@ -16,13 +16,8 @@ export interface ApprovalRecord {
 }
 
 export function extractRawCommand(toolName: string, args: unknown): string | undefined {
-  if (toolName === 'bash' && args && typeof args === 'object') {
-    const a = args as Record<string, unknown>;
-    if (typeof a.command === 'string') {
-      return a.command;
-    }
-  }
-  if (toolName === 'shell' && args && typeof args === 'object') {
+  // bash, shell, exec all use {"command": "..."} format
+  if ((toolName === 'bash' || toolName === 'shell' || toolName === 'exec') && args && typeof args === 'object') {
     const a = args as Record<string, unknown>;
     if (typeof a.command === 'string') {
       return a.command;
