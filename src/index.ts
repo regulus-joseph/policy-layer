@@ -729,7 +729,10 @@ const plugin = {
           }
         }
 
-        // New decision chain: Bayesian primary, Smart Review secondary
+        // Dual-gate decision chain: Bayesian AND Smart Review must both agree to allow
+        // - Any BLOCK/DENY → DENY immediately
+        // - Any ASK_USER/ESCALATE → ESCALATE (user confirm required)
+        // - Bayesian PROCEED + Smart Review APPROVE → ALLOW only
         // Step 1: Check Bayesian recommendation for this (command + directory)
         const bayesianLoaded = isProfileLoaded();
         const bayesianProfile = bayesianLoaded ? getCommandProfile(effectiveCmd) : null;

@@ -80,7 +80,7 @@ open docs/approval-analytics.html
 
 ## Architecture in Depth
 
-### Two-Tier Decision System: Bayesian + D'
+### Two-Tier Agent Trust + Dual-Gate Command Decision
 
 Policy Layer uses a two-tier, cooperative decision system:
 
@@ -94,15 +94,17 @@ Tier 2 — D' (Agent Trust):  "Is THIS agent trustworthy right now?"
       → ACCEPT / ESCALATE / REJECT zone
       → Controls how much autonomy the agent gets
       → Injected into LLM context so agent can self-regulate
+
+Tier 3 — Smart Review (LLM Gate):  "Does the LLM think this command is safe?"
+  └── Ollama local inference: approve / deny / escalate
 ```
 
-**Cooperation model (AND logic — both must agree to allow):**
+**Dual-gate model (AND logic — both must agree):**
 - **Any DENY/BLOCK** → immediate rejection (either Bayesian or Smart Review can block)
 - **Any ESCALATE/ASK_USER** → user confirmation required (either Bayesian or Smart Review can escalate)
 - **Both PROCEED + APPROVE** → command allowed (both must agree to auto-pass)
-- D' score is **contextual overlay** — when Bayesian says ASK_USER, a high D' agent is more likely to get user approval
-- D' does NOT override Bayesian BLOCK — an agent with D'=0.95 still cannot execute a `rm /home` that Bayesian marks BLOCK
-- LLM Smart Review acts as a **co-decision gate** — it can block or escalate even when Bayesian says CONFIRM/PROCEED
+- D' score is **contextual overlay** — when user sees ESCALATE, a high D' agent may influence their decision
+- D' does NOT override either gate — an agent with D'=0.95 still cannot execute a `rm /home` if either gate denies
 
 ### End-to-End Flow
 
@@ -205,7 +207,7 @@ Detects path traversal attacks: `../` escaping home directory, `/proc`/`/sys` se
 
 #### 2.1 Overview
 
-Bayesian risk assessment is the **primary decision gate** in the new architecture. After pattern detection, the system computes a Beta-Binomial posterior probability for the `(command_type, directory)` pair using historical data from `approval.jsonl`.
+Bayesian risk assessment is **one of two decision gates** (dual-gate model). After pattern detection, the system computes a Beta-Binomial posterior probability for the `(command_type, directory)` pair using historical data from `approval.jsonl`.
 
 ```
 posterior_mean = α / (α + β)   // P(success | historical data)
