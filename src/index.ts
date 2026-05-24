@@ -741,7 +741,7 @@ const plugin = {
           metrics.lastPolicyResult = `BAYESIAN_BLOCK(${bayesianProfile.commandType}→${bayesianProfile.directory} pos=${bayesianProfile.posteriorMean.toFixed(2)})`;
           await logApproval({ ...recordBase, result: 'deny', reason: 'bayesian-block', timestamp: new Date().toISOString() } as ApprovalRecord);
           await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'REJECT');
-          doLog(api, "warn", `Bayesian BLOCK: ${bayesianNLP}`);
+          doLog(api, "warn", `[Bayesian→BLOCK] cmd="${normalized}" type=${bayesianProfile.commandType} dir=${bayesianProfile.directory} posterior=${bayesianProfile.posteriorMean.toFixed(3)} confidence=${bayesianProfile.confidence} signals=${bayesianProfile.successCount}ok/${bayesianProfile.failCount}fail`);
           return { block: true, blockReason: `Bayesian risk assessment: ${bayesianNLP}` };
         }
 
@@ -751,6 +751,7 @@ const plugin = {
           metrics.lastPolicyResult = `ESCALATE(bayesian-ask)`;
           await logApproval({ ...recordBase, result: 'escalate', reason: 'bayesian-ask-user', timestamp: new Date().toISOString() } as ApprovalRecord);
           await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ESCALATE');
+          doLog(api, "info", `[Bayesian→ESCALATE] cmd="${normalized}" type=${bayesianProfile.commandType} dir=${bayesianProfile.directory} posterior=${bayesianProfile.posteriorMean.toFixed(3)} confidence=${bayesianProfile.confidence} signals=${bayesianProfile.successCount}ok/${bayesianProfile.failCount}fail — user confirm required`);
 
           const evolveMode = pluginCfg.evolveMode === true;
           const decisions = evolveMode
@@ -815,8 +816,10 @@ Human confirmation required.${safeDirHint}`,
 
         // Step 4: Bayesian CONFIRM or PROCEED → LLM Smart Review as second opinion
         // For CONFIRM, LLM makes the call. For PROCEED, LLM serves as a safety net for high-risk patterns.
+        doLog(api, "debug", `[SmartReview→${bayesianRec}] cmd="${normalized}" posterior=${bayesianProfile?.posteriorMean.toFixed(3) ?? 'n/a'} — calling LLM`);
         const redacted = redactSecrets(normalized);
         const reviewResult = await smartReview(redacted.redacted, patterns);
+        doLog(api, "debug", `[SmartReview→${reviewResult}] cmd="${normalized}"`);
 
         if (reviewResult === 'deny') {
           const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
@@ -824,6 +827,7 @@ Human confirmation required.${safeDirHint}`,
           metrics.lastPolicyResult = `DENY(review)`;
           await logApproval({ ...recordBase, result: 'deny', reason: 'smart-review deny', timestamp: new Date().toISOString() } as ApprovalRecord);
           await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'REJECT');
+          doLog(api, "info", `[SmartReview→DENY] cmd="${normalized}" blocked by LLM`);
           return { block: true, blockReason: `Smart review denied: ${patterns.map(p => p.label).join(', ')}` };
         }
 
@@ -832,6 +836,7 @@ Human confirmation required.${safeDirHint}`,
           metrics.lastPolicyResult = `ESCALATE(review)`;
           await logApproval({ ...recordBase, result: 'escalate', reason: 'smart-review-escalate', timestamp: new Date().toISOString() } as ApprovalRecord);
           await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ESCALATE');
+          doLog(api, "info", `[SmartReview→ESCALATE] cmd="${normalized}" — user confirm required`);
 
           const evolveMode = pluginCfg.evolveMode === true;
           const decisions = evolveMode
@@ -901,6 +906,7 @@ LLM review flag raised. Human confirmation required.${safeDirHint}`,
         metrics.lastPolicyResult = `REVIEW_OK`;
         await logApproval({ ...recordBase, result: 'approve', reason: 'smart-review approve', timestamp: new Date().toISOString() } as ApprovalRecord);
         await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ACCEPT');
+        doLog(api, "info", `[SmartReview→APPROVE] cmd="${normalized}" posterior=${bayesianProfile?.posteriorMean.toFixed(3) ?? 'n/a'}`);
         return { block: false };
       } catch (err) {
         doLog(api, "warn", `before_tool_call error: ${String(err)}`);
