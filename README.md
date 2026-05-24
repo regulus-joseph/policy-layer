@@ -562,7 +562,7 @@ In `~/.openclaw/openclaw.json`:
           "sigmoidSteepness":    0.10,    // Transition sharpness
           "sigmoidAcceptBelow":  0.15,    // Risk ≤ this → ACCEPT (direct pass)
           "sigmoidRejectAbove":  0.85,    // Risk ≥ this → REJECT (direct block)
-          "safeDirs":            ["node_modules", "dist", "build", "tmp"],  // Directories that bypass pattern check
+          "safeDirs":            ["node_modules", "dist", "build", "tmp"],  // Bypass dirs: omit = defaults, [] = none (strictest)
           "logLevel":            "info"   // debug / info / warn
         }
       }
@@ -579,7 +579,7 @@ In `~/.openclaw/openclaw.json`:
 | `sigmoidSteepness`   | 0.10    | Controls how sharp the ACCEPT→ESCALATE→REJECT transition is        |
 | `sigmoidAcceptBelow` | 0.15    | Risk ≤ this → ACCEPT zone                                          |
 | `sigmoidRejectAbove` | 0.85    | Risk ≥ this → REJECT zone                                          |
-| `safeDirs`           | (list)  | Directories that bypass pattern check (e.g. node_modules, dist, tmp) |
+| `safeDirs`           | (list)  | Bypass dirs: omit=defaults, `[]`=none (strictest) |
 | `logLevel`           | info    | Log verbosity level                                                |
 
 ---
