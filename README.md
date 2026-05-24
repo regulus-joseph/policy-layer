@@ -96,11 +96,13 @@ Tier 2 — D' (Agent Trust):  "Is THIS agent trustworthy right now?"
       → Injected into LLM context so agent can self-regulate
 ```
 
-**Cooperation model:**
-- Bayesian is the **primary gate** — it directly blocks or escalates commands based on historical success rates
+**Cooperation model (AND logic — both must agree to allow):**
+- **Any DENY/BLOCK** → immediate rejection (either Bayesian or Smart Review can block)
+- **Any ESCALATE/ASK_USER** → user confirmation required (either Bayesian or Smart Review can escalate)
+- **Both PROCEED + APPROVE** → command allowed (both must agree to auto-pass)
 - D' score is **contextual overlay** — when Bayesian says ASK_USER, a high D' agent is more likely to get user approval
 - D' does NOT override Bayesian BLOCK — an agent with D'=0.95 still cannot execute a `rm /home` that Bayesian marks BLOCK
-- LLM Smart Review acts as a **secondary check** for CONFIRM/PROCEED decisions, serving as a safety net for high-risk patterns
+- LLM Smart Review acts as a **co-decision gate** — it can block or escalate even when Bayesian says CONFIRM/PROCEED
 
 ### End-to-End Flow
 
@@ -377,17 +379,15 @@ fast_lane_counter: Map<pattern_label, consecutive_approvals>
 
 **Activation threshold:** Each generalized pattern requires **3 allow-always** triggers before activating.
 
-**Decision chain (before_tool_call):**
+**Decision chain (before_tool_call, AND logic):**
 ```
 1. No patterns detected → PASS
 2. Safe directory bypass → PASS (node_modules, dist, build, tmp, etc.)
 3. Whitelist match (persistent, active: count ≥ 3) → PASS   ← learned whitelist
-4. Bayesian BLOCK → REJECT (hard reject, no prompt)
-5. Bayesian ASK_USER → ESCALATE (user confirm)
-6. Bayesian CONFIRM/PROCEED → LLM Smart Review
-7. Smart review deny → BLOCK
-8. Smart review escalate → ESCALATE (user confirm)
-9. Smart review approve → PASS
+4. Bayesian BLOCK → DENY (hard reject, no prompt)
+5. Smart Review DENY → DENY (LLM blocks)
+6. Bayesian ASK_USER or Smart Review ESCALATE → ESCALATE (user confirm)
+7. Bayesian PROCEED + Smart Review APPROVE → ALLOW (both agree)
 ```
 
 **allow-always flow:**
