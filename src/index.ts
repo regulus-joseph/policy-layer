@@ -747,13 +747,43 @@ const plugin = {
           return { block: true, blockReason: `Bayesian risk assessment: ${bayesianNLP}` };
         }
 
-        // Step 3: Bayesian ASK_USER → escalate to user confirmation
-        if (bayesianRec === 'ASK_USER') {
+        // Combined decision table (AND logic):
+        // - Any BLOCK → DENY immediately
+        // - Any escalate → ESCALATE (user confirm)
+        // - Bayesian PROCEED + Smart Review approve → ALLOW
+        // - Otherwise → ESCALATE (stricter: both must agree to allow)
+
+        // Step 3: Run Smart Review (always, since we need both opinions)
+        doLog(api, "debug", `[SmartReview→${bayesianRec}] cmd="${normalized}" posterior=${bayesianProfile?.posteriorMean.toFixed(3) ?? 'n/a'} — calling LLM`);
+        const redacted = redactSecrets(normalized);
+        const reviewResult = await smartReview(redacted.redacted, patterns);
+        doLog(api, "debug", `[SmartReview→${reviewResult}] cmd="${normalized}"`);
+
+        // Combine Bayesian and Smart Review decisions
+        const bayesianEscalate = (bayesianRec === 'ASK_USER' || bayesianRec === 'CONFIRM');
+        const smartReviewEscalate = (reviewResult === 'escalate');
+        const smartReviewDeny = (reviewResult === 'deny');
+        const smartReviewApprove = (reviewResult === 'approve');
+        const bothApprove = (bayesianRec === 'PROCEED' && smartReviewApprove);
+
+        // Any deny → hard reject (Bayesian BLOCK already handled, Smart Review deny here)
+        if (smartReviewDeny) {
           const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
-          metrics.lastPolicyResult = `ESCALATE(bayesian-ask)`;
-          await logApproval({ ...recordBase, result: 'escalate', reason: 'bayesian-ask-user', timestamp: new Date().toISOString() } as ApprovalRecord);
+          metrics.trustSignals.approvalDenials++;
+          metrics.lastPolicyResult = `DENY(review)`;
+          await logApproval({ ...recordBase, result: 'deny', reason: 'smart-review deny', timestamp: new Date().toISOString() } as ApprovalRecord);
+          await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'REJECT');
+          doLog(api, "info", `[SmartReview→DENY] cmd="${normalized}" blocked by LLM`);
+          return { block: true, blockReason: `Smart review denied: ${patterns.map(p => p.label).join(', ')}` };
+        }
+
+        // Any escalate (Bayesian ASK_USER or Smart Review escalate) → user confirm
+        if (bayesianEscalate || smartReviewEscalate) {
+          const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
+          metrics.lastPolicyResult = `ESCALATE`;
+          await logApproval({ ...recordBase, result: 'escalate', reason: 'bayesian-escalate', timestamp: new Date().toISOString() } as ApprovalRecord);
           await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ESCALATE');
-          doLog(api, "info", `[Bayesian→ESCALATE] cmd="${normalized}" type=${bayesianProfile.commandType} dir=${bayesianProfile.directory} posterior=${bayesianProfile.posteriorMean.toFixed(3)} confidence=${bayesianProfile.confidence} signals=${bayesianProfile.successCount}ok/${bayesianProfile.failCount}fail — user confirm required`);
+          doLog(api, "info", `[ESCALATE] cmd="${normalized}" bayesian=${bayesianRec} smartReview=${reviewResult} — user confirm required`);
 
           const evolveMode = pluginCfg.evolveMode === true;
           const decisions = evolveMode
@@ -814,45 +844,35 @@ const plugin = {
           };
         }
 
-        // Step 4: Bayesian CONFIRM or PROCEED → LLM Smart Review as second opinion
-        // For CONFIRM, LLM makes the call. For PROCEED, LLM serves as a safety net for high-risk patterns.
-        doLog(api, "debug", `[SmartReview→${bayesianRec}] cmd="${normalized}" posterior=${bayesianProfile?.posteriorMean.toFixed(3) ?? 'n/a'} — calling LLM`);
-        const redacted = redactSecrets(normalized);
-        const reviewResult = await smartReview(redacted.redacted, patterns);
-        doLog(api, "debug", `[SmartReview→${reviewResult}] cmd="${normalized}"`);
-
-        if (reviewResult === 'deny') {
+        // Both Bayesian PROCEED and Smart Review approve → allow
+        if (bothApprove) {
+          patterns.forEach(p => onApprove(p.label));
           const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
-          metrics.trustSignals.approvalDenials++;
-          metrics.lastPolicyResult = `DENY(review)`;
-          await logApproval({ ...recordBase, result: 'deny', reason: 'smart-review deny', timestamp: new Date().toISOString() } as ApprovalRecord);
-          await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'REJECT');
-          doLog(api, "info", `[SmartReview→DENY] cmd="${normalized}" blocked by LLM`);
-          return { block: true, blockReason: `Smart review denied: ${patterns.map(p => p.label).join(', ')}` };
+          metrics.trustSignals.approvalPasses++;
+          metrics.lastPolicyResult = `REVIEW_OK`;
+          await logApproval({ ...recordBase, result: 'approve', reason: 'smart-review approve', timestamp: new Date().toISOString() } as ApprovalRecord);
+          await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ACCEPT');
+          doLog(api, "info", `[APPROVE] cmd="${normalized}" bayesian=PROCEED smartReview=approve — allowed`);
+          return { block: false };
         }
 
-        if (reviewResult === 'escalate') {
+        // Fallback: CONFIRM + approve (Bayesian says CONFIRM, Smart Review approves but we still require user confirm for stricter control)
+        // This should not be reached since CONFIRM triggers escalate above, but as a safety net:
+        {
           const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
-          metrics.lastPolicyResult = `ESCALATE(review)`;
-          await logApproval({ ...recordBase, result: 'escalate', reason: 'smart-review-escalate', timestamp: new Date().toISOString() } as ApprovalRecord);
+          metrics.lastPolicyResult = `ESCALATE(fallback)`;
+          await logApproval({ ...recordBase, result: 'escalate', reason: 'strict-mode-fallback', timestamp: new Date().toISOString() } as ApprovalRecord);
           await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ESCALATE');
-          doLog(api, "info", `[SmartReview→ESCALATE] cmd="${normalized}" — user confirm required`);
-
           const evolveMode = pluginCfg.evolveMode === true;
-          const decisions = evolveMode
-            ? ["allow-once", "allow-always", "deny"]
-            : ["allow-once", "deny"];
-
+          const decisions = evolveMode ? ["allow-once", "allow-always", "deny"] : ["allow-once", "deny"];
           const safe = cfg.safeDirs ?? DEFAULT_SAFE_DIRS;
           const safeDirHint = whitelistablePatterns.length > 0 && whitelistablePatterns.every(p => p.severity !== 'critical')
-            ? ` (Only safe directories like: ${safe.slice(0, 4).join(', ')}... are learned)`
-            : '';
-
+            ? ` (Only safe directories like: ${safe.slice(0, 4).join(', ')}... are learned)` : '';
           return {
             block: false,
             requireApproval: {
-              title: `Policy Layer: Smart Review Requests Confirmation`,
-              description: `Pattern: ${patterns.map(p => p.label).join(', ')}. LLM flags risk. History: ${((bayesianProfile?.posteriorMean ?? 0) * 100).toFixed(0)}% success.${safeDirHint}`,
+              title: `Policy Layer: Approval Required`,
+              description: `Pattern: ${patterns.map(p => p.label).join(', ')}. History: ${(bayesianProfile.posteriorMean * 100).toFixed(0)}% success (${bayesianProfile.confidence}).${safeDirHint}`,
               severity: "warning",
               allowedDecisions: decisions,
               onResolution: async (decision: string) => {
@@ -873,20 +893,10 @@ const plugin = {
                   if (cfg.evolveMode && whitelistablePatterns.length > 0) {
                     try {
                       const generalized = generalizePattern(effectiveCmd, safe);
-                      const entry = await addToWhitelist({
-                        pattern: generalized,
-                        originalCommand: effectiveCmd,
-                        addedAt: new Date().toISOString(),
-                        addedBy: 'allow-always',
-                      });
-                      if (entry.active) {
-                        doLog(api, "info", `Whitelist ACTIVATED: ${generalized} (${entry.count} approvals)`);
-                      } else {
-                        doLog(api, "debug", `Whitelist queued: ${generalized} (${entry.count}/${ACTIVATION_THRESHOLD} — needs ${ACTIVATION_THRESHOLD - entry.count} more)`);
-                      }
-                    } catch (err) {
-                      doLog(api, "warn", `Failed to add whitelist: ${String(err)}`);
-                    }
+                      const entry = await addToWhitelist({ pattern: generalized, originalCommand: effectiveCmd, addedAt: new Date().toISOString(), addedBy: 'allow-always' });
+                      if (entry.active) doLog(api, "info", `Whitelist ACTIVATED: ${generalized} (${entry.count} approvals)`);
+                      else doLog(api, "debug", `Whitelist queued: ${generalized} (${entry.count}/${ACTIVATION_THRESHOLD})`);
+                    } catch (err) { doLog(api, "warn", `Failed to add whitelist: ${String(err)}`); }
                   }
                 } else if (decision === 'deny') {
                   m.trustSignals.approvalDenials++;
@@ -896,16 +906,6 @@ const plugin = {
             },
           };
         }
-
-        // Smart review passed (no block/escalate)
-        patterns.forEach(p => onApprove(p.label));
-        const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
-        metrics.trustSignals.approvalPasses++;
-        metrics.lastPolicyResult = `REVIEW_OK`;
-        await logApproval({ ...recordBase, result: 'approve', reason: 'smart-review approve', timestamp: new Date().toISOString() } as ApprovalRecord);
-        await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ACCEPT');
-        doLog(api, "info", `[SmartReview→APPROVE] cmd="${normalized}" posterior=${bayesianProfile?.posteriorMean.toFixed(3) ?? 'n/a'}`);
-        return { block: false };
       } catch (err) {
         doLog(api, "warn", `before_tool_call error: ${String(err)}`);
         return { block: false };
