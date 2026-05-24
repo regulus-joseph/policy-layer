@@ -34,6 +34,25 @@ These commands are registered by the plugin and **both Agent and User can call t
 </openclaw_state>
 ```
 
+## The <command_profile> Fields (Natural Language)
+
+When the plugin has history for your command type + target directory, it injects this block with a **plain-language explanation** — no math needed:
+
+```xml
+<command_profile>
+  <type>rm</type>
+  <directory>/home/user/project/node_modules</directory>
+  <posterior_success_pct>80</posterior_success_pct>
+  <observations>5</observations>
+  <result_ratio>4 ok / 1 fail</result_ratio>
+  <confidence>HIGH</confidence>
+  <recommendation>PROCEED</recommendation>
+  <natural_language>This 'rm' command targets 'node_modules'.
+    All 4 recorded executions succeeded (80% posterior).
+    node_modules — development cleanup, usually safe.</natural_language>
+</command_profile>
+```
+
 ## How to Read Each Field
 
 | Field | What it means | Good | Bad |
@@ -45,6 +64,22 @@ These commands are registered by the plugin and **both Agent and User can call t
 | `session_success_rate` | % of your recent tool calls that succeeded | > 0.80 | < 0.50 |
 | `tool_failure_rate` | % of tool calls that failed | < 0.10 | > 0.30 |
 | `last_policy_result` | Result of your last decision | PASS | DENY/ESCALATE |
+| `type` | Command category (rm, curl, git, etc.) | — | — |
+| `directory` | Target directory | safe dirs (node_modules, tmp) | /etc, /home |
+| `posterior_success_pct` | Bayesian P(success) for this (type, dir) | 75%+ | < 50% |
+| `observations` | How many similar commands in history | 5+ | 0-1 |
+| `confidence` | HIGH (5+ obs) / MEDIUM (2-4) / LOW (0-1) | HIGH | LOW |
+| `recommendation` | What to do | PROCEED | BLOCK |
+| `natural_language` | Plain explanation you should read | — | — |
+
+## Recommendation Actions
+
+| Recommendation | What to do |
+|---------------|-----------|
+| `PROCEED` | Safe to execute — command succeeded most of the time |
+| `CONFIRM` | Execute but verify target is correct |
+| `ASK_USER` | Get user confirmation before proceeding |
+| `BLOCK` | Do not execute — history shows high failure rate, or targeting sensitive /etc or external /home |
 
 ## The Three Zones
 
@@ -111,6 +146,13 @@ Your D' is computed from 8 signals. Understanding them helps you self-correct:
 | ACCEPT | Normal operation |
 | ESCALATE | Caution, prefer safe commands |
 | REJECT | Stop, default to read-only, ask user |
+
+| recommendation | Action |
+|----------------|--------|
+| PROCEED | Safe to execute |
+| CONFIRM | Verify before executing |
+| ASK_USER | Get user confirmation |
+| BLOCK | Do not execute |
 
 ## How to Self-Improve Your Score
 
