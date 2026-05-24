@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.6.0] — 2026-05-24
+
+### Added
+
+- **Bayesian risk assessment as primary decision gate** — Beta-Binomial posterior for (command_type + directory) computed from approval.jsonl history. Replaces pattern-severity as the primary gate. Recommendation: BLOCK (< 0.25), ASK_USER (0.25–0.40), CONFIRM (0.40–0.75), PROCEED (≥ 0.75)
+- **Bayesian natural language injection** — `<command_profile>` block in `<openclaw_state>` with posterior %, observations, success/fail ratio, confidence, and plain-language explanation. LLM can self-regulate based on command history
+- **Structured decision logging** — `[Bayesian→BLOCK]`, `[Bayesian→ESCALATE]`, `[SmartReview→APPROVE/DENY/ESCALATE]` log prefix for real-time traceability
+- **exec tool support in extractRawCommand** — `exec {"command": "..."}` now parsed correctly, fixing directory extraction for exec commands
+
+### Changed
+
+- **Decision chain restructured**: Bayesian BLOCK → Bayesian ASK_USER → LLM Smart Review (secondary) → user confirm. D' score is now agent-level trust overlay, not a command-level veto
+- **Approval description** — truncated to ≤256 chars (gateway limit) with concise format. Previously natural language made it too long
+- **safeDirs config clarified**: omit = DEFAULT_SAFE_DIRS (node_modules, dist, build, tmp); `[]` = no bypass (strictest); custom dirs added to defaults
+- **exec tool support** — added to extractRawCommand alongside bash/shell
+
+### Deprecated
+
+- **CRITICAL severity as hard block** — no longer directly blocks; replaced by Bayesian BLOCK. CRITICAL patterns now route through Bayesian decision chain
+
+### Fixed
+
+- **Approval request gateway error** — `description` field exceeded 256-char limit when natural language was included. Shortened to essential metrics only
+- **`rm -rf node_modules` misclassified** — extractTargetDir was returning `-rf` as directory. Now correctly handled via exec tool fix
+
+---
+
 ## [0.5.0] — 2026-05-19
 
 ### Added
