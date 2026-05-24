@@ -32,14 +32,13 @@ Next LLM Decision → before_prompt_build (inject cognitive state score)
 | Feature                      | Description                                                                                                    |
 | ---------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | 🛡️ Dangerous Command Blocking | Layer 1 pattern matching — 16 CRITICAL patterns blocked immediately, no LLM review                             |
-| 🤖 LLM Smart Review           | HIGH/MEDIUM commands go through local Ollama + `qwen2.5:3b` for second review (approve/deny/escalate)          |
+| 🤖 Bayesian Risk Assessment   | Beta-Binomial posterior for (command + directory) — primary decision gate before LLM review                    |
+| 🧠 D' Cognitive Scoring       | 8-signal trust score — inject into LLM context so agent self-regulates its behavior                          |
 | 🚀 Fast Lane                  | Same harmless command approved 5 times consecutively → skip LLM review, fast-track                             |
 | 📚 Learned Whitelist          | User clicks "Always Allow" → pattern auto-learned to `learned-whitelist.jsonl` (persistent, survive restart)   |
-| 📊 Cognitive State Scoring    | D' trust score — 8 signals (success, tool_fail, severity, critical_hit, approvals, denials, nudges, fast_lane) |
 | 🔒 Secret Leak Detection      | `after_tool_call` scans tool output for 39 secret patterns; leaks trigger warning                              |
 | 📝 Decision Audit Log         | All decisions appended to `~/.openclaw/logs/approval.jsonl` (JSONL, append-only)                               |
-| 🗳️ User Feedback Loop         | `report-bad-result` — user flags bad result → trust penalty; use `security-add-blacklist` to permanently block |
-| 📈 Analytics Dashboard        | Generate HTML dashboard from approval.jsonl, with pattern filtering and timeline analysis                      |
+| 🗳️ User Feedback Loop         | `report-bad-result` — user flags bad result → trust penalty                                                     |
 
 ---
 
@@ -81,6 +80,28 @@ open docs/approval-analytics.html
 
 ## Architecture in Depth
 
+### Two-Tier Decision System: Bayesian + D'
+
+Policy Layer uses a two-tier, cooperative decision system:
+
+```
+Tier 1 — Bayesian (Command Risk):  "Is THIS command likely to succeed?"
+  └── Beta-Binomial posterior for (command_type + directory) from approval.jsonl
+      → BLOCK / ASK_USER / CONFIRM / PROCEED
+
+Tier 2 — D' (Agent Trust):  "Is THIS agent trustworthy right now?"
+  └── 8-signal weighted trust score from tool call history
+      → ACCEPT / ESCALATE / REJECT zone
+      → Controls how much autonomy the agent gets
+      → Injected into LLM context so agent can self-regulate
+```
+
+**Cooperation model:**
+- Bayesian is the **primary gate** — it directly blocks or escalates commands based on historical success rates
+- D' score is **contextual overlay** — when Bayesian says ASK_USER, a high D' agent is more likely to get user approval
+- D' does NOT override Bayesian BLOCK — an agent with D'=0.95 still cannot execute a `rm /home` that Bayesian marks BLOCK
+- LLM Smart Review acts as a **secondary check** for CONFIRM/PROCEED decisions, serving as a safety net for high-risk patterns
+
 ### End-to-End Flow
 
 ```
@@ -92,11 +113,20 @@ Tool Call Input
      │      └─ nfkcNormalize()     // NFKC normalization (unify Unicode homoglyphs)
      │      ↓
      ├─ Layer 1: detectDangerousPatterns()
-     │      ├─ CRITICAL (16): Block immediately, no LLM review
-     │      └─ HIGH/MEDIUM (7): Proceed to Smart Review
+     │      ├─ Patterns detected → proceed
+     │      └─ No patterns → PASS
+     │      ↓
+     ├─ Layer 2: Bayesian Decision (NEW — primary gate)
+     │      ├─ Load profiles from approval.jsonl (Beta-Binomial posterior)
+     │      ├─ getCommandProfile(cmd) → recommendation + natural language
+     │      ├─ BLOCK (posterior < 0.25) → hard reject
+     │      ├─ ASK_USER (posterior 0.25–0.40) → escalate to user
+     │      ├─ CONFIRM (posterior 0.40–0.75) → LLM Smart Review
+     │      └─ PROCEED (posterior ≥ 0.75) → LLM Smart Review (safety net)
      │      ↓
      ├─ Layer 2: D' CBS (injected via before_prompt_build)
      │      └─ Injects <openclaw_state> XML into LLM context
+     │         Includes Bayesian natural language recommendation
      │         Agent reads it and adjusts behavior according to D' score
      │      ↓
      ├─ Layer 3: Smart Review + Whitelist
@@ -169,13 +199,64 @@ Detects path traversal attacks: `../` escaping home directory, `/proc`/`/sys` se
 
 ---
 
-### Layer 2 — D' Cognitive Behavior Scoring System (CBS)
+### Layer 2 — Bayesian Risk Assessment (Primary Decision Gate)
 
-#### 2.1 What Is D'?
+#### 2.1 Overview
+
+Bayesian risk assessment is the **primary decision gate** in the new architecture. After pattern detection, the system computes a Beta-Binomial posterior probability for the `(command_type, directory)` pair using historical data from `approval.jsonl`.
+
+```
+posterior_mean = α / (α + β)   // P(success | historical data)
+```
+
+Where α = 2 + successes, β = 2 + failures (Beta-Binomial with weakly informative prior Beta(2,2)).
+
+#### 2.2 Recommendation Logic
+
+| Recommendation | Condition | Action |
+| ---------------| ---------- | ------ |
+| `BLOCK` | posterior < 0.25 | Hard reject, no prompt |
+| `ASK_USER` | 0.25 ≤ posterior < 0.40 | User confirmation dialog |
+| `CONFIRM` | 0.40 ≤ posterior < 0.75 | LLM Smart Review |
+| `PROCEED` | posterior ≥ 0.75 | LLM Smart Review (safety net) |
+| `CONFIRM` | total observations < 2 | LLM Smart Review (cold start) |
+
+#### 2.3 Natural Language Injection
+
+The `getCommandProfile()` function generates a plain-language explanation injected into `<openclaw_state>`:
+
+```xml
+<command_profile>
+  <type>rm</type>
+  <directory>/tmp</directory>
+  <posterior_success_pct>91</posterior_success_pct>
+  <observations>8</observations>
+  <result_ratio>8 ok / 0 fail</result_ratio>
+  <confidence>HIGH</confidence>
+  <recommendation>PROCEED</recommendation>
+  <natural_language>This 'rm' command targets '/tmp'.
+    All 8 recorded executions succeeded (91% posterior success rate).
+    Usually safe to proceed.</natural_language>
+</command_profile>
+```
+
+#### 2.4 Cold Start Behavior
+
+With 0 historical observations, the prior Beta(2,2) gives posterior = 0.5, which falls in the `CONFIRM` range → LLM Smart Review. As the user approves/denies commands, Bayesian learns from every interaction. 30–50 records produce meaningful posteriors.
+
+#### 2.5 Command Type Classification
+
+Commands are categorized into 14 types: `rm`, `curl`, `wget`, `git`, `kill`, `chmod`, `mkdir`, `mv`, `cp`, `pkill`, `package_manager`, `docker`, `ssh`, `read`, `list`, `other`.
+
+---
+
+### Layer 3 — D' Cognitive Behavior Scoring System (CBS)
+
+#### 3.1 What Is D'?
 
 D' (d-prime) is the core metric from Signal Detection Theory. Policy Layer adapts it for AI Agent behavioral evaluation — treating the Agent's historical behavior as the "signal" and comparing it against a baseline, yielding a quantifiable risk/anomaly score.
 
-#### 2.2 Four Signal Dimensions
+#### 3.2 Eight Signal Dimensions
 
 After each tool call, the system records 8 trust signals:
 
@@ -190,7 +271,7 @@ After each tool call, the system records 8 trust signals:
 | `user_nudge`      | 0.20   | User gave negative feedback            | nudge_rate (negative)   |
 | `fast_lane_use`   | 0.05   | Fast-lane earned                       | fast_lane_rate (capped) |
 
-#### 2.3 Trust Score (D') Calculation
+#### 3.3 Trust Score (D') Calculation
 
 ```
 TrustScore = Σ(w_i × m_i) / (max_weight × n)
@@ -203,7 +284,7 @@ Key improvements over old D':
 - Approval/denial signals track user interaction quality
 - `critical_hit` directly penalizes blocked commands
 
-#### 2.4 Sigmoid Risk Scoring
+#### 3.4 Sigmoid Risk Scoring
 
 D' alone is a normalized score (0-1). To produce a human-interpretable risk assessment, D' is passed through an **inverted** sigmoid function — high D' (high trust) yields low risk:
 
@@ -241,7 +322,7 @@ Example mappings (with inverted formula):
 | 0.80 | 0.131      | ACCEPT   |
 | 0.90 | 0.047      | ACCEPT   |
 
-#### 2.5 Score Injection
+#### 3.5 Score Injection
 
 In the `before_prompt_build` hook, inject `<openclaw_state>` XML into the LLM context:
 
@@ -258,9 +339,9 @@ In the `before_prompt_build` hook, inject `<openclaw_state>` XML into the LLM co
 
 ---
 
-### Layer 3 — Smart Review System
+### Layer 5 — Smart Review System
 
-#### 3.1 Smart Review (`smart-review.ts`)
+#### 5.1 Smart Review (`smart-review.ts`)
 
 For HIGH/MEDIUM commands, run a second review via Ollama local LLM:
 
@@ -277,7 +358,7 @@ smartReview(cmd: string, patterns: string[]): ReviewResult
 
 **Safety:** If Ollama is unreachable, defaults to `escalate` (safe default — requires human approval).
 
-#### 3.2 Fast Lane (`fast-lane.ts`)
+#### 5.2 Fast Lane (`fast-lane.ts`)
 
 **Motivation:** For definitely harmless commands (e.g. `git status`, `ls`), running LLM review every time is wasteful and adds latency.
 
@@ -290,7 +371,7 @@ fast_lane_counter: Map<pattern_label, consecutive_approvals>
 // Reset: any deny / escalate / new command pattern
 ```
 
-#### 3.3 Learned Whitelist (`learned-whitelist.ts`)
+#### 5.3 Learned Whitelist (`learned-whitelist.ts`)
 
 **Motivation:** When a user clicks "Always Allow" repeatedly for the same command pattern (3 times), the system learns to auto-approve similar commands without prompting.
 
@@ -300,11 +381,13 @@ fast_lane_counter: Map<pattern_label, consecutive_approvals>
 ```
 1. No patterns detected → PASS
 2. Safe directory bypass → PASS (node_modules, dist, build, tmp, etc.)
-3. Whitelist match (persistent, active: count ≥ 3) → PASS  ← learned whitelist
-4. Critical pattern → BLOCK
-5. Fast-lane match (memory, 5-approve) → PASS      ← temporary auto-approve
-6. Smart review (Ollama LLM) → approve / deny / escalate
-7. Escalate → requireApproval → allow-once / allow-always / deny
+3. Whitelist match (persistent, active: count ≥ 3) → PASS   ← learned whitelist
+4. Bayesian BLOCK → REJECT (hard reject, no prompt)
+5. Bayesian ASK_USER → ESCALATE (user confirm)
+6. Bayesian CONFIRM/PROCEED → LLM Smart Review
+7. Smart review deny → BLOCK
+8. Smart review escalate → ESCALATE (user confirm)
+9. Smart review approve → PASS
 ```
 
 **allow-always flow:**
@@ -314,7 +397,7 @@ fast_lane_counter: Map<pattern_label, consecutive_approvals>
    - `"rm -rf dist"` → `"rm -rf {dist}"` (different entry from node_modules)
 3. Checks `NEVER_WHITELIST_PATTERNS` — if matched, never whitelisted
 4. Increments `count` on existing entry, or creates new entry (count=1, active=false)
-5. **Only when count ≥ 3** → `active=true` →下次同类命令直接 bypass
+5. **Only when count ≥ 3** → `active=true` → next similar command bypasses prompt
 6. All changes logged to `whitelist-audit.jsonl`
 
 **NEVER_WHITELIST_PATTERNS** (absolute blocklist — never learnable):
@@ -335,7 +418,7 @@ fast_lane_counter: Map<pattern_label, consecutive_approvals>
 {"action":"activate","pattern":"rm -rf {node_modules}","count":3,"active":true,"addedBy":"allow-always","timestamp":"2026-05-19T12:05:00Z"}
 ```
 
-#### 3.4 Approval Log (`approval-log.ts`)
+#### 5.4 Approval Log (`approval-log.ts`)
 
 All decisions (approve / deny / escalate / fast_lane / blocked) are appended to:
 

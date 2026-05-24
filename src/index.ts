@@ -727,46 +727,29 @@ const plugin = {
           }
         }
 
-        const severities = patterns.map(p => p.severity);
-        if (severities.includes('critical')) {
-          const critLabels = patterns.filter(p => p.severity === 'critical').map(p => p.label);
-          const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
-          metrics.trustSignals.criticalHits++;
-          metrics.lastPolicyResult = `DENY(${critLabels[0]})`;
-          await logApproval({ ...recordBase, result: 'deny', timestamp: new Date().toISOString() } as ApprovalRecord);
-          await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'REJECT');
-          doLog(api, "warn", `CRITICAL pattern blocked: ${critLabels.join(', ')}`);
-          return { block: true, blockReason: `Critical dangerous pattern(s): ${critLabels.join(', ')}` };
-        }
+        // New decision chain: Bayesian primary, Smart Review secondary
+        // Step 1: Check Bayesian recommendation for this (command + directory)
+        const bayesianLoaded = isProfileLoaded();
+        const bayesianProfile = bayesianLoaded ? getCommandProfile(effectiveCmd) : null;
+        const bayesianRec = bayesianProfile?.recommendation ?? 'CONFIRM';
+        const bayesianNLP = bayesianProfile?.naturalLanguage ?? '';
 
-        const patternKey = patterns.map(p => p.label).sort().join('|');
-        if (isFastLane(patternKey)) {
-          patterns.forEach(p => onApprove(p.label));
-          const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
-          metrics.trustSignals.fastLaneUses++;
-          metrics.lastPolicyResult = `FASTLANE(${patternKey})`;
-          await logApproval({ ...recordBase, result: 'fast_lane', timestamp: new Date().toISOString() } as ApprovalRecord);
-          await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ACCEPT');
-          doLog(api, "debug", `Fast-lane approve: ${patternKey}`);
-          return { block: false };
-        }
-
-        const redacted = redactSecrets(normalized);
-        const reviewResult = await smartReview(redacted.redacted, patterns);
-
-        if (reviewResult === 'deny') {
+        // Step 2: Bayesian BLOCK → hard reject (low historical success for this type+dir)
+        if (bayesianRec === 'BLOCK') {
           const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
           metrics.trustSignals.approvalDenials++;
-          metrics.lastPolicyResult = `DENY(review)`;
-          await logApproval({ ...recordBase, result: 'deny', reason: 'smart-review deny', timestamp: new Date().toISOString() } as ApprovalRecord);
+          metrics.lastPolicyResult = `BAYESIAN_BLOCK(${bayesianProfile.commandType}→${bayesianProfile.directory} pos=${bayesianProfile.posteriorMean.toFixed(2)})`;
+          await logApproval({ ...recordBase, result: 'deny', reason: 'bayesian-block', timestamp: new Date().toISOString() } as ApprovalRecord);
           await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'REJECT');
-          return { block: true, blockReason: `Smart review denied: ${patterns.map(p => p.label).join(', ')}` };
+          doLog(api, "warn", `Bayesian BLOCK: ${bayesianNLP}`);
+          return { block: true, blockReason: `Bayesian risk assessment: ${bayesianNLP}` };
         }
 
-        if (reviewResult === 'escalate') {
+        // Step 3: Bayesian ASK_USER → escalate to user confirmation
+        if (bayesianRec === 'ASK_USER') {
           const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
-          metrics.lastPolicyResult = `ESCALATE`;
-          await logApproval({ ...recordBase, result: 'escalate', reason: 'requires human review', timestamp: new Date().toISOString() } as ApprovalRecord);
+          metrics.lastPolicyResult = `ESCALATE(bayesian-ask)`;
+          await logApproval({ ...recordBase, result: 'escalate', reason: 'bayesian-ask-user', timestamp: new Date().toISOString() } as ApprovalRecord);
           await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ESCALATE');
 
           const evolveMode = pluginCfg.evolveMode === true;
@@ -774,7 +757,6 @@ const plugin = {
             ? ["allow-once", "allow-always", "deny"]
             : ["allow-once", "deny"];
 
-          // Determine safe dir hint for description
           const safe = cfg.safeDirs ?? DEFAULT_SAFE_DIRS;
           const safeDirHint = whitelistablePatterns.length > 0 && whitelistablePatterns.every(p => p.severity !== 'critical')
             ? ` (Only safe directories like: ${safe.slice(0, 4).join(', ')}... are learned)`
@@ -783,8 +765,10 @@ const plugin = {
           return {
             block: false,
             requireApproval: {
-              title: `Policy Layer: Command Requires Approval`,
-              description: `Command "${normalized}" matched pattern(s): ${patterns.map(p => p.label).join(', ')}. Risky operations require human confirmation.${safeDirHint}`,
+              title: `Policy Layer: Approval Required`,
+              description: `Command "${normalized}" matched pattern(s): ${patterns.map(p => p.label).join(', ')}.
+${bayesianNLP} (posterior: ${(bayesianProfile.posteriorMean * 100).toFixed(0)}%, confidence: ${bayesianProfile.confidence})
+Human confirmation required.${safeDirHint}`,
               severity: "warning",
               allowedDecisions: decisions,
               onResolution: async (decision: string) => {
@@ -829,6 +813,88 @@ const plugin = {
           };
         }
 
+        // Step 4: Bayesian CONFIRM or PROCEED → LLM Smart Review as second opinion
+        // For CONFIRM, LLM makes the call. For PROCEED, LLM serves as a safety net for high-risk patterns.
+        const redacted = redactSecrets(normalized);
+        const reviewResult = await smartReview(redacted.redacted, patterns);
+
+        if (reviewResult === 'deny') {
+          const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
+          metrics.trustSignals.approvalDenials++;
+          metrics.lastPolicyResult = `DENY(review)`;
+          await logApproval({ ...recordBase, result: 'deny', reason: 'smart-review deny', timestamp: new Date().toISOString() } as ApprovalRecord);
+          await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'REJECT');
+          return { block: true, blockReason: `Smart review denied: ${patterns.map(p => p.label).join(', ')}` };
+        }
+
+        if (reviewResult === 'escalate') {
+          const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
+          metrics.lastPolicyResult = `ESCALATE(review)`;
+          await logApproval({ ...recordBase, result: 'escalate', reason: 'smart-review-escalate', timestamp: new Date().toISOString() } as ApprovalRecord);
+          await logDCycle(sessionKey, agentId, sessionKey, metrics, toolTrigger, 'ESCALATE');
+
+          const evolveMode = pluginCfg.evolveMode === true;
+          const decisions = evolveMode
+            ? ["allow-once", "allow-always", "deny"]
+            : ["allow-once", "deny"];
+
+          const safe = cfg.safeDirs ?? DEFAULT_SAFE_DIRS;
+          const safeDirHint = whitelistablePatterns.length > 0 && whitelistablePatterns.every(p => p.severity !== 'critical')
+            ? ` (Only safe directories like: ${safe.slice(0, 4).join(', ')}... are learned)`
+            : '';
+
+          return {
+            block: false,
+            requireApproval: {
+              title: `Policy Layer: Smart Review Requests Confirmation`,
+              description: `Command "${normalized}" matched pattern(s): ${patterns.map(p => p.label).join(', ')}.
+${bayesianNLP} (posterior: ${(bayesianProfile?.posteriorMean ?? 0) * 100}%, confidence: ${bayesianProfile?.confidence ?? 'LOW'})
+LLM review flag raised. Human confirmation required.${safeDirHint}`,
+              severity: "warning",
+              allowedDecisions: decisions,
+              onResolution: async (decision: string) => {
+                const m = getOrCreateMetrics(sessionKey, pluginCfg);
+                const resolutionRecord: Partial<ApprovalRecord> = {
+                  command: normalized,
+                  rawCommand: rawCmd,
+                  tool: toolCall.toolName,
+                  sessionId: sessionKey,
+                  patterns: patterns.map(p => p.label),
+                };
+                if (decision === 'allow-once') {
+                  m.trustSignals.approvalPasses++;
+                  await logApproval({ ...resolutionRecord, result: 'allow-once', timestamp: new Date().toISOString() } as ApprovalRecord);
+                } else if (decision === 'allow-always') {
+                  m.trustSignals.approvalPasses++;
+                  await logApproval({ ...resolutionRecord, result: 'allow-always', timestamp: new Date().toISOString() } as ApprovalRecord);
+                  if (cfg.evolveMode && whitelistablePatterns.length > 0) {
+                    try {
+                      const generalized = generalizePattern(effectiveCmd, safe);
+                      const entry = await addToWhitelist({
+                        pattern: generalized,
+                        originalCommand: effectiveCmd,
+                        addedAt: new Date().toISOString(),
+                        addedBy: 'allow-always',
+                      });
+                      if (entry.active) {
+                        doLog(api, "info", `Whitelist ACTIVATED: ${generalized} (${entry.count} approvals)`);
+                      } else {
+                        doLog(api, "debug", `Whitelist queued: ${generalized} (${entry.count}/${ACTIVATION_THRESHOLD} — needs ${ACTIVATION_THRESHOLD - entry.count} more)`);
+                      }
+                    } catch (err) {
+                      doLog(api, "warn", `Failed to add whitelist: ${String(err)}`);
+                    }
+                  }
+                } else if (decision === 'deny') {
+                  m.trustSignals.approvalDenials++;
+                  await logApproval({ ...resolutionRecord, result: 'deny', timestamp: new Date().toISOString() } as ApprovalRecord);
+                }
+              },
+            },
+          };
+        }
+
+        // Smart review passed (no block/escalate)
         patterns.forEach(p => onApprove(p.label));
         const metrics = getOrCreateMetrics(sessionKey, pluginCfg);
         metrics.trustSignals.approvalPasses++;
