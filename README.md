@@ -557,12 +557,13 @@ In `~/.openclaw/openclaw.json`:
         },
         "config": {
           "reportToUser":       true,    // Agent proactively reports D' state in conversation
-          "sensoriumWindow":    20,      // Cycle window size for D' tracking
-          "sigmoidMidpoint":    0.58,    // D' at sigmoid center (risk=0.50)
-          "sigmoidSteepness":   0.10,    // Transition sharpness
-          "sigmoidAcceptBelow": 0.15,    // Risk ≤ this → ACCEPT (direct pass)
-          "sigmoidRejectAbove": 0.85,    // Risk ≥ this → REJECT (direct block)
-          "logLevel":          "info"   // debug / info / warn
+          "sensoriumWindow":     20,      // Cycle window size for D' tracking
+          "sigmoidMidpoint":     0.58,    // D' at sigmoid center (risk=0.50)
+          "sigmoidSteepness":    0.10,    // Transition sharpness
+          "sigmoidAcceptBelow":  0.15,    // Risk ≤ this → ACCEPT (direct pass)
+          "sigmoidRejectAbove":  0.85,    // Risk ≥ this → REJECT (direct block)
+          "safeDirs":            ["node_modules", "dist", "build", "tmp"],  // Directories that bypass pattern check
+          "logLevel":            "info"   // debug / info / warn
         }
       }
     }
@@ -578,6 +579,7 @@ In `~/.openclaw/openclaw.json`:
 | `sigmoidSteepness`   | 0.10    | Controls how sharp the ACCEPT→ESCALATE→REJECT transition is        |
 | `sigmoidAcceptBelow` | 0.15    | Risk ≤ this → ACCEPT zone                                          |
 | `sigmoidRejectAbove` | 0.85    | Risk ≥ this → REJECT zone                                          |
+| `safeDirs`           | (list)  | Directories that bypass pattern check (e.g. node_modules, dist, tmp) |
 | `logLevel`           | info    | Log verbosity level                                                |
 
 ---
