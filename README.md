@@ -32,7 +32,7 @@ Next LLM Decision → before_prompt_build (inject cognitive state score)
 | Feature                      | Description                                                                                                    |
 | ---------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | 🛡️ Dangerous Command Blocking | Layer 1 pattern matching — 16 CRITICAL patterns blocked immediately, no LLM review                             |
-| 🤖 Bayesian Risk Assessment   | Beta-Binomial posterior for (command + directory) — primary decision gate before LLM review                    |
+| 🤖 Bayesian Risk Assessment   | Beta-Binomial posterior for (command + directory) — Gate 1 of dual-gate AND model with Smart Review                    |
 | 🧠 D' Cognitive Scoring       | 8-signal trust score — inject into LLM context so agent self-regulates its behavior                          |
 | 🚀 Fast Lane                  | Same harmless command approved 5 times consecutively → skip LLM review, fast-track                             |
 | 📚 Learned Whitelist          | User clicks "Always Allow" → pattern auto-learned to `learned-whitelist.jsonl` (persistent, survive restart)   |
@@ -206,7 +206,7 @@ Detects path traversal attacks: `../` escaping home directory, `/proc`/`/sys` se
 
 ---
 
-### Layer 2 — Bayesian Risk Assessment (Primary Decision Gate)
+### Layer 2 — Bayesian Risk Assessment (Gate 1 of 2 — Dual-Gate Model)
 
 #### 2.1 Overview
 
